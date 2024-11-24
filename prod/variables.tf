@@ -6,6 +6,14 @@ variable "region" {
   type = string
 }
 
+variable "az_primary" {
+  type = string
+}
+
+variable "az_secondary" {
+  type = string
+}
+
 variable "env" {
   type = string
 }
