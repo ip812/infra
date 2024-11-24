@@ -90,16 +90,6 @@ resource "aws_subnet" "private_subnet_b" {
   }
 }
 
-resource "aws_eip" "eip" {
-  domain     = "vpc"
-  instance   = aws_instance.vm.id
-  depends_on = [aws_internet_gateway.igw]
-  tags = {
-    Organization = var.organization
-    Environment  = var.env
-  }
-}
-
 resource "aws_key_pair" "vm_ssh_public_key" {
   key_name   = "vm-ssh-key"
   public_key = var.vm_ssh_public_key
@@ -110,11 +100,22 @@ resource "aws_key_pair" "vm_ssh_public_key" {
 }
 
 resource "aws_instance" "vm" {
-  ami           = "ami-07c1b39b7b3d2525d"
-  instance_type = "t2.micro"
-  subnet_id     = aws_subnet.public_subnet_a.id
+  ami                    = "ami-07c1b39b7b3d2525d"
+  instance_type          = "t2.micro"
+  subnet_id              = aws_subnet.public_subnet_a.id
   vpc_security_group_ids = [aws_security_group.vm_sg.id]
   key_name               = aws_key_pair.vm_ssh_public_key.key_name
+  user_data              = file("scripts/vm-setup.sh")
+  tags = {
+    Organization = var.organization
+    Environment  = var.env
+  }
+}
+
+resource "aws_eip" "eip" {
+  domain     = "vpc"
+  instance   = aws_instance.vm.id
+  depends_on = [aws_internet_gateway.igw]
   tags = {
     Organization = var.organization
     Environment  = var.env
