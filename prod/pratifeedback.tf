@@ -1,19 +1,15 @@
 resource "cloudflare_zone" "pratifeedback_zone" {
-  account_id = var.cloudflare_account_id
-  zone       = var.pratifeedback_domain
+  name = var.pratifeedback_domain
+  account = {
+    id = var.cloudflare_account_id
+  }
 }
 
-resource "cloudflare_record" "pratifeedback_a_record" {
+resource "cloudflare_dns_record" "pratifeedback_dns_record" {
   zone_id = cloudflare_zone.pratifeedback_zone.id
-  name    = "www"
-  type    = "A"
+  name    = var.pratifeedback_domain
   content = aws_eip.eip.public_ip
+  type    = "A"
+  ttl     = 1
   proxied = true
-
-  tags = {
-    Domain       = var.pratifeedback_domain
-    Organization = var.organization
-    Environment  = var.env
-    CreatedAt    = timestamp()
-  }
 }
