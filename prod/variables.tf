@@ -1,23 +1,3 @@
-variable "organization" {
-  type = string
-}
-
-variable "region" {
-  type = string
-}
-
-variable "az_primary" {
-  type = string
-}
-
-variable "az_secondary" {
-  type = string
-}
-
-variable "env" {
-  type = string
-}
-
 variable "aws_access_key" {
   type      = string
   sensitive = true
@@ -36,6 +16,51 @@ variable "cloudflare_api_token" {
 variable "cloudflare_account_id" {
   type      = string
   sensitive = true
+}
+
+variable "vm_ssh_public_key" {
+  type      = string
+  sensitive = true
+}
+
+variable "region" {
+  type = string
+}
+
+variable "az_a" {
+  type = string
+}
+
+variable "az_b" {
+  type = string
+}
+
+variable "vpc_cidr" {
+  type = string
+}
+
+variable "public_subnet_a_cidr" {
+  type = string
+}
+
+variable "public_subnet_b_cidr" {
+  type = string
+}
+
+variable "private_subnet_a_cidr" {
+  type = string
+}
+
+variable "private_subnet_b_cidr" {
+  type = string
+}
+
+variable "organization" {
+  type = string
+}
+
+variable "env" {
+  type = string
 }
 
 variable "pratifeedback_domain" {
