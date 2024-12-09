@@ -9,6 +9,6 @@ chown ubuntu:ubuntu /home/ubuntu/.tmux.conf
 chown ubuntu:ubuntu /home/ubuntu/.vimrc
 
 curl -fsSl https://get.docker.com | sh
-sudo groupadd docker
-sudo usermod -aG docker $USER
+groupadd docker
+gpasswd -a ubuntu docker
 docker swarm init
