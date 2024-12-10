@@ -70,26 +70,6 @@ resource "aws_route_table_association" "public_subnet_b_rt_association" {
   route_table_id = aws_route_table.public_subnet_b_rt.id
 }
 
-resource "aws_subnet" "private_subnet_a" {
-  vpc_id            = aws_vpc.vpc.id
-  cidr_block        = var.private_subnet_a_cidr
-  availability_zone = var.az_a
-  tags = {
-    Organization = var.organization
-    Environment  = var.env
-  }
-}
-
-resource "aws_subnet" "private_subnet_b" {
-  vpc_id            = aws_vpc.vpc.id
-  cidr_block        = var.private_subnet_b_cidr
-  availability_zone = var.az_b
-  tags = {
-    Organization = var.organization
-    Environment  = var.env
-  }
-}
-
 resource "aws_key_pair" "vm_ssh_public_key" {
   key_name   = "vm-ssh-key"
   public_key = var.vm_ssh_public_key
