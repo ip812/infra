@@ -10,15 +10,24 @@ terraform {
       source  = "cloudflare/cloudflare"
       version = "5.0.0-alpha1"
     }
+    github = {
+      source = "integrations/github"
+      version = "6.4.0"
+    }
   }
 }
 
 provider "aws" {
-  region     = var.region
+  region     = var.aws_region
   access_key = var.aws_access_key
   secret_key = var.aws_secret_key
 }
 
 provider "cloudflare" {
   api_token = var.cloudflare_api_token
+}
+
+provider "github" {
+ token = var.github_access_token
+ owner = var.organization
 }

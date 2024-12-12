@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo ${deploy_ssh_public_key} >> /home/ubuntu/.ssh/authorized_keys
+
 apt-get update -y
 apt-get install -y tmux vim stow
 cd /home/ubuntu

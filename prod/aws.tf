@@ -1,5 +1,5 @@
 resource "aws_vpc" "vpc" {
-  cidr_block = var.vpc_cidr
+  cidr_block = var.aws_vpc_cidr
   tags = {
     Organization = var.organization
     Environment  = var.env
@@ -16,8 +16,8 @@ resource "aws_internet_gateway" "igw" {
 
 resource "aws_subnet" "public_subnet_a" {
   vpc_id            = aws_vpc.vpc.id
-  cidr_block        = var.public_subnet_a_cidr
-  availability_zone = var.az_a
+  cidr_block        = var.aws_public_subnet_a_cidr
+  availability_zone = var.aws_az_a
   tags = {
     Organization = var.organization
     Environment  = var.env
@@ -44,8 +44,8 @@ resource "aws_route_table_association" "public_subnet_a_rt_association" {
 
 resource "aws_subnet" "public_subnet_b" {
   vpc_id            = aws_vpc.vpc.id
-  cidr_block        = var.public_subnet_b_cidr
-  availability_zone = var.az_b
+  cidr_block        = var.aws_public_subnet_b_cidr
+  availability_zone = var.aws_az_b
   tags = {
     Organization = var.organization
     Environment  = var.env
@@ -70,9 +70,9 @@ resource "aws_route_table_association" "public_subnet_b_rt_association" {
   route_table_id = aws_route_table.public_subnet_b_rt.id
 }
 
-resource "aws_key_pair" "vm_ssh_public_key" {
-  key_name   = "vm-ssh-key"
-  public_key = var.vm_ssh_public_key
+resource "aws_key_pair" "admin_ssh_public_key" {
+  key_name   = "admin-ssh-key"
+  public_key = var.admin_ssh_public_key
   tags = {
     Organization = var.organization
     Environment  = var.env
@@ -84,8 +84,10 @@ resource "aws_instance" "vm" {
   instance_type          = "t2.micro"
   subnet_id              = aws_subnet.public_subnet_a.id
   vpc_security_group_ids = [aws_security_group.vm_sg.id]
-  key_name               = aws_key_pair.vm_ssh_public_key.key_name
-  user_data              = file("scripts/vm-setup.sh")
+  key_name = aws_key_pair.admin_ssh_public_key.key_name
+  user_data = templatefile("scripts/vm-setup.sh", {
+    deploy_ssh_public_key = var.deploy_ssh_public_key
+  })
   tags = {
     Organization = var.organization
     Environment  = var.env
@@ -93,9 +95,36 @@ resource "aws_instance" "vm" {
 }
 
 resource "aws_eip" "eip" {
+  depends_on = [aws_internet_gateway.igw]
   domain     = "vpc"
   instance   = aws_instance.vm.id
-  depends_on = [aws_internet_gateway.igw]
+  tags = {
+    Organization = var.organization
+    Environment  = var.env
+  }
+}
+
+resource "aws_ecr_repository" "infr_repo" {
+  name = "${var.organization}/infr"
+  image_tag_mutability = "MUTABLE"
+  tags = {
+    Organization = var.organization
+    Environment  = var.env
+  }
+}
+
+resource "aws_ecr_repository" "apps_repo" {
+  name = "${var.organization}/apps"
+  image_tag_mutability = "MUTABLE"
+  tags = {
+    Organization = var.organization
+    Environment  = var.env
+  }
+}
+
+resource "aws_ecr_repository" "blog_repo" {
+  name = "${var.organization}/blog"
+  image_tag_mutability = "MUTABLE"
   tags = {
     Organization = var.organization
     Environment  = var.env
