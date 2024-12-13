@@ -22,6 +22,7 @@ jobs:
       - name: Run Terraform Apply
         run: |
           cd prod
+          terraform init -reconfigure
           terraform apply -auto-approve
         env:
           TFE_TOKEN: ${{ secrets.TF_TOKEN }}
