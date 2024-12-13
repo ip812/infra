@@ -58,8 +58,8 @@ resource "github_actions_secret" "blog_github_access_token" {
  plaintext_value = var.github_access_token
 }
 
-resource "github_actions_secret" "infr_terrafrom_token" {
+resource "github_actions_secret" "infr_terrafrom_api_token" {
  repository      = "infr"
- secret_name     = "TF_TOKEN"
- plaintext_value = var.terraform_token
+ secret_name     = "TF_API_TOKEN"
+ plaintext_value = var.terraform_api_token
 }
