@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - terraform/**.tf  ## Ensure to only run when Terraform configuration changes
+      - prod/**.tf  ## Ensure to only run when Terraform configuration changes
 
 env:
   TF_CLOUD_ORGANIZATION: ip812 ## Replace with your HCP Terraform Organization name
