@@ -104,24 +104,6 @@ resource "aws_eip" "eip" {
   }
 }
 
-resource "aws_ecr_repository" "infr_repo" {
-  name = "${var.organization}/infr"
-  image_tag_mutability = "MUTABLE"
-  tags = {
-    Organization = var.organization
-    Environment  = var.env
-  }
-}
-
-resource "aws_ecr_repository" "apps_repo" {
-  name = "${var.organization}/apps"
-  image_tag_mutability = "MUTABLE"
-  tags = {
-    Organization = var.organization
-    Environment  = var.env
-  }
-}
-
 resource "aws_ecr_repository" "blog_repo" {
   name = "${var.organization}/blog"
   image_tag_mutability = "MUTABLE"

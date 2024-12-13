@@ -1,0 +1,27 @@
+---
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: '1.9.7'
+
+      - name: Run Terraform Apply
+        run: |
+          cd prod
+          terraform apply -auto-approve
+        env:
+          TFE_TOKEN: ${{ secrets.TFE_TOKEN }} 
