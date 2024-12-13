@@ -23,4 +23,4 @@ jobs:
         run: |
           cd prod
           terraform init -backend-config=backend-config.hcl
-          terraform apply -auto-approve
+          terraform apply -auto-approve -backend-config="token=${secrets.TF_TOKEN}"
