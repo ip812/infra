@@ -22,7 +22,7 @@ jobs:
       - name: Run Terraform Apply
         run: |
           cd prod
-          terraform init -reconfigure
+          terraform init -backend-config=../backend-config.hcl
           terraform apply -auto-approve
         env:
           TF_TOKEN: ${{ secrets.TF_TOKEN }}
