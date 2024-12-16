@@ -6,14 +6,16 @@ echo ${deploy_ssh_public_key} >> /home/ubuntu/.ssh/authorized_keys
 
 # Dependencies
 apt-get update -y
-apt-get install -y tmux vim stow
+apt-get install -y tmux vim
 
 # dotfiles
 cd /home/ubuntu
 git clone https://github.com/iypetrov/.vm-dotfiles.git
-(cd .vm-dotfiles && stow .)
-(cd .vm-dotfiles && stow -d /root/.vm-dotfiles .)
 chmod -R ugo+r /home/ubuntu/.vm-dotfiles
+ln -s /home/ubuntu/.vm-dotfiles/.tmux.conf /home/ubuntu/.tmux.conf
+ln -s /home/ubuntu/.vm-dotfiles/.vimrc /home/ubuntu/.vimrc
+ln -s /home/ubuntu/.vm-dotfiles/.tmux.conf /root/.tmux.conf
+ln -s /home/ubuntu/.vm-dotfiles/.vimrc /root/.vimrc
 
 # Docker
 curl -fsSl https://get.docker.com | sh
