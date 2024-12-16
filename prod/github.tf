@@ -58,8 +58,9 @@ resource "github_actions_secret" "blog_github_access_token" {
  plaintext_value = var.github_access_token
 }
 
-resource "github_actions_secret" "infr_terrafrom_api_token" {
- repository      = "infr"
- secret_name     = "TF_API_TOKEN"
- plaintext_value = var.terraform_api_token
-}
+# This secret will be added manulay, so the CI/CD pipeline to be able to create the infrastructure from scratch.
+# resource "github_actions_secret" "infr_terrafrom_api_token" {
+#  repository      = "infr"
+#  secret_name     = "TF_API_TOKEN"
+#  plaintext_value = var.terraform_api_token
+# }

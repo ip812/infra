@@ -83,8 +83,3 @@ variable "aws_account_id" {
   type = string
   sensitive = true
 }
-
-variable "terraform_api_token" {
-  type = string
-  sensitive = true
-}

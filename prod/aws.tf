@@ -70,9 +70,56 @@ resource "aws_route_table_association" "public_subnet_b_rt_association" {
   route_table_id = aws_route_table.public_subnet_b_rt.id
 }
 
-resource "aws_key_pair" "admin_ssh_public_key" {
-  key_name   = "admin-ssh-key"
-  public_key = var.admin_ssh_public_key
+resource "aws_security_group" "vm_sg" {
+  vpc_id = aws_vpc.vpc.id
+  ingress = [
+    {
+      cidr_blocks      = ["0.0.0.0/0"]
+      description      = "ssh"
+      from_port        = 22
+      ipv6_cidr_blocks = []
+      prefix_list_ids  = []
+      protocol         = "tcp"
+      security_groups  = []
+      self             = false
+      to_port          = 22
+    },
+    {
+      cidr_blocks      = ["0.0.0.0/0"]
+      description      = "http"
+      from_port        = 0
+      ipv6_cidr_blocks = []
+      prefix_list_ids  = []
+      protocol         = "tcp"
+      security_groups  = []
+      self             = false
+      to_port          = 80
+    },
+    {
+      cidr_blocks      = ["0.0.0.0/0"]
+      description      = "https"
+      from_port        = 0
+      ipv6_cidr_blocks = []
+      prefix_list_ids  = []
+      protocol         = "tcp"
+      security_groups  = []
+      self             = false
+      to_port          = 443
+    },
+  ]
+  egress = [
+    {
+      cidr_blocks      = ["0.0.0.0/0"]
+      description      = ""
+      from_port        = 0
+      ipv6_cidr_blocks = []
+      prefix_list_ids  = []
+      protocol         = -1
+      security_groups  = []
+      self             = false
+      to_port          = 0
+    },
+  ]
   tags = {
     Organization = var.organization
     Environment  = var.env
@@ -84,9 +131,10 @@ resource "aws_instance" "vm" {
   instance_type          = "t2.micro"
   subnet_id              = aws_subnet.public_subnet_a.id
   vpc_security_group_ids = [aws_security_group.vm_sg.id]
-  key_name = aws_key_pair.admin_ssh_public_key.key_name
   user_data = templatefile("scripts/vm-setup.sh", {
+    admin_ssh_public_key = var.admin_ssh_public_key
     deploy_ssh_public_key = var.deploy_ssh_public_key
+    github_access_token= var.github_access_token
   })
   tags = {
     Organization = var.organization
@@ -98,15 +146,6 @@ resource "aws_eip" "eip" {
   depends_on = [aws_internet_gateway.igw]
   domain     = "vpc"
   instance   = aws_instance.vm.id
-  tags = {
-    Organization = var.organization
-    Environment  = var.env
-  }
-}
-
-resource "aws_ecr_repository" "blog_repo" {
-  name = "${var.organization}/blog"
-  image_tag_mutability = "MUTABLE"
   tags = {
     Organization = var.organization
     Environment  = var.env
