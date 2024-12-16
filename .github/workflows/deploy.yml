@@ -5,7 +5,8 @@ on:
     branches:
       - main
     paths:
-      - prod/**.tf
+      - prod/**
+
 env:
   TF_CLOUD_ORGANIZATION: ip812
   TF_API_TOKEN: ${{ secrets.TF_API_TOKEN }}
