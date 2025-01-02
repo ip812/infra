@@ -88,8 +88,3 @@ variable "blog_db_file" {
   type = string
   sensitive = true
 }
-
-variable "blog_port" {
-  type = string
-  sensitive = true
-}
