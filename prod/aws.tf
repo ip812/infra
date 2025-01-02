@@ -126,11 +126,44 @@ resource "aws_security_group" "vm_sg" {
   }
 }
 
+resource "aws_iam_role" "vm_role" {
+  name = "${var.organization}-${var.env}-ec2-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Principal = {
+          Service = "ec2.amazonaws.com"
+        }
+        Action = "sts:AssumeRole"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_policy" "secrets_access" {
+  name        = "${var.organization}-${var.env}-secrets-access"
+  policy = file("policies/vm-policy.json")
+}
+
+resource "aws_iam_role_policy_attachment" "attach_secrets_access" {
+  role       = aws_iam_role.vm_role.name
+  policy_arn = aws_iam_policy.secrets_access.arn
+}
+
+resource "aws_iam_instance_profile" "ec2_instance_profile" {
+  name = "${var.organization}-${var.env}-ec2-profile"
+  role = aws_iam_role.vm_role.name
+}
+
 resource "aws_instance" "vm" {
   ami                    = "ami-07c1b39b7b3d2525d"
   instance_type          = "t2.micro"
   subnet_id              = aws_subnet.public_subnet_a.id
   vpc_security_group_ids = [aws_security_group.vm_sg.id]
+  iam_instance_profile = aws_iam_instance_profile.ec2_instance_profile.name
   user_data = templatefile("scripts/vm-setup.sh", {
     admin_ssh_public_key = var.admin_ssh_public_key
     deploy_ssh_public_key = var.deploy_ssh_public_key
@@ -139,6 +172,7 @@ resource "aws_instance" "vm" {
     aws_access_key_id= var.aws_access_key
     aws_secret_access_key = var.aws_secret_key
   })
+
   tags = {
     Organization = var.organization
     Environment  = var.env
