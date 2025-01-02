@@ -135,6 +135,9 @@ resource "aws_instance" "vm" {
     admin_ssh_public_key = var.admin_ssh_public_key
     deploy_ssh_public_key = var.deploy_ssh_public_key
     github_access_token= var.github_access_token
+    aws_region= var.aws_region
+    aws_access_key_id= var.aws_access_key
+    aws_secret_access_key = var.aws_secret_key
   })
   tags = {
     Organization = var.organization

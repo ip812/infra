@@ -8,7 +8,7 @@ echo ${deploy_ssh_public_key} >> /home/ubuntu/.ssh/authorized_keys
 apt-get update -y
 apt-get install -y tmux vim
 
-# dotfiles
+# Dotfiles
 cd /home/ubuntu
 git clone https://github.com/iypetrov/.vm-dotfiles.git
 chmod -R ugo+r /home/ubuntu/.vm-dotfiles
@@ -23,6 +23,10 @@ gpasswd -a ubuntu docker
 
 # Swarm
 docker swarm init
+printf ${aws_region} | docker secret create aws_region -
+printf ${aws_access_key_id} | docker secret create aws_access_key_id -
+printf ${aws_secret_access_key} | docker secret create aws_secret_access_key -
+
 curl -X POST \
   -H "Accept: application/vnd.github+json" \
   -H "Authorization: token ${github_access_token}" \
