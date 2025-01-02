@@ -83,3 +83,8 @@ variable "aws_account_id" {
   type = string
   sensitive = true
 }
+
+variable "blog_db_file" {
+  type = string
+  sensitive = true
+}
