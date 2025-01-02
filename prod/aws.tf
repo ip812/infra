@@ -172,7 +172,3 @@ resource "aws_secretsmanager_secret_version" "blog_db_file_version" {
   secret_id     = aws_secretsmanager_secret.blog_db_file.id
   secret_string = var.blog_db_file
 }
-
-resource "aws_secretsmanager_secret" "blog_port" {
-  name            = "blog_port"
-}
