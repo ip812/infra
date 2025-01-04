@@ -188,21 +188,3 @@ resource "aws_eip" "eip" {
     Environment  = var.env
   }
 }
-
-resource "aws_secretsmanager_secret" "blog_addr" {
-  name            = "blog_addr"
-}
-
-resource "aws_secretsmanager_secret_version" "blog_addr_version" {
-  secret_id     = aws_secretsmanager_secret.blog_addr.id
-  secret_string = var.blog_domain
-}
-
-resource "aws_secretsmanager_secret" "blog_db_file" {
-  name            = "blog_db_file"
-}
-
-resource "aws_secretsmanager_secret_version" "blog_db_file_version" {
-  secret_id     = aws_secretsmanager_secret.blog_db_file.id
-  secret_string = var.blog_db_file
-}

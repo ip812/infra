@@ -23,9 +23,12 @@ gpasswd -a ubuntu docker
 
 # Swarm
 docker swarm init
-printf ${aws_region} | docker secret create aws_region -
-printf ${aws_access_key_id} | docker secret create aws_access_key_id -
-printf ${aws_secret_access_key} | docker secret create aws_secret_access_key -
+printf ${blog_domain} | docker secret create blog_domain -
+printf ${blog_port} | docker secret create blog_port -
+printf ${blog_db_file} | docker secret create blog_db_file -
+printf ${blog_aws_region} | docker secret create blog_aws_region -
+printf ${blog_aws_access_key_id} | docker secret create blog_aws_access_key_id -
+printf ${blog_aws_secret_access_key} | docker secret create blog_aws_secret_access_key -
 
 curl -X POST \
   -H "Accept: application/vnd.github+json" \
