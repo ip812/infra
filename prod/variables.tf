@@ -70,16 +70,22 @@ variable "env" {
   type = string
 }
 
-variable "blog_domain" {
-  type = string
-}
-
 variable "github_access_token" {
   type      = string
   sensitive = true
 }
 
 variable "aws_account_id" {
+  type = string
+  sensitive = true
+}
+
+variable "blog_domain" {
+  type = string
+  sensitive = true
+}
+
+variable "blog_port" {
   type = string
   sensitive = true
 }

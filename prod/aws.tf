@@ -167,10 +167,13 @@ resource "aws_instance" "vm" {
   user_data = templatefile("scripts/vm-setup.sh", {
     admin_ssh_public_key = var.admin_ssh_public_key
     deploy_ssh_public_key = var.deploy_ssh_public_key
-    github_access_token= var.github_access_token
-    aws_region= var.aws_region
-    aws_access_key_id= var.aws_access_key
-    aws_secret_access_key = var.aws_secret_key
+    github_access_token = var.github_access_token
+    blog_domain = var.blog_domain
+    blog_port = var.blog_port
+    blog_db_file = var.blog_db_file
+    blog_aws_region = var.aws_region
+    blog_aws_access_key_id = var.aws_access_key
+    blog_aws_secret_access_key = var.aws_secret_key
   })
 
   tags = {
