@@ -115,7 +115,7 @@ resource "aws_security_group" "vm_sg" {
       protocol         = "tcp"
       security_groups  = []
       self             = false
-      to_port          = 9000
+      to_port          = 9443
     },
   ]
   egress = [
