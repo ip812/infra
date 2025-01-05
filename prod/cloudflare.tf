@@ -9,7 +9,7 @@ resource "cloudflare_dns_record" "traefik_dns_record" {
 
 resource "cloudflare_dns_record" "portainer_dns_record" {
   zone_id = var.cloudflare_blog_zone_id
-  name    = "portainer"
+  name    = "portainer.deviliablog.com"
   content = aws_eip.eip.public_ip
   type    = "A"
   ttl     = 1
