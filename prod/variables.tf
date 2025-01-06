@@ -94,3 +94,9 @@ variable "blog_db_file" {
   type = string
   sensitive = true
 }
+
+variable "whitelist_email_addresses" {
+  default = [
+    "ilia.yavorov.petrov@gmail.com",
+  ]
+}
