@@ -106,39 +106,6 @@ resource "aws_security_group" "vm_sg" {
       self             = false
       to_port          = 443
     },
-    {
-      cidr_blocks      = ["0.0.0.0/0"]
-      description      = "https"
-      from_port        = 0
-      ipv6_cidr_blocks = []
-      prefix_list_ids  = []
-      protocol         = "tcp"
-      security_groups  = []
-      self             = false
-      to_port          = 8000
-    },
-    {
-      cidr_blocks      = ["0.0.0.0/0"]
-      description      = "https"
-      from_port        = 0
-      ipv6_cidr_blocks = []
-      prefix_list_ids  = []
-      protocol         = "tcp"
-      security_groups  = []
-      self             = false
-      to_port          = 9000
-    },
-    {
-      cidr_blocks      = ["0.0.0.0/0"]
-      description      = "https"
-      from_port        = 0
-      ipv6_cidr_blocks = []
-      prefix_list_ids  = []
-      protocol         = "tcp"
-      security_groups  = []
-      self             = false
-      to_port          = 9443
-    },
   ]
   egress = [
     {
@@ -177,7 +144,7 @@ resource "aws_iam_role" "vm_role" {
 }
 
 resource "aws_iam_policy" "secrets_access" {
-  name        = "${var.organization}-${var.env}-secrets-access"
+  name   = "${var.organization}-${var.env}-secrets-access"
   policy = file("policies/vm-policy.json")
 }
 
@@ -196,16 +163,17 @@ resource "aws_instance" "vm" {
   instance_type          = "t2.micro"
   subnet_id              = aws_subnet.public_subnet_a.id
   vpc_security_group_ids = [aws_security_group.vm_sg.id]
-  iam_instance_profile = aws_iam_instance_profile.ec2_instance_profile.name
+  iam_instance_profile   = aws_iam_instance_profile.ec2_instance_profile.name
   user_data = templatefile("scripts/vm-setup.sh", {
-    admin_ssh_public_key = var.admin_ssh_public_key
-    deploy_ssh_public_key = var.deploy_ssh_public_key
-    github_access_token = var.github_access_token
-    blog_domain = var.blog_domain
-    blog_port = var.blog_port
-    blog_db_file = var.blog_db_file
-    blog_aws_region = var.aws_region
-    blog_aws_access_key_id = var.aws_access_key
+    admin_ssh_public_key       = var.admin_ssh_public_key
+    deploy_ssh_public_key      = var.deploy_ssh_public_key
+    github_access_token        = var.github_access_token
+    ip812_tunnel_token         = cloudflare_zero_trust_tunnel_cloudflared.ip812_tunnel.tunnel_token
+    blog_domain                = var.blog_domain
+    blog_port                  = var.blog_port
+    blog_db_file               = var.blog_db_file
+    blog_aws_region            = var.aws_region
+    blog_aws_access_key_id     = var.aws_access_key
     blog_aws_secret_access_key = var.aws_secret_key
   })
 

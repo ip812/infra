@@ -76,22 +76,27 @@ variable "github_access_token" {
 }
 
 variable "aws_account_id" {
-  type = string
+  type      = string
   sensitive = true
 }
 
 variable "blog_domain" {
-  type = string
+  type      = string
   sensitive = true
 }
 
 variable "blog_port" {
-  type = string
+  type      = string
   sensitive = true
 }
 
 variable "blog_db_file" {
-  type = string
+  type      = string
+  sensitive = true
+}
+
+variable "ip812_tunnel_secret" {
+  type      = string
   sensitive = true
 }
 

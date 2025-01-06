@@ -23,6 +23,7 @@ gpasswd -a ubuntu docker
 
 # Swarm
 docker swarm init
+printf ${ip812_tunnel_token} | docker secret create ip812_tunnel_token -
 printf ${blog_domain} | docker secret create blog_domain -
 printf ${blog_port} | docker secret create blog_port -
 printf ${blog_db_file} | docker secret create blog_db_file -

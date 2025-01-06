@@ -11,7 +11,7 @@ terraform {
       version = "4.49.1"
     }
     github = {
-      source = "integrations/github"
+      source  = "integrations/github"
       version = "6.4.0"
     }
   }
@@ -28,6 +28,6 @@ provider "cloudflare" {
 }
 
 provider "github" {
- token = var.github_access_token
- owner = var.organization
+  token = var.github_access_token
+  owner = var.organization
 }
