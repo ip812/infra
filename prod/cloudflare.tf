@@ -22,7 +22,7 @@ resource "cloudflare_access_policy" "traefik_policy" {
   decision       = "allow"
 
   include {
-    emails = ["iliayavorovpetrov@gmail.com"]
+    emails = ["ilia.yavorov.petrov@gmail.com"]
   }
 }
 
@@ -50,7 +50,7 @@ resource "cloudflare_access_policy" "portainer_policy" {
   decision       = "allow"
 
   include {
-    emails = ["iliayavorovpetrov@gmail.com"]
+    emails = ["ilia.yavorov.petrov@gmail.com"]
   }
 }
 
