@@ -103,15 +103,3 @@ resource "cloudflare_zero_trust_access_application" "blog_zt_app" {
   session_duration          = "24h"
   auto_redirect_to_identity = true
 }
-
-resource "cloudflare_access_policy" "blog_ap" {
-  account_id     = var.cloudflare_account_id
-  application_id = cloudflare_zero_trust_access_application.blog_zt_app.id
-  name           = var.organization
-  decision       = "allow"
-  precedence     = 1
-
-  include {
-    everyone = true
-  }
-}
