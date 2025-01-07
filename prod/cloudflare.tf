@@ -59,13 +59,13 @@ resource "cloudflare_zero_trust_access_application" "traefik_zt_app" {
   domain                    = "traefik.deviliablog.com"
   type                      = "self_hosted"
   session_duration          = "24h"
-  auto_redirect_to_identity = false
+  auto_redirect_to_identity = true
 }
 
 resource "cloudflare_access_policy" "traefik_ap" {
   account_id     = var.cloudflare_account_id
   application_id = cloudflare_zero_trust_access_application.traefik_zt_app.id
-  name           = var.organization
+  name           = "traefik"
   decision       = "allow"
   precedence     = 1
 
@@ -80,13 +80,13 @@ resource "cloudflare_zero_trust_access_application" "portainer_zt_app" {
   domain                    = "portainer.deviliablog.com"
   type                      = "self_hosted"
   session_duration          = "24h"
-  auto_redirect_to_identity = false
+  auto_redirect_to_identity = true
 }
 
 resource "cloudflare_access_policy" "portainer_ap" {
   account_id     = var.cloudflare_account_id
   application_id = cloudflare_zero_trust_access_application.portainer_zt_app.id
-  name           = var.organization
+  name           = "portainer"
   decision       = "allow"
   precedence     = 1
 
@@ -107,7 +107,7 @@ resource "cloudflare_zero_trust_access_application" "blog_zt_app" {
 resource "cloudflare_access_policy" "blog_ap" {
   account_id     = var.cloudflare_account_id
   application_id = cloudflare_zero_trust_access_application.blog_zt_app.id
-  name           = var.organization
+  name           = "blog"
   decision       = "allow"
   precedence     = 1
 
