@@ -94,24 +94,3 @@ resource "cloudflare_access_policy" "portainer_ap" {
     email = var.whitelist_email_addresses
   }
 }
-
-resource "cloudflare_zero_trust_access_application" "blog_zt_app" {
-  zone_id                   = var.cloudflare_blog_zone_id
-  name                      = "blog"
-  domain                    = "deviliablog.com"
-  type                      = "self_hosted"
-  session_duration          = "24h"
-  auto_redirect_to_identity = false
-}
-
-resource "cloudflare_access_policy" "blog_ap" {
-  account_id     = var.cloudflare_account_id
-  application_id = cloudflare_zero_trust_access_application.blog_zt_app.id
-  name           = "blog"
-  decision       = "allow"
-  precedence     = 1
-
-  include {
-    everyone = true
-  }
-}
