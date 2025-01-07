@@ -72,10 +72,6 @@ resource "cloudflare_access_policy" "traefik_ap" {
   include {
     email = var.whitelist_email_addresses
   }
-
-  require {
-    email = var.whitelist_email_addresses
-  }
 }
 
 resource "cloudflare_zero_trust_access_application" "portainer_zt_app" {
@@ -95,10 +91,6 @@ resource "cloudflare_access_policy" "portainer_ap" {
   precedence     = 1
 
   include {
-    email = var.whitelist_email_addresses
-  }
-
-  require {
     email = var.whitelist_email_addresses
   }
 }
