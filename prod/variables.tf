@@ -23,21 +23,6 @@ variable "cloudflare_blog_zone_id" {
   sensitive = true
 }
 
-variable "admin_ssh_public_key" {
-  type      = string
-  sensitive = true
-}
-
-variable "deploy_ssh_public_key" {
-  type      = string
-  sensitive = true
-}
-
-variable "deploy_ssh_private_key" {
-  type      = string
-  sensitive = true
-}
-
 variable "aws_region" {
   type = string
 }
@@ -58,7 +43,11 @@ variable "aws_public_subnet_a_cidr" {
   type = string
 }
 
-variable "aws_public_subnet_b_cidr" {
+variable "aws_private_subnet_a_cidr" {
+  type = string
+}
+
+variable "aws_private_subnet_b_cidr" {
   type = string
 }
 
