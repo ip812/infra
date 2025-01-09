@@ -23,12 +23,6 @@ resource "github_actions_secret" "apps_aws_secret_key" {
   plaintext_value = var.aws_secret_key
 }
 
-resource "github_actions_secret" "apps_hostname" {
-  repository      = "apps"
-  secret_name     = "HOSTNAME"
-  plaintext_value = aws_eip.eip.private_ip
-}
-
 resource "github_actions_secret" "apps_github_access_token" {
   repository      = "apps"
   secret_name     = "REPO_TOKEN"

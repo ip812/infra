@@ -16,9 +16,9 @@ resource "aws_internet_gateway" "igw" {
 
 resource "aws_subnet" "public_subnet_a" {
   vpc_id            = aws_vpc.vpc.id
-  cidr_block        = var.aws_private_subnet_a_cidr
+  cidr_block        = var.aws_public_subnet_a_cidr
   availability_zone = var.aws_az_a
-  map_customer_owned_ip_on_launch = true
+  map_public_ip_on_launch = true
   tags = {
     Organization = var.organization
     Environment  = var.env
@@ -42,48 +42,22 @@ resource "aws_route_table_association" "public_subnet_a_rt_association" {
   route_table_id = aws_route_table.public_subnet_a_rt.id
 }
 
-resource "aws_subnet" "private_subnet_a" {
+resource "aws_subnet" "public_subnet_b" {
   vpc_id            = aws_vpc.vpc.id
-  cidr_block        = var.aws_private_subnet_a_cidr
-  availability_zone = var.aws_az_a
-  tags = {
-    Organization = var.organization
-    Environment  = var.env
-  }
-}
-
-resource "aws_subnet" "private_subnet_b" {
-  vpc_id            = aws_vpc.vpc.id
-  cidr_block        = var.aws_private_subnet_b_cidr
+  cidr_block        = var.aws_public_subnet_b_cidr
   availability_zone = var.aws_az_b
+  map_public_ip_on_launch = true
   tags = {
     Organization = var.organization
     Environment  = var.env
   }
 }
 
-resource "aws_eip" "eip" {
-  domain     = "vpc"
-  tags = {
-    Organization = var.organization
-    Environment  = var.env
-  }
-}
-
-resource "aws_nat_gateway" "natgw" {
-  allocation_id = aws_eip.eip.id
-  subnet_id     = aws_subnet.public_subnet_a.id
-  tags = {
-    Organization = var.organization
-    Environment  = var.env
-  }
-}
-
-resource "aws_route_table" "private_subnet_a_rt" {
+resource "aws_route_table" "public_subnet_b_rt" {
   vpc_id = aws_vpc.vpc.id
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = aws_nat_gateway.natgw.id
+    gateway_id = aws_internet_gateway.igw.id
   }
   tags = {
     Organization = var.organization
@@ -91,32 +65,27 @@ resource "aws_route_table" "private_subnet_a_rt" {
   }
 }
 
-resource "aws_route_table_association" "private_subnet_a_rt_association" {
-  subnet_id      = aws_subnet.private_subnet_a.id
-  route_table_id = aws_route_table.private_subnet_a_rt.id
-}
-
-resource "aws_route_table" "private_subnet_b_rt" {
-  vpc_id = aws_vpc.vpc.id
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = aws_nat_gateway.natgw.id
-  }
-  tags = {
-    Organization = var.organization
-    Environment  = var.env
-  }
-}
-
-resource "aws_route_table_association" "private_subnet_b_rt_association" {
-  subnet_id      = aws_subnet.private_subnet_b.id
-  route_table_id = aws_route_table.private_subnet_b_rt.id
+resource "aws_route_table_association" "public_subnet_b_rt_association" {
+  subnet_id      = aws_subnet.public_subnet_b.id
+  route_table_id = aws_route_table.public_subnet_b_rt.id
 }
 
 resource "aws_security_group" "vm_sg" {
   vpc_id = aws_vpc.vpc.id
   ingress = []
-  egress = []
+  egress = [
+    {
+      cidr_blocks      = ["0.0.0.0/0"]
+      description      = "ssm"
+      from_port        = 0
+      ipv6_cidr_blocks = []
+      prefix_list_ids  = []
+      protocol         = "tcp"
+      security_groups  = []
+      self             = false
+      to_port          = 443
+    },
+  ]
   tags = {
     Organization = var.organization
     Environment  = var.env
@@ -125,7 +94,6 @@ resource "aws_security_group" "vm_sg" {
 
 resource "aws_iam_role" "vm_role" {
   name = "${var.organization}-${var.env}-ec2-role"
-
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -156,9 +124,10 @@ resource "aws_iam_instance_profile" "ec2_instance_profile" {
 }
 
 resource "aws_instance" "vm" {
-  ami                    = "ami-05c172c7f0d3aed00"
+  ami                    = "ami-0a628e1e89aaedf80"
   instance_type          = "t2.micro"
-  subnet_id              = aws_subnet.private_subnet_a.id
+  associate_public_ip_address = true
+  subnet_id              = aws_subnet.public_subnet_a.id
   vpc_security_group_ids = [aws_security_group.vm_sg.id]
   iam_instance_profile   = aws_iam_instance_profile.ec2_instance_profile.name
   user_data = templatefile("scripts/vm-setup.sh", {
@@ -171,7 +140,6 @@ resource "aws_instance" "vm" {
     blog_aws_access_key_id     = var.aws_access_key
     blog_aws_secret_access_key = var.aws_secret_key
   })
-
   tags = {
     Organization = var.organization
     Environment  = var.env

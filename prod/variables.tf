@@ -43,11 +43,7 @@ variable "aws_public_subnet_a_cidr" {
   type = string
 }
 
-variable "aws_private_subnet_a_cidr" {
-  type = string
-}
-
-variable "aws_private_subnet_b_cidr" {
+variable "aws_public_subnet_b_cidr" {
   type = string
 }
 
