@@ -1,15 +1,8 @@
 #!/bin/bash
 
-# Add Cloudflare's package signing key
-mkdir -p --mode=0755 /usr/share/keyrings
-curl -fsSL https://pkg.cloudflare.com/cloudflare-main.gpg | tee /usr/share/keyrings/cloudflare-main.gpg >/dev/null
-
-# Add Cloudflare's apt repo to your apt repositories
-echo "deb [signed-by=/usr/share/keyrings/cloudflare-main.gpg] https://pkg.cloudflare.com/cloudflared $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/cloudflared.list
-
 # Dependencies
 apt-get update -y
-apt-get install -y tmux vim cloudflared
+apt-get install -y tmux vim
 
 # Dotfiles
 cd /home/ubuntu
@@ -19,6 +12,9 @@ ln -s /home/ubuntu/.vm-dotfiles/.tmux.conf /home/ubuntu/.tmux.conf
 ln -s /home/ubuntu/.vm-dotfiles/.vimrc /home/ubuntu/.vimrc
 ln -s /home/ubuntu/.vm-dotfiles/.tmux.conf /root/.tmux.conf
 ln -s /home/ubuntu/.vm-dotfiles/.vimrc /root/.vimrc
+
+# Envs
+echo 'IP812_TUNNEL_TOKEN=${ip812_tunnel_token}' | tee -a /etc/environment
 
 # Docker
 curl -fsSl https://get.docker.com | sh
@@ -40,7 +36,4 @@ curl -X POST \
   -H "X-GitHub-Api-Version: 2022-11-28" \
   https://api.github.com/repos/ip812/apps/actions/workflows/deploy.yml/dispatches \
   -d '{"ref": "main"}'
-
-# Run cloudflare tunnel
-while true; do cloudflared tunnel run --token ${ip812_tunnel_token}; done
 
