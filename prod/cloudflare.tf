@@ -62,7 +62,7 @@ resource "cloudflare_zero_trust_access_application" "traefik_zt_app" {
   auto_redirect_to_identity = true
 }
 
-resource "cloudflare_access_policy" "traefik_ap" {
+resource "cloudflare_zero_trust_access_policy" "traefik_ap" {
   account_id     = var.cloudflare_account_id
   application_id = cloudflare_zero_trust_access_application.traefik_zt_app.id
   name           = "traefik"
@@ -83,7 +83,7 @@ resource "cloudflare_zero_trust_access_application" "portainer_zt_app" {
   auto_redirect_to_identity = true
 }
 
-resource "cloudflare_access_policy" "portainer_ap" {
+resource "cloudflare_zero_trust_access_policy" "portainer_ap" {
   account_id     = var.cloudflare_account_id
   application_id = cloudflare_zero_trust_access_application.portainer_zt_app.id
   name           = "portainer"
