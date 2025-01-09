@@ -32,7 +32,7 @@ resource "github_actions_secret" "apps_github_access_token" {
 resource "github_actions_secret" "apps_ip812_tunnel_token" {
   repository      = "apps"
   secret_name     = "IP812_TUNNEL_TOKEN"
-  plaintext_value = var.cloudflare_zero_trust_tunnel_cloudflared.ip812_tunnel.token
+  plaintext_value = cloudflare_zero_trust_tunnel_cloudflared.ip812_tunnel.token
 }
 
 resource "github_actions_secret" "blog_aws_account_id" {
