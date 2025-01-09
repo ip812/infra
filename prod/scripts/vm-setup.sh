@@ -13,9 +13,6 @@ ln -s /home/ubuntu/.vm-dotfiles/.vimrc /home/ubuntu/.vimrc
 ln -s /home/ubuntu/.vm-dotfiles/.tmux.conf /root/.tmux.conf
 ln -s /home/ubuntu/.vm-dotfiles/.vimrc /root/.vimrc
 
-# Envs
-echo 'IP812_TUNNEL_TOKEN=${ip812_tunnel_token}' | tee -a /etc/environment
-
 # Docker
 curl -fsSl https://get.docker.com | sh
 gpasswd -a ubuntu docker
