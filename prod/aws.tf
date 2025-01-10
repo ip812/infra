@@ -125,7 +125,7 @@ resource "aws_iam_instance_profile" "ec2_instance_profile" {
 
 resource "aws_instance" "vm" {
   ami                    = "ami-0a628e1e89aaedf80"
-  instance_type          = "t3.micro"
+  instance_type          = "t2.micro"
   associate_public_ip_address = true
   subnet_id              = aws_subnet.public_subnet_a.id
   vpc_security_group_ids = [aws_security_group.vm_sg.id]
