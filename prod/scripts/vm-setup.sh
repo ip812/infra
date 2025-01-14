@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Setup SQLite
-mkdir -p /var/lib/blog
-
 # Dependencies
 apt-get update -y
 apt-get install -y tmux vim
