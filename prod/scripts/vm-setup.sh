@@ -2,7 +2,12 @@
 
 # Dependencies
 apt-get update -y
-apt-get install -y tmux vim
+apt-get install -y tmux vim sqlite3
+
+# Litestream
+wget https://github.com/benbjohnson/litestream/releases/download/v0.3.13/litestream-v0.3.13-linux-amd64.deb
+dpkg -i litestream-v0.3.13-linux-amd64.deb
+rm litestream-v0.3.13-linux-amd64.deb
 
 # Dotfiles
 cd /home/ubuntu

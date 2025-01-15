@@ -147,21 +147,27 @@ resource "aws_instance" "vm" {
 }
 
 resource "aws_s3_bucket" "sqlite_backup" {
-  bucket = "sqlite-backup"
+  bucket = "${var.organization}-sqlite-backup"
   tags = {
     Organization = var.organization
     Environment  = var.env
   }
 }
 
-resource "aws_s3_bucket_acl" "sqlite_backup_acl" {
-  bucket = aws_s3_bucket.sqlite_backup.id
-  acl    = "private"
-}
-
 resource "aws_s3_bucket_versioning" "sqlite_backup_versioning" {
   bucket = aws_s3_bucket.sqlite_backup.id
   versioning_configuration {
     status = "Enabled"
+  }
+}
+
+resource "aws_vpc_endpoint" "sqlite_backup_vpc_endpoint" {
+  vpc_id       = aws_vpc.vpc.id
+  service_name = "com.amazonaws.${var.aws_region}.s3"
+  vpc_endpoint_type = "Gateway"
+  route_table_ids = [aws_route_table.public_subnet_a_rt.id, aws_route_table.public_subnet_b_rt.id]
+  tags = {
+    Organization = var.organization
+    Environment  = var.env
   }
 }
