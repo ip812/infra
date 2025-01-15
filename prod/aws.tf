@@ -145,3 +145,23 @@ resource "aws_instance" "vm" {
     Environment  = var.env
   }
 }
+
+resource "aws_s3_bucket" "sqlite_backup" {
+  bucket = "sqlite-backup"
+  tags = {
+    Organization = var.organization
+    Environment  = var.env
+  }
+}
+
+resource "aws_s3_bucket_acl" "sqlite_backup_acl" {
+  bucket = aws_s3_bucket.sqlite_backup.id
+  acl    = "private"
+}
+
+resource "aws_s3_bucket_versioning" "sqlite_backup_versioning" {
+  bucket = aws_s3_bucket.sqlite_backup.id
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
