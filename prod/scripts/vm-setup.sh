@@ -11,10 +11,11 @@ chmod -R ugo+r /home/ubuntu/.vm-dotfiles
 ln -s /home/ubuntu/.vm-dotfiles/.tmux.conf /root/.tmux.conf
 ln -s /home/ubuntu/.vm-dotfiles/.vimrc /root/.vimrc
 
-bashrc_cnt=$(cat <<'EOF'
+brc=$(cat <<'EOF'
 # Docker
 alias d="docker"
 alias dls="docker service ls"
+alias mdls="watch -n 1 docker service ls"
 alias dps="docker ps -a"
 alias dlog="docker service logs -f"
 
@@ -22,26 +23,26 @@ db() {
     tmpfile=$(mktemp)
 
     find /var/lib/docker/volumes -maxdepth 3 -mindepth 3 -type f -name "*.db" | while IFS= read -r filepath; do
-        basename=$(basename "${filepath}")
-        echo "${basename}|${filepath}" >> "${tmpfile}"
+        basename=$(basename "$filepath")
+        echo "$basename|$filepath" >> "$tmpfile"
     done
 
-    selected=$(cut -d '|' -f 1 "${tmpfile}" | fzf --prompt="Select a database file: ")
-    if [[ -n "${selected}" ]]; then
-        selected_file=$(grep "^${selected}|" "${tmpfile}" | cut -d '|' -f 2)
-        sqlite3 "${selected_file}"
+    selected=$(cut -d '|' -f 1 "$tmpfile" | fzf --prompt="Select a database file: ")
+    if [[ -n "$selected" ]]; then
+        selected_file=$(grep "^$selected|" "$tmpfile" | cut -d '|' -f 2)
+        sqlite3 "$selected_file"
     else
         echo "No file selected."
     fi
 
-    rm -f "${tmpfile}"
+    rm -f "$tmpfile"
 }
 EOF
 )
-echo "${bashrc_cnt}" >> ~/.bashrc
+echo "$brc" >> ~/.bashrc
 
 # Litestream
-litestream_cfg=$(cat <<EOF
+lstream=$(cat <<EOF
 dbs:
   - path: /path/to/your/database.db
     replicas:
@@ -51,7 +52,7 @@ dbs:
         region: your-region
 EOF
 )
-echo "${litestream_cfg}" | tee /etc/litestream.yml > /dev/null
+echo "$lstream" | tee /etc/litestream.yml > /dev/null
 
 # Docker
 curl -fsSl https://get.docker.com | sh
