@@ -1,9 +1,15 @@
-# This secret will be added manulay, so the CI/CD pipeline to be able to create the infrastructure from scratch.
+# This file contains all needed secrets for the CI/CD pipeline
+
+# This secret has to be added manulay, so the CI/CD pipeline to be able to create the infrastructure from scratch.
 # resource "github_actions_secret" "infr_terrafrom_api_token" {
 #  repository      = "infr"
 #  secret_name     = "TF_API_TOKEN"
 #  plaintext_value = var.terraform_api_token
 # }
+
+#################################################################################
+#                                     Apps                                      #
+#################################################################################
 
 resource "github_actions_secret" "apps_aws_account_id" {
   repository      = "apps"
@@ -35,11 +41,9 @@ resource "github_actions_secret" "apps_ip812_tunnel_token" {
   plaintext_value = cloudflare_zero_trust_tunnel_cloudflared.ip812_tunnel.tunnel_token
 }
 
-resource "github_actions_secret" "blog_aws_account_id" {
-  repository      = "blog"
-  secret_name     = "AWS_REGION"
-  plaintext_value = var.aws_region
-}
+#################################################################################
+#                                     Blog                                      #
+#################################################################################
 
 resource "github_actions_secret" "blog_aws_access_key" {
   repository      = "blog"
@@ -53,8 +57,15 @@ resource "github_actions_secret" "blog_aws_secret_key" {
   plaintext_value = var.aws_secret_key
 }
 
+resource "github_actions_secret" "blog_aws_account_id" {
+  repository      = "blog"
+  secret_name     = "AWS_REGION"
+  plaintext_value = var.aws_region
+}
+
 resource "github_actions_secret" "blog_github_access_token" {
   repository      = "blog"
   secret_name     = "REPO_TOKEN"
   plaintext_value = var.github_access_token
 }
+

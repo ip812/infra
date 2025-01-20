@@ -1,50 +1,12 @@
-variable "aws_access_key" {
+# This file contains all common variables that are used in the project
+
+#################################################################################
+#                                   Variables                                   #
+#################################################################################
+
+variable "aws_account_id" {
   type      = string
   sensitive = true
-}
-
-variable "aws_secret_key" {
-  type      = string
-  sensitive = true
-}
-
-variable "cloudflare_api_token" {
-  type      = string
-  sensitive = true
-}
-
-variable "cloudflare_account_id" {
-  type      = string
-  sensitive = true
-}
-
-variable "cloudflare_blog_zone_id" {
-  type      = string
-  sensitive = true
-}
-
-variable "aws_region" {
-  type = string
-}
-
-variable "aws_az_a" {
-  type = string
-}
-
-variable "aws_az_b" {
-  type = string
-}
-
-variable "aws_vpc_cidr" {
-  type = string
-}
-
-variable "aws_public_subnet_a_cidr" {
-  type = string
-}
-
-variable "aws_public_subnet_b_cidr" {
-  type = string
 }
 
 variable "organization" {
@@ -53,36 +15,6 @@ variable "organization" {
 
 variable "env" {
   type = string
-}
-
-variable "github_access_token" {
-  type      = string
-  sensitive = true
-}
-
-variable "aws_account_id" {
-  type      = string
-  sensitive = true
-}
-
-variable "blog_domain" {
-  type      = string
-  sensitive = true
-}
-
-variable "blog_port" {
-  type      = string
-  sensitive = true
-}
-
-variable "blog_db_file" {
-  type      = string
-  sensitive = true
-}
-
-variable "ip812_tunnel_secret" {
-  type      = string
-  sensitive = true
 }
 
 variable "whitelist_email_addresses" {
