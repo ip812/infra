@@ -10,6 +10,6 @@ aws_vpc_cidr             = "10.0.0.0/16"
 aws_public_subnet_a_cidr = "10.0.1.0/24"
 aws_public_subnet_b_cidr = "10.0.2.0/24"
 
-ip812_tunnel_secret = "ip812_tunnel"
+ip812_tunnel_name = "ip812_tunnel"
 
 blog_domain = "deviliablog.com"
