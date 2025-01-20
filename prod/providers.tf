@@ -24,6 +24,11 @@ variable "cloudflare_account_id" {
   sensitive = true
 }
 
+variable "cloudflare_ip812_zone_id" {
+  type      = string
+  sensitive = true
+}
+
 variable "cloudflare_blog_zone_id" {
   type      = string
   sensitive = true

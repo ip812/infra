@@ -23,7 +23,7 @@ resource "cloudflare_zero_trust_access_application" "traefik_zt_app" {
 }
 
 resource "cloudflare_zero_trust_access_policy" "traefik_ap" {
-  account_id     = var.cloudflare_account_id
+  zone_id                   = var.cloudflare_blog_zone_id
   application_id = cloudflare_zero_trust_access_application.traefik_zt_app.id
   name           = "traefik"
   decision       = "allow"
