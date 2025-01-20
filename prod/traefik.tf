@@ -14,7 +14,7 @@ resource "cloudflare_record" "traefik_dns_record" {
 }
 
 resource "cloudflare_zero_trust_access_application" "traefik_zt_app" {
-  zone_id                   = var.cloudflare_blog_zone_id
+  zone_id                   = var.cloudflare_ip812_zone_id
   name                      = "traefik"
   domain                    = "traefik.ip812.com"
   type                      = "self_hosted"
@@ -23,7 +23,7 @@ resource "cloudflare_zero_trust_access_application" "traefik_zt_app" {
 }
 
 resource "cloudflare_zero_trust_access_policy" "traefik_ap" {
-  zone_id        = var.cloudflare_blog_zone_id
+  zone_id        = var.cloudflare_ip812_zone_id
   application_id = cloudflare_zero_trust_access_application.traefik_zt_app.id
   name           = "traefik"
   decision       = "allow"
