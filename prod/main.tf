@@ -49,9 +49,9 @@ resource "aws_internet_gateway" "igw" {
 }
 
 resource "aws_subnet" "public_subnet_a" {
-  vpc_id            = aws_vpc.vpc.id
-  cidr_block        = var.aws_public_subnet_a_cidr
-  availability_zone = var.aws_az_a
+  vpc_id                  = aws_vpc.vpc.id
+  cidr_block              = var.aws_public_subnet_a_cidr
+  availability_zone       = var.aws_az_a
   map_public_ip_on_launch = true
   tags = {
     Organization = var.organization
@@ -77,9 +77,9 @@ resource "aws_route_table_association" "public_subnet_a_rt_association" {
 }
 
 resource "aws_subnet" "public_subnet_b" {
-  vpc_id            = aws_vpc.vpc.id
-  cidr_block        = var.aws_public_subnet_b_cidr
-  availability_zone = var.aws_az_b
+  vpc_id                  = aws_vpc.vpc.id
+  cidr_block              = var.aws_public_subnet_b_cidr
+  availability_zone       = var.aws_az_b
   map_public_ip_on_launch = true
   tags = {
     Organization = var.organization
@@ -109,7 +109,7 @@ resource "aws_route_table_association" "public_subnet_b_rt_association" {
 #################################################################################
 
 resource "aws_security_group" "vm_sg" {
-  vpc_id = aws_vpc.vpc.id
+  vpc_id  = aws_vpc.vpc.id
   ingress = []
   egress = [
     {
@@ -162,12 +162,12 @@ resource "aws_iam_instance_profile" "ec2_instance_profile" {
 }
 
 resource "aws_instance" "vm" {
-  ami                    = "ami-0a628e1e89aaedf80"
-  instance_type          = "t2.micro"
+  ami                         = "ami-0a628e1e89aaedf80"
+  instance_type               = "t2.micro"
   associate_public_ip_address = true
-  subnet_id              = aws_subnet.public_subnet_a.id
-  vpc_security_group_ids = [aws_security_group.vm_sg.id]
-  iam_instance_profile   = aws_iam_instance_profile.ec2_instance_profile.name
+  subnet_id                   = aws_subnet.public_subnet_a.id
+  vpc_security_group_ids      = [aws_security_group.vm_sg.id]
+  iam_instance_profile        = aws_iam_instance_profile.ec2_instance_profile.name
   user_data = templatefile("scripts/vm-setup.sh", {
     github_access_token        = var.github_access_token
     ip812_tunnel_token         = cloudflare_zero_trust_tunnel_cloudflared.ip812_tunnel.tunnel_token
