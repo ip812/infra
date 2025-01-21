@@ -12,13 +12,6 @@ ln -s /home/ubuntu/.vm-dotfiles/.tmux.conf /root/.tmux.conf
 ln -s /home/ubuntu/.vm-dotfiles/.vimrc /root/.vimrc
 
 brc=$(cat <<'EOF'
-# Docker
-alias d="docker"
-alias dls="docker service ls"
-alias mdls="watch -n 1 docker service ls"
-alias dps="docker ps -a"
-alias dlog="docker service logs -f"
-
 db() {
     tmpfile=$(mktemp)
 
@@ -41,6 +34,18 @@ EOF
 )
 echo "$brc" >> ~/.bashrc
 
+# Traefik
+trfk=$(cat <<EOF
+http:
+  middlewares:
+    cloudflarewarp:
+      plugin:
+        cloudflarewarp:
+          disabledefaultcfips: false
+EOF
+)
+echo "$trfk" | tee /etc/traefik/dynamic-config > /dev/null
+
 # Litestream
 lstream=$(cat <<EOF
 dbs:
@@ -52,7 +57,7 @@ dbs:
         region: your-region
 EOF
 )
-echo "$lstream" | tee /etc/litestream.yml > /dev/null
+echo "$lstream" | tee /etc/litestream/config > /dev/null
 
 # Docker
 curl -fsSl https://get.docker.com | sh
