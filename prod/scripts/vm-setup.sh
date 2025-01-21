@@ -35,6 +35,7 @@ EOF
 echo "$brc" >> ~/.bashrc
 
 # Traefik
+mkidr -p /etc/traefik
 trfk=$(cat <<EOF
 http:
   middlewares:
@@ -47,6 +48,7 @@ EOF
 echo "$trfk" | tee /etc/traefik/dynamic-config > /dev/null
 
 # Litestream
+mkidr -p /etc/litestream
 lstream=$(cat <<EOF
 dbs:
   - path: /path/to/your/database.db
