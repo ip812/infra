@@ -1,5 +1,20 @@
 # This file contains all needed secrets for the CI/CD pipeline
 
+#################################################################################
+#                                   Variables                                   #
+#################################################################################
+
+variable "discord_deployments_webhook_url" {
+  type      = string
+  sensitive = true
+}
+
+#################################################################################
+#                                   Secrets                                     #
+#################################################################################
+
+# Infra
+
 # This secret has to be added manulay, so the CI/CD pipeline to be able to create the infrastructure from scratch.
 # resource "github_actions_secret" "infr_terrafrom_api_token" {
 #  repository      = "infr"
@@ -7,9 +22,7 @@
 #  plaintext_value = var.terraform_api_token
 # }
 
-#################################################################################
-#                                     Apps                                      #
-#################################################################################
+# Apps
 
 resource "github_actions_secret" "apps_aws_account_id" {
   repository      = "apps"
@@ -31,7 +44,7 @@ resource "github_actions_secret" "apps_aws_secret_key" {
 
 resource "github_actions_secret" "apps_github_access_token" {
   repository      = "apps"
-  secret_name     = "REPO_TOKEN"
+  secret_name     = "GITHUB_ACCESS_TOKEN"
   plaintext_value = var.github_access_token
 }
 
@@ -41,9 +54,14 @@ resource "github_actions_secret" "apps_ip812_tunnel_token" {
   plaintext_value = cloudflare_zero_trust_tunnel_cloudflared.ip812_tunnel.tunnel_token
 }
 
-#################################################################################
-#                                     Blog                                      #
-#################################################################################
+
+resource "github_actions_secret" "apps_discord_deployments_webhook_url" {
+  repository      = "apps"
+  secret_name     = "DISCORD_DEPLOYMENTS_WEBHOOK_URL"
+  plaintext_value = var.discord_deployments_webhook_url
+}
+
+# Blog
 
 resource "github_actions_secret" "blog_aws_access_key" {
   repository      = "blog"
@@ -65,7 +83,7 @@ resource "github_actions_secret" "blog_aws_account_id" {
 
 resource "github_actions_secret" "blog_github_access_token" {
   repository      = "blog"
-  secret_name     = "REPO_TOKEN"
+  secret_name     = "GITHUB_ACCESS_TOKEN"
   plaintext_value = var.github_access_token
 }
 
