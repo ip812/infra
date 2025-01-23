@@ -44,7 +44,7 @@ resource "github_actions_secret" "apps_aws_secret_key" {
 
 resource "github_actions_secret" "apps_github_access_token" {
   repository      = "apps"
-  secret_name     = "GITHUB_ACCESS_TOKEN"
+  secret_name     = "ACCESS_TOKEN"
   plaintext_value = var.github_access_token
 }
 
@@ -83,7 +83,7 @@ resource "github_actions_secret" "blog_aws_account_id" {
 
 resource "github_actions_secret" "blog_github_access_token" {
   repository      = "blog"
-  secret_name     = "GITHUB_ACCESS_TOKEN"
+  secret_name     = "ACCESS_TOKEN"
   plaintext_value = var.github_access_token
 }
 
