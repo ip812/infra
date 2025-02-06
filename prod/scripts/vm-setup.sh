@@ -34,33 +34,6 @@ EOF
 )
 echo "$brc" >> ~/.bashrc
 
-# Traefik
-mkidr -p /etc/traefik
-trfk=$(cat <<EOF
-http:
-  middlewares:
-    cloudflarewarp:
-      plugin:
-        cloudflarewarp:
-          disabledefaultcfips: false
-EOF
-)
-echo "$trfk" | tee /etc/traefik/dynamic-config > /dev/null
-
-# Litestream
-mkidr -p /etc/litestream
-lstream=$(cat <<EOF
-dbs:
-  - path: /path/to/your/database.db
-    replicas:
-      - type: s3
-        bucket: your-s3-bucket
-        path: /path/in/s3
-        region: your-region
-EOF
-)
-echo "$lstream" | tee /etc/litestream/config > /dev/null
-
 # Docker
 curl -fsSl https://get.docker.com | sh
 gpasswd -a ubuntu docker
