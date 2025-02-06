@@ -2,7 +2,17 @@
 
 # Dependencies
 apt-get update -y
-apt-get install -y tmux vim sqlite3 fzf
+apt-get install -y tmux vim curl unzip sqlite3 fzf
+
+# AWS cli 
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+./aws/install
+
+# AWS credentials & config
+mkdir -p ~/.aws
+echo -e "[default]\nregion = ${blog_aws_region}\noutput = json" > ~/.aws/config
+echo -e "[default]\naws_access_key_id = ${blog_aws_access_key_id}\naws_secret_access_key = ${blog_aws_secret_access_key}" > ~/.aws/credentials
 
 # Dotfiles
 cd /home/ubuntu
@@ -37,6 +47,7 @@ echo "$brc" >> ~/.bashrc
 # Docker
 curl -fsSl https://get.docker.com | sh
 gpasswd -a ubuntu docker
+aws ecr get-login-password --region ${blog_aws_region} | docker login --username AWS --password-stdin 678468774710.dkr.ecr.${blog_aws_region}.amazonaws.com
 
 # Swarm init & secrets
 docker swarm init
