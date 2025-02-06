@@ -38,7 +38,7 @@ resource "cloudflare_record" "blog_dns_record" {
 
 resource "aws_ecr_repository" "blog_ecr_repository" {
   name                 = "${var.organization}/blog"
-  image_tag_mutability = "MUTABLE"
+  image_tag_mutability = "IMMUTABLE"
   tags = {
     Organization = var.organization
     Environment  = var.env
