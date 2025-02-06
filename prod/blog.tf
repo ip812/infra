@@ -37,7 +37,7 @@ resource "cloudflare_record" "blog_dns_record" {
 #################################################################################
 
 resource "aws_ecr_repository" "blog_ecr_repository" {
-  name                 = "blog"
+  name                 = "${var.organization}/blog"
   image_tag_mutability = "MUTABLE"
   tags = {
     Organization = var.organization
