@@ -14,7 +14,6 @@ variable "discord_deployments_webhook_url" {
 #################################################################################
 
 # Infra
-
 # This secret has to be added manulay, so the CI/CD pipeline to be able to create the infrastructure from scratch.
 # resource "github_actions_secret" "infr_terrafrom_api_token" {
 #  repository      = "infr"
@@ -23,7 +22,6 @@ variable "discord_deployments_webhook_url" {
 # }
 
 # Apps
-
 resource "github_actions_secret" "apps_aws_account_id" {
   repository      = "apps"
   secret_name     = "AWS_REGION"
@@ -44,7 +42,7 @@ resource "github_actions_secret" "apps_aws_secret_key" {
 
 resource "github_actions_secret" "apps_github_access_token" {
   repository      = "apps"
-  secret_name     = "ACCESS_TOKEN"
+  secret_name     = "GITHUB_ACCESS_TOKEN"
   plaintext_value = var.github_access_token
 }
 
@@ -62,7 +60,6 @@ resource "github_actions_secret" "apps_discord_deployments_webhook_url" {
 }
 
 # Blog
-
 resource "github_actions_secret" "blog_aws_access_key" {
   repository      = "blog"
   secret_name     = "AWS_ACCESS_KEY_ID"
@@ -83,7 +80,7 @@ resource "github_actions_secret" "blog_aws_account_id" {
 
 resource "github_actions_secret" "blog_github_access_token" {
   repository      = "blog"
-  secret_name     = "ACCESS_TOKEN"
+  secret_name     = "GITHUB_ACCESS_TOKEN"
   plaintext_value = var.github_access_token
 }
 
