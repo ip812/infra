@@ -22,6 +22,12 @@ variable "discord_deployments_webhook_url" {
 # }
 
 # Apps
+resource "github_actions_secret" "apps_org" {
+  repository      = "apps"
+  secret_name     = "ORG"
+  plaintext_value = var.organization
+}
+
 resource "github_actions_secret" "apps_aws_account_id" {
   repository      = "apps"
   secret_name     = "AWS_REGION"
@@ -51,7 +57,6 @@ resource "github_actions_secret" "apps_ip812_tunnel_token" {
   secret_name     = "CF_TUNNEL_TOKEN"
   plaintext_value = cloudflare_zero_trust_tunnel_cloudflared.ip812_tunnel.tunnel_token
 }
-
 
 resource "github_actions_secret" "apps_discord_deployments_webhook_url" {
   repository      = "apps"
