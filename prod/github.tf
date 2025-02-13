@@ -48,7 +48,7 @@ resource "github_actions_secret" "apps_github_access_token" {
 
 resource "github_actions_secret" "apps_ip812_tunnel_token" {
   repository      = "apps"
-  secret_name     = "IP812_TUNNEL_TOKEN"
+  secret_name     = "CF_TUNNEL_TOKEN"
   plaintext_value = cloudflare_zero_trust_tunnel_cloudflared.ip812_tunnel.tunnel_token
 }
 
