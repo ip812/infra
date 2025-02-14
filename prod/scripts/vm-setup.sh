@@ -63,6 +63,6 @@ curl -X POST \
   -H "Accept: application/vnd.github+json" \
   -H "Authorization: token ${github_access_token}" \
   -H "X-GitHub-Api-Version: 2022-11-28" \
-  https://api.github.com/repos/ip812/apps/actions/workflows/deploy.yml/dispatches \
+  https://api.github.com/repos/ip812/apps/actions/workflows/init-deploy.yml/dispatches \
   -d '{"ref": "main"}'
 
