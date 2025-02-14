@@ -16,10 +16,16 @@ variable "discord_deployments_webhook_url" {
 # Infra
 # This secret has to be added manulay, so the CI/CD pipeline to be able to create the infrastructure from scratch.
 # resource "github_actions_secret" "infr_terrafrom_api_token" {
-#  repository      = "infr"
+#  repository      = "infra"
 #  secret_name     = "TF_API_TOKEN"
 #  plaintext_value = var.terraform_api_token
 # }
+
+resource "github_actions_secret" "apps_org" {
+  repository      = "infra"
+  secret_name     = "ORG"
+  plaintext_value = var.organization
+}
 
 # Apps
 resource "github_actions_secret" "apps_org" {
