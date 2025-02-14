@@ -8,17 +8,14 @@ on:
       - prod/**
 
 env:
-  TF_CLOUD_ORGANIZATION: ip812
-  TF_API_TOKEN: ${{ secrets.TF_API_TOKEN }}
-  TF_WORKSPACE: prod
-  CONFIG_DIRECTORY: prod
+  TF_CLOUD_ORGANIZATION: ${{ secrets.ORG }}
 
 jobs:
   terraform-cloud-apply-run:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Set up Terraform
@@ -26,25 +23,24 @@ jobs:
         with:
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
-      - name: Upload Terraform Configuration to HCP
+      - name: Upload Terraform configuration to HCP
         uses: hashicorp/tfc-workflows-github/actions/upload-configuration@v1.3.2
         id: upload
         with:
-          workspace: ${{ env.TF_WORKSPACE }}
-          directory: ${{ env.CONFIG_DIRECTORY }}
+          workspace: prod
+          directory: prod 
 
-      - name: Create Terraform Apply Run
+      - name: Create Terraform apply run
         uses: hashicorp/tfc-workflows-github/actions/create-run@v1.3.2
         id: create-run
         with:
-          workspace: ${{ env.TF_WORKSPACE }}
+          workspace: prod
           configuration_version: ${{ steps.upload.outputs.configuration_version_id }}
 
-      - name: Apply Terraform Run
+      - name: Apply Terraform run
         uses: hashicorp/tfc-workflows-github/actions/apply-run@v1.3.2
         id: apply
         if: ${{ fromJSON(steps.create-run.outputs.payload).data.attributes.actions.IsConfirmable }}
         with:
           run: ${{ steps.create-run.outputs.run_id }}
-          comment: "Apply Run from GitHub Actions CI ${{ github.sha }}"
 
