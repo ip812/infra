@@ -1,0 +1,29 @@
+---
+name: Infracost
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - prod/**
+
+jobs:
+  terraform-cloud-apply-run:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Infracost
+        uses: infracost/actions/setup@v3
+        with:
+          api-key: ${{ secrets.INFRACOST_API_KEY }}
+
+      - name: Run Infracost on default branch and update Infracost Cloud
+        run: |
+          infracost breakdown --path=prod \
+                    --format=json \
+                    --out-file=infracost.json
+
