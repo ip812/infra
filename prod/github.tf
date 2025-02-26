@@ -21,10 +21,16 @@ variable "discord_deployments_webhook_url" {
 #  plaintext_value = var.terraform_api_token
 # }
 
-resource "github_actions_secret" "apps_org" {
+resource "github_actions_secret" "infra_org" {
   repository      = "infra"
   secret_name     = "ORG"
   plaintext_value = var.organization
+}
+
+resource "github_actions_secret" "infra_infracost_api_key" {
+  repository      = "infra"
+  secret_name     = "INFRACOST_API_KEY"
+  plaintext_value = var.infracost_api_key
 }
 
 # Apps
