@@ -27,3 +27,6 @@ jobs:
                     --format=json \
                     --out-file=infracost.json
 
+          cat infracost.json
+          infracost upload --path=infracost.json 
+

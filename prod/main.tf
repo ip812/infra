@@ -8,10 +8,6 @@ variable "aws_region" {
   type = string
 }
 
-variable "aws_regioni_b" {
-  type = string
-}
-
 variable "aws_az_a" {
   type = string
 }
