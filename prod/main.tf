@@ -178,10 +178,6 @@ resource "aws_iam_instance_profile" "ec2_instance_profile" {
 }
 
 resource "aws_instance" "vm" {
-  depends_on = [
-    cloudflare_zero_trust_tunnel_cloudflared.tunnel,
-  ]
-
   ami                         = "ami-0a628e1e89aaedf80"
   instance_type               = "t2.micro"
   associate_public_ip_address = true
@@ -231,9 +227,6 @@ resource "aws_instance" "vm" {
   # Swarm init & secrets
   echo "Setting up Docker Swarm starts"
   docker swarm init
-  printf ${cloudflare_zero_trust_tunnel_cloudflared.tunnel.tunnel_token} | docker secret create cf_tunnel_token -
-  printf ${var.pgadmin_email} | docker secret create pgadmin_email -
-  printf ${var.pgadmin_password} | docker secret create pgadmin_password -
   printf ${var.go_template_domain} | docker secret create go_template_domain -
   printf ${var.go_template_port} | docker secret create go_template_port -
   printf ${var.go_template_db_name} | docker secret create go_template_db_name -

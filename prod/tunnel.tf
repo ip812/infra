@@ -23,6 +23,11 @@ resource "cloudflare_zero_trust_tunnel_cloudflared" "tunnel" {
   secret     = var.tunnel_secret
 }
 
+output "tunnel_token" {
+  value     = cloudflare_zero_trust_tunnel_cloudflared.tunnel.tunnel_token
+  sensitive = true
+}
+
 resource "cloudflare_zero_trust_tunnel_cloudflared_config" "tunnel_cfg" {
   account_id = var.cloudflare_account_id
   tunnel_id  = cloudflare_zero_trust_tunnel_cloudflared.tunnel.id
