@@ -41,16 +41,15 @@ resource "cloudflare_record" "go_template_dns_record" {
 ################################################################################
 #                                     DB                                       #
 ################################################################################
-
 resource "aws_lambda_invocation" "create_go_template_db" {
   depends_on = [
     aws_lambda_function.db_query_exec_function
   ]
 
   function_name = aws_lambda_function.db_query_exec_function.function_name
-  input         = jsonencode({
-    database_name: "postgres",
-    query: "CREATE DATABASE \"${var.go_template_db_name}\";",
-    ssl_mode: "require"
+  input = jsonencode({
+    database_name = "postgres",
+    query = "SELECT 'CREATE DATABASE \"${var.go_template_db_name}\"' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = '${var.go_template_db_name}');",
+    ssl_mode = "require"
   })
 }
