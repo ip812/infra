@@ -42,7 +42,7 @@ resource "aws_iam_role" "db_query_exec_function_role" {
 resource "aws_lambda_function" "db_query_exec_function" {
   function_name = "db-query-exec-function"
   timeout       = 5
-  image_uri     = "678468774710.dkr.ecr.eu-central-1.amazonaws.com/ip812/db-query-exec:0.2.1"
+  image_uri     = "678468774710.dkr.ecr.eu-central-1.amazonaws.com/ip812/db-query-exec:0.2.2"
   package_type  = "Image"
   role          = aws_iam_role.db_query_exec_function_role.arn
   vpc_config {
