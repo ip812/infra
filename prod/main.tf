@@ -298,44 +298,6 @@ resource "aws_security_group" "db_sg" {
   tags = local.default_tags
 }
 
-# resource "aws_iam_role" "db_role" {
-#   name = "db-${var.org}-role"
-#   assume_role_policy = jsonencode({
-#     Version = "2012-10-17"
-#     Statement = [{
-#       Effect = "Allow"
-#       Principal = {
-#         Service = "rds.amazonaws.com"
-#       }
-#       Action = "sts:AssumeRole"
-#     }]
-#   })
-#   tags = local.default_tags
-# }
-# 
-# resource "aws_iam_policy" "db_policy" {
-#   name = "db-${var.org}-policy"
-#   policy = jsonencode({
-#     Version = "2012-10-17"
-#     Statement = [{
-#       Effect   = "Allow"
-#       Action   = ["rds-db:connect"]
-#       Resource = "*"
-#     }]
-#   })
-# }
-# 
-# resource "aws_iam_role_policy_attachment" "db_role_policy_attach" {
-#   role       = aws_iam_role.db_role.name
-#   policy_arn = aws_iam_policy.db_policy.arn
-# }
-# 
-# resource "aws_db_instance_role_association" "db_role_attach" {
-#   db_instance_identifier = aws_db_instance.db.identifier
-#   feature_name           = "IAMDatabaseAuthentication"
-#   role_arn               = aws_iam_role.db_role.arn
-# }
-
 resource "aws_db_instance" "db" {
   allocated_storage                   = 20
   engine                              = "postgres"
