@@ -20,6 +20,10 @@ resource "aws_lambda_function" "hello_function" {
   image_uri     = "678468774710.dkr.ecr.eu-central-1.amazonaws.com/ip812/hello:0.1.0"
   package_type  = "Image"
   role          = aws_iam_role.hello_function_role.arn
+  vpc_config {
+    subnet_ids         = [aws_subnet.public_subnet_a.id, aws_subnet.public_subnet_b.id]
+    security_group_ids = [aws_security_group.vm_sg.id]
+  }
   tags          = local.default_tags
 }
 
