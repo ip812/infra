@@ -42,12 +42,12 @@ resource "aws_iam_role" "db_query_exec_function_role" {
 resource "aws_lambda_function" "db_query_exec_function" {
   function_name = "db-query-exec-function"
   timeout       = 5
-  image_uri     = "678468774710.dkr.ecr.eu-central-1.amazonaws.com/ip812/db-query-exec:0.1.0"
+  image_uri     = "678468774710.dkr.ecr.eu-central-1.amazonaws.com/ip812/db-query-exec:0.2.1"
   package_type  = "Image"
   role          = aws_iam_role.db_query_exec_function_role.arn
   vpc_config {
-    subnet_ids         = [aws_subnet.private_subnet_a, aws_subnet.private_subnet_b]
-    security_group_ids = [aws_security_group.db_sg] 
+    subnet_ids         = [aws_subnet.public_subnet_a.id, aws_subnet.public_subnet_b.id]
+    security_group_ids = [aws_security_group.vm_sg.id]
   }
   environment {
     variables = {

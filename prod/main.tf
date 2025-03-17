@@ -278,7 +278,7 @@ resource "aws_security_group" "db_sg" {
       ipv6_cidr_blocks = []
       prefix_list_ids  = []
       protocol         = "tcp"
-      security_groups  = []
+      security_groups  = [aws_security_group.vm_sg.id]
       self             = false
       to_port          = 5432
     }
