@@ -14,7 +14,7 @@ resource "cloudflare_record" "traefik_dns_record" {
 resource "cloudflare_zero_trust_access_application" "traefik_zt_app" {
   zone_id                   = var.cloudflare_ip812_zone_id
   name                      = "traefik"
-  domain                    = "traefik"
+  domain                    = "traefik.${var.org}.com"
   type                      = "self_hosted"
   session_duration          = "24h"
   auto_redirect_to_identity = true

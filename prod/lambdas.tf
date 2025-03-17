@@ -14,6 +14,11 @@ resource "aws_iam_role" "hello_function_role" {
   tags = local.default_tags
 }
 
+resource "aws_iam_role_policy_attachment" "hello_function_vpc_policy" {
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
+  role       = aws_iam_role.hello_function_role.name
+}
+
 resource "aws_lambda_function" "hello_function" {
   function_name = "hello-function"
   timeout       = 5
