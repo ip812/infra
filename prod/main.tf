@@ -227,6 +227,7 @@ resource "aws_instance" "vm" {
   # Swarm init & secrets
   echo "Setting up Docker Swarm starts"
   docker swarm init
+  printf ${var.pgadmin_password} | docker secret create pgadmin_password -
   printf ${var.go_template_domain} | docker secret create go_template_domain -
   printf ${var.go_template_port} | docker secret create go_template_port -
   printf ${var.go_template_db_name} | docker secret create go_template_db_name -
