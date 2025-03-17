@@ -52,12 +52,6 @@ resource "github_actions_secret" "apps_github_access_token" {
   plaintext_value = data.terraform_remote_state.prod.outputs.github_access_token
 }
 
-resource "github_actions_secret" "apps_tunnel_token" {
-  repository      = "apps"
-  secret_name     = "CF_TUNNEL_TOKEN"
-  plaintext_value = data.terraform_remote_state.prod.outputs.tunnel_token
-}
-
 resource "github_actions_secret" "apps_discord_deployments_webhook_url" {
   repository      = "apps"
   secret_name     = "DISCORD_DEPLOYMENTS_WEBHOOK_URL"

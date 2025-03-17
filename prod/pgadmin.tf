@@ -7,6 +7,16 @@ variable "pgadmin_domain" {
   sensitive = true
 }
 
+variable "pgadmin_email" {
+  type      = string
+  sensitive = true
+}
+
+variable "pgadmin_password" {
+  type      = string
+  sensitive = true
+}
+
 ################################################################################
 #                                     DNS                                      #
 ################################################################################
