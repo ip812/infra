@@ -232,7 +232,7 @@ resource "aws_instance" "vm" {
   printf ${var.go_template_db_name} | docker secret create go_template_db_name -
   printf ${var.db_username} | docker secret create go_template_db_username -
   printf ${var.db_password} | docker secret create go_template_db_password -
-  printf ${aws_db_instance.db.endpoint} | docker secret create go_template_db_host -
+  printf ${aws_db_instance.db.endpoint} | docker secret create go_template_db_endpoint -
   printf ${var.go_template_db_ssl_mode} | docker secret create go_template_db_ssl_mode -
   printf ${var.aws_region} | docker secret create go_template_aws_region -
   printf ${var.aws_access_key} | docker secret create go_template_aws_access_key_id -
