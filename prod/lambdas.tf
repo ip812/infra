@@ -45,6 +45,10 @@ resource "aws_lambda_function" "db_query_exec_function" {
   image_uri     = "678468774710.dkr.ecr.eu-central-1.amazonaws.com/ip812/db-query-exec:0.1.0"
   package_type  = "Image"
   role          = aws_iam_role.db_query_exec_function_role.arn
+  vpc_config {
+    subnet_ids         = [aws_subnet.private_subnet_a, aws_subnet.private_subnet_b]
+    security_group_ids = [aws_security_group.db_sg] 
+  }
   environment {
     variables = {
       DB_HOST     = aws_db_instance.db.endpoint
