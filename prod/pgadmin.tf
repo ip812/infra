@@ -7,7 +7,7 @@ variable "pgadmin_domain" {
   sensitive = true
 }
 
-variable "pgadin_password" {
+variable "pgadmin_password" {
   type      = string
   sensitive = true
 }
