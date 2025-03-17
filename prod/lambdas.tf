@@ -39,6 +39,11 @@ resource "aws_iam_role" "db_query_exec_function_role" {
   tags = local.default_tags
 }
 
+resource "aws_iam_role_policy_attachment" "db_query_exec_function_vpc_policy" {
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
+  role       = aws_iam_role.db_query_exec_function_role.name
+}
+
 resource "aws_lambda_function" "db_query_exec_function" {
   function_name = "db-query-exec-function"
   timeout       = 5
