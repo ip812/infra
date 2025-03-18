@@ -177,6 +177,12 @@ resource "aws_iam_instance_profile" "ec2_instance_profile" {
   role = aws_iam_role.vm_role.name
 }
 
+resource "random_string" "vm_suffix" {
+  length  = 4
+  special = false
+  upper   = false
+}
+
 resource "aws_launch_template" "vm_lt" {
   name_prefix            = "vm-lt-"
   image_id               = "ami-0a628e1e89aaedf80"
@@ -250,7 +256,12 @@ resource "aws_launch_template" "vm_lt" {
     echo "Triggering Docker Swarm's deployment ends"
   EOF
   )
-  tags = local.default_tags
+  tag_specifications {
+    resource_type = "instance"
+    tags = merge(local.default_tags, {
+      Name = "vm-instance-${random_string.vm_suffix.result}"
+    })
+  }
 }
 
 resource "aws_autoscaling_group" "vm_asg" {
