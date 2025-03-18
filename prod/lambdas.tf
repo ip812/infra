@@ -29,7 +29,7 @@ resource "aws_lambda_function" "hello_function" {
     subnet_ids         = [aws_subnet.public_subnet_a.id, aws_subnet.public_subnet_b.id]
     security_group_ids = [aws_security_group.vm_sg.id]
   }
-  tags          = local.default_tags
+  tags = local.default_tags
 }
 
 # db-query-exec 
