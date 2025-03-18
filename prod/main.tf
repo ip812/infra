@@ -263,7 +263,7 @@ resource "aws_launch_template" "vm_lt" {
       tags = merge(
         local.default_tags,
         {
-          Name = "vm-instance-${tag_specifications.key}"
+          Name = "vm-instance-${random_string.vm_suffix.result}"
         }
       )
     }
