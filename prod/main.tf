@@ -178,10 +178,10 @@ resource "aws_iam_instance_profile" "ec2_instance_profile" {
 }
 
 resource "aws_launch_template" "vm_lt" {
-  name_prefix          = "vm-lt-"
-  image_id             = "ami-0a628e1e89aaedf80"
-  instance_type        = "t2.micro"
-  security_group_names = ["${aws_security_group.vm_sg.name}"]
+  name_prefix            = "vm-lt-"
+  image_id               = "ami-0a628e1e89aaedf80"
+  instance_type          = "t2.micro"
+  vpc_security_group_ids = [aws_security_group.vm_sg.id]
   iam_instance_profile {
     name = aws_iam_instance_profile.ec2_instance_profile.name
   }
