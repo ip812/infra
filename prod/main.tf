@@ -250,6 +250,7 @@ resource "aws_launch_template" "vm_lt" {
     echo "Triggering Docker Swarm's deployment ends"
   EOF
   )
+  tags = local.default_tags
 }
 
 resource "aws_autoscaling_group" "vm_asg" {
