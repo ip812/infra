@@ -34,7 +34,7 @@ resource "cloudflare_record" "go_template_dns_record" {
 }
 
 ################################################################################
-#                                     DB                                       #
+#                                     APP                                      #
 ################################################################################
 resource "aws_lambda_invocation" "create_go_template_db" {
   function_name = aws_lambda_function.db_query_exec_function.function_name
