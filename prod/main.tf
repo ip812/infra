@@ -275,6 +275,7 @@ resource "aws_autoscaling_group" "vm_asg" {
     id      = aws_launch_template.vm_lt.id
     version = "$Latest"
   }
+  name                      = "${var.org}-${var.env}-vm-asg"
   desired_capacity          = 1
   max_size                  = 1
   min_size                  = 1

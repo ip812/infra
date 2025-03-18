@@ -3,7 +3,7 @@
 ################################################################################
 
 resource "aws_cloudwatch_metric_alarm" "vm_cpu_alarm" {
-  alarm_name          = "vm_cpu_utilization_alarm"
+  alarm_name          = "vm-cpu-utilization-alarm"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = 1
   metric_name         = "CPUUtilization"
