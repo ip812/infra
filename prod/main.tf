@@ -256,11 +256,17 @@ resource "aws_launch_template" "vm_lt" {
     echo "Triggering Docker Swarm's deployment ends"
   EOF
   )
-  tag_specifications {
-    resource_type = "instance"
-    tags = merge(local.default_tags, {
-      Name = "vm-instance-${random_string.vm_suffix.result}"
-    })
+  dynamic "tag_specifications" {
+    for_each = toset(["instance"])
+    content {
+      resource_type = tag_specifications.key
+      tags = merge(
+        local.default_tags,
+        {
+          Name = "vm-instance-${tag_specifications.key}"
+        }
+      )
+    }
   }
 }
 
