@@ -178,9 +178,9 @@ resource "aws_iam_instance_profile" "ec2_instance_profile" {
 }
 
 resource "aws_launch_template" "vm_lt" {
-  name_prefix   = "vm-lt-"
-  image_id      = "ami-0a628e1e89aaedf80"
-  instance_type = "t2.micro"
+  name_prefix          = "vm-lt-"
+  image_id             = "ami-0a628e1e89aaedf80"
+  instance_type        = "t2.micro"
   security_group_names = ["${aws_security_group.vm_sg.name}"]
   iam_instance_profile {
     name = aws_iam_instance_profile.ec2_instance_profile.name
@@ -257,14 +257,14 @@ resource "aws_autoscaling_group" "vm_asg" {
     id      = aws_launch_template.vm_lt.id
     version = "$Latest"
   }
-  desired_capacity     = 1
-  max_size             = 1
-  min_size             = 1
-  vpc_zone_identifier  = [aws_subnet.public_subnet_a.id]
-  health_check_type          = "EC2"
+  desired_capacity          = 1
+  max_size                  = 1
+  min_size                  = 1
+  vpc_zone_identifier       = [aws_subnet.public_subnet_a.id]
+  health_check_type         = "EC2"
   health_check_grace_period = 300
-  force_delete               = true
-  wait_for_capacity_timeout   = "0"
+  force_delete              = true
+  wait_for_capacity_timeout = "0"
 }
 
 ################################################################################
