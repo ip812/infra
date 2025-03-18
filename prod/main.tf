@@ -177,85 +177,94 @@ resource "aws_iam_instance_profile" "ec2_instance_profile" {
   role = aws_iam_role.vm_role.name
 }
 
-resource "aws_instance" "vm" {
-  ami                         = "ami-0a628e1e89aaedf80"
-  instance_type               = "t2.micro"
-  associate_public_ip_address = true
-  subnet_id                   = aws_subnet.public_subnet_a.id
-  vpc_security_group_ids      = [aws_security_group.vm_sg.id]
-  iam_instance_profile        = aws_iam_instance_profile.ec2_instance_profile.name
-  user_data_replace_on_change = true
-  user_data                   = <<-EOF
-  #!/bin/bash
+resource "aws_launch_template" "vm_lt" {
+  name_prefix   = "vm-lt-"
+  image_id      = "ami-0a628e1e89aaedf80"
+  instance_type = "t2.micro"
+  security_group_names = ["${aws_security_group.vm_sg.name}"]
+  iam_instance_profile {
+    name = aws_iam_instance_profile.ec2_instance_profile.name
+  }
+  user_data = base64encode(<<-EOF
+    #!/bin/bash
+    # Dependencies
+    echo "Updating and installing dependencies starts"
+    apt-get update -y
+    apt-get install -y tmux vim curl unzip
+    echo "Updating and installing dependencies ends"
 
-  # Dependencies
-  echo "Updating and installing dependencies starts"
-  apt-get update -y
-  apt-get install -y tmux vim curl unzip
-  echo "Updating and installing dependencies ends"
+    # AWS CLI
+    echo "Installing AWS CLI starts"
+    curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+    unzip awscliv2.zip
+    ./aws/install
+    echo "Installing AWS CLI ends"
 
-  # AWS CLI
-  echo "Installing AWS CLI starts"
-  curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-  unzip awscliv2.zip
-  ./aws/install
-  echo "Installing AWS CLI ends"
+    # AWS credentials & config
+    echo "Setting up AWS credentials starts"
+    mkdir -p ~/.aws
+    echo -e "[default]\nregion = ${var.aws_region}\noutput = json" > ~/.aws/config
+    echo -e "[default]\naws_access_key_id = ${var.aws_access_key}\naws_secret_access_key = ${var.aws_secret_key}" > ~/.aws/credentials
+    echo "Setting up AWS credentials ends"
 
-  # AWS credentials & config
-  echo "Setting up AWS credentials starts"
-  mkdir -p ~/.aws
-  echo -e "[default]\nregion = ${var.aws_region}\noutput = json" > ~/.aws/config
-  echo -e "[default]\naws_access_key_id = ${var.aws_access_key}\naws_secret_access_key = ${var.aws_secret_key}" > ~/.aws/credentials
-  echo "Setting up AWS credentials ends"
+    # Dotfiles
+    echo "Setting up dotfiles starts"
+    cd /home/ubuntu
+    git clone https://github.com/iypetrov/.vm-dotfiles.git
+    chmod -R ugo+r /home/ubuntu/.vm-dotfiles
+    ln -s /home/ubuntu/.vm-dotfiles/.tmux.conf /root/.tmux.conf
+    ln -s /home/ubuntu/.vm-dotfiles/.vimrc /root/.vimrc
+    echo "Setting up dotfiles ends"
 
-  # Dotfiles
-  echo "Setting up dotfiles starts"
-  cd /home/ubuntu
-  git clone https://github.com/iypetrov/.vm-dotfiles.git
-  chmod -R ugo+r /home/ubuntu/.vm-dotfiles
-  ln -s /home/ubuntu/.vm-dotfiles/.tmux.conf /root/.tmux.conf
-  ln -s /home/ubuntu/.vm-dotfiles/.vimrc /root/.vimrc
-  echo "Setting up dotfiles ends"
+    # Docker
+    echo "Installing Docker starts"
+    curl -fsSl https://get.docker.com | sh
+    gpasswd -a ubuntu docker
+    aws ecr get-login-password --region ${var.aws_region} | docker login --username AWS --password-stdin 678468774710.dkr.ecr.${var.aws_region}.amazonaws.com
+    echo "Installing Docker ends"
 
-  # Docker
-  echo "Installing Docker starts"
-  curl -fsSl https://get.docker.com | sh
-  gpasswd -a ubuntu docker
-  aws ecr get-login-password --region ${var.aws_region} | docker login --username AWS --password-stdin 678468774710.dkr.ecr.${var.aws_region}.amazonaws.com
-  echo "Installing Docker ends"
+    # Swarm init & secrets
+    echo "Setting up Docker Swarm starts"
+    docker swarm init
+    printf ${var.pgadmin_password} | docker secret create pgadmin_password -
+    printf ${var.go_template_domain} | docker secret create go_template_domain -
+    printf ${var.go_template_port} | docker secret create go_template_port -
+    printf ${var.go_template_db_name} | docker secret create go_template_db_name -
+    printf ${var.db_username} | docker secret create go_template_db_username -
+    printf ${var.db_password} | docker secret create go_template_db_password -
+    printf ${aws_db_instance.db.endpoint} | docker secret create go_template_db_endpoint -
+    printf ${var.go_template_db_ssl_mode} | docker secret create go_template_db_ssl_mode -
+    printf ${var.aws_region} | docker secret create go_template_aws_region -
+    printf ${var.aws_access_key} | docker secret create go_template_aws_access_key_id -
+    printf ${var.aws_secret_key} | docker secret create go_template_aws_secret_access_key -
+    echo "Setting up Docker Swarm ends"
 
-  # Swarm init & secrets
-  echo "Setting up Docker Swarm starts"
-  docker swarm init
-  printf ${var.pgadmin_password} | docker secret create pgadmin_password -
-  printf ${var.go_template_domain} | docker secret create go_template_domain -
-  printf ${var.go_template_port} | docker secret create go_template_port -
-  printf ${var.go_template_db_name} | docker secret create go_template_db_name -
-  printf ${var.db_username} | docker secret create go_template_db_username -
-  printf ${var.db_password} | docker secret create go_template_db_password -
-  printf ${aws_db_instance.db.endpoint} | docker secret create go_template_db_endpoint -
-  printf ${var.go_template_db_ssl_mode} | docker secret create go_template_db_ssl_mode -
-  printf ${var.aws_region} | docker secret create go_template_aws_region -
-  printf ${var.aws_access_key} | docker secret create go_template_aws_access_key_id -
-  printf ${var.aws_secret_key} | docker secret create go_template_aws_secret_access_key -
-  echo "Setting up Docker Swarm ends"
-
-  # Trigger deploy pipeline
-  echo "Triggering Docker Swarm's deployment  starts"
-  curl -X POST \
-    -H "Accept: application/vnd.github+json" \
-    -H "Authorization: token ${var.github_access_token}" \
-    -H "X-GitHub-Api-Version: 2022-11-28" \
-    https://api.github.com/repos/ip812/apps/actions/workflows/deploy.yml/dispatches \
-    -d '{"ref": "main"}'
-  echo "Triggering Docker Swarm's deployment  ends"
+    # Trigger deploy pipeline
+    echo "Triggering Docker Swarm's deployment starts"
+    curl -X POST \
+      -H "Accept: application/vnd.github+json" \
+      -H "Authorization: token ${var.github_access_token}" \
+      -H "X-GitHub-Api-Version: 2022-11-28" \
+      https://api.github.com/repos/ip812/apps/actions/workflows/deploy.yml/dispatches \
+      -d '{"ref": "main"}'
+    echo "Triggering Docker Swarm's deployment ends"
   EOF
-  tags = merge(
-    local.default_tags,
-    {
-      Name = "${var.org}-${var.env}-core-vm"
-    }
   )
+}
+
+resource "aws_autoscaling_group" "vm_asg" {
+  launch_template {
+    id      = aws_launch_template.vm_lt.id
+    version = "$Latest"
+  }
+  desired_capacity     = 1
+  max_size             = 1
+  min_size             = 1
+  vpc_zone_identifier  = [aws_subnet.public_subnet_a.id]
+  health_check_type          = "EC2"
+  health_check_grace_period = 300
+  force_delete               = true
+  wait_for_capacity_timeout   = "0"
 }
 
 ################################################################################
