@@ -279,7 +279,7 @@ resource "aws_autoscaling_group" "vm_asg" {
   desired_capacity          = 1
   max_size                  = 1
   min_size                  = 1
-  vpc_zone_identifier       = [aws_subnet.public_subnet_a.id]
+  vpc_zone_identifier       = [aws_subnet.public_subnet_a.id, aws_subnet.public_subnet_b.id]
   force_delete              = true
   wait_for_capacity_timeout = "0"
   health_check_type         = "EC2"
