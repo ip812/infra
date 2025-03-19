@@ -295,8 +295,8 @@ resource "aws_autoscaling_group" "vm_asg" {
 
 resource "aws_autoscaling_policy" "vm_replace_policy" {
   name                   = "replace-policy"
-  scaling_adjustment     = 0
-  adjustment_type        = "ExactCapacity"
+  scaling_adjustment     = 1
+  adjustment_type        = "ChangeInCapacity"
   cooldown               = 300
   autoscaling_group_name = aws_autoscaling_group.vm_asg.name
 }
