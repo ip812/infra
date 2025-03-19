@@ -18,6 +18,6 @@ resource "aws_cloudwatch_metric_alarm" "vm_cpu_alarm" {
     AutoScalingGroupName = aws_autoscaling_group.vm_asg.name
   }
   alarm_actions = [
-    aws_autoscaling_policy.vm_replace_policy.arn
+    aws_autoscaling_group.vm_asg.arn
   ]
 }
