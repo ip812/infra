@@ -176,3 +176,11 @@ resource "aws_autoscaling_group" "asg" {
     }
   }
 }
+
+resource "aws_autoscaling_policy" "asg_scale_in_policy" {
+  name                   = "${var.org}-${var.env}-asg-scale-in"
+  scaling_adjustment     = -1
+  adjustment_type        = "ChangeInCapacity"
+  cooldown               = 300
+  autoscaling_group_name = aws_autoscaling_group.asg.name
+}
