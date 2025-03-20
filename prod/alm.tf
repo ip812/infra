@@ -8,7 +8,7 @@ resource "aws_cloudwatch_metric_alarm" "asg_high_cpu_alarm" {
   evaluation_periods        = 1
   metric_name               = "CPUUtilization"
   namespace                 = "AWS/EC2"
-  period                    = 300
+  period                    = 10
   statistic                 = "Average"
   threshold                 = 75
   alarm_description         = "Alarm when CPU exceeds 75%"
