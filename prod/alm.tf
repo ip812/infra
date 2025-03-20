@@ -3,7 +3,7 @@
 ################################################################################
 
 resource "aws_cloudwatch_metric_alarm" "asg_high_cpu_alarm" {
-  alarm_name                = "asg-high-cpu-alarm"
+  alarm_name                = "asg-high-cpu-utilization-alarm"
   comparison_operator       = "GreaterThanOrEqualToThreshold"
   evaluation_periods        = 1
   metric_name               = "CPUUtilization"
