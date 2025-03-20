@@ -159,10 +159,10 @@ resource "aws_autoscaling_group" "asg" {
     id      = aws_launch_template.asg_lt.id
     version = "$Latest"
   }
-  name                      = "${var.org}-${var.env}-asg-asg"
+  name                      = "${var.org}-${var.env}-asg"
   desired_capacity          = 1
   max_size                  = 1
-  min_size                  = 1
+  min_size                  = 0
   vpc_zone_identifier       = [aws_subnet.public_subnet_a.id, aws_subnet.public_subnet_b.id]
   force_delete              = true
   wait_for_capacity_timeout = "0"
