@@ -27,7 +27,7 @@ resource "aws_lambda_function" "hello_function" {
   role          = aws_iam_role.hello_function_role.arn
   vpc_config {
     subnet_ids         = [aws_subnet.public_subnet_a.id, aws_subnet.public_subnet_b.id]
-    security_group_ids = [aws_security_group.vm_sg.id]
+    security_group_ids = [aws_security_group.asg_sg.id]
   }
   tags = local.default_tags
 }
@@ -61,7 +61,7 @@ resource "aws_lambda_function" "db_query_exec_function" {
   role          = aws_iam_role.db_query_exec_function_role.arn
   vpc_config {
     subnet_ids         = [aws_subnet.public_subnet_a.id, aws_subnet.public_subnet_b.id]
-    security_group_ids = [aws_security_group.vm_sg.id]
+    security_group_ids = [aws_security_group.asg_sg.id]
   }
   environment {
     variables = {
