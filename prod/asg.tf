@@ -1,5 +1,5 @@
 ################################################################################
-#                                    DB                                        #
+#                                    ASG                                       #
 ################################################################################
 
 resource "aws_security_group" "asg_sg" {
@@ -37,8 +37,8 @@ resource "aws_iam_role" "asg_role" {
   })
 }
 
-resource "aws_iam_policy" "secrets_access" {
-  name = "${var.org}-${var.env}-secrets-access"
+resource "aws_iam_policy" "asg_policy" {
+  name = "${var.org}-${var.env}-asg-policy"
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -51,9 +51,9 @@ resource "aws_iam_policy" "secrets_access" {
   })
 }
 
-resource "aws_iam_role_policy_attachment" "attach_secrets_access" {
+resource "aws_iam_role_policy_attachment" "asg_policy_attachment" {
   role       = aws_iam_role.asg_role.name
-  policy_arn = aws_iam_policy.secrets_access.arn
+  policy_arn = aws_iam_policy.asg_policy.name
 }
 
 resource "aws_iam_instance_profile" "ec2_instance_profile" {
@@ -114,7 +114,6 @@ resource "aws_launch_template" "asg_lt" {
     echo "Installing Docker ends"
 
     # Swarm init & secrets
-    echo "Setting up Docker Swarm starts"
     echo "Setting up Docker Swarm starts"
     docker swarm init
     printf ${var.pgadmin_password} | docker secret create pgadmin_password -
