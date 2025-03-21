@@ -32,9 +32,9 @@ resource "aws_lambda_function" "hello_function" {
   tags = local.default_tags
 }
 
-# db-query-exec 
-resource "aws_iam_role" "db_query_exec_function_role" {
-  name = "${var.org}-${var.env}-db-query-exec-function-role"
+# pg-query-exec 
+resource "aws_iam_role" "pg_query_exec_function_role" {
+  name = "${var.org}-${var.env}-pg-query-exec-function-role"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
@@ -48,17 +48,17 @@ resource "aws_iam_role" "db_query_exec_function_role" {
   tags = local.default_tags
 }
 
-resource "aws_iam_role_policy_attachment" "db_query_exec_function_vpc_policy" {
+resource "aws_iam_role_policy_attachment" "pg_query_exec_function_vpc_policy" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
-  role       = aws_iam_role.db_query_exec_function_role.name
+  role       = aws_iam_role.pg_query_exec_function_role.name
 }
 
-resource "aws_lambda_function" "db_query_exec_function" {
-  function_name = "db-query-exec-function"
+resource "aws_lambda_function" "pg_query_exec_function" {
+  function_name = "pg-query-exec-function"
   timeout       = 5
-  image_uri     = "678468774710.dkr.ecr.eu-central-1.amazonaws.com/ip812/db-query-exec:0.3.1"
+  image_uri     = "678468774710.dkr.ecr.eu-central-1.amazonaws.com/ip812/pg-query-exec:0.1.0"
   package_type  = "Image"
-  role          = aws_iam_role.db_query_exec_function_role.arn
+  role          = aws_iam_role.pg_query_exec_function_role.arn
   vpc_config {
     subnet_ids         = [aws_subnet.public_subnet_a.id, aws_subnet.public_subnet_b.id]
     security_group_ids = [aws_security_group.asg_sg.id]
