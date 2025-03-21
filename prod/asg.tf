@@ -115,6 +115,7 @@ resource "aws_launch_template" "asg_lt" {
 
     # Swarm init & secrets
     echo "Setting up Docker Swarm starts"
+    echo "Setting up Docker Swarm starts"
     docker swarm init
     printf ${var.pgadmin_password} | docker secret create pgadmin_password -
     printf ${var.go_template_domain} | docker secret create go_template_domain -
