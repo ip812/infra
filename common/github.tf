@@ -2,6 +2,25 @@
 #                                   Secrets                                    #
 ################################################################################
 
+# Toolkit 
+resource "github_actions_secret" "toolkit_aws_region" {
+  repository      = "toolkit"
+  secret_name     = "AWS_REGION"
+  plaintext_value = data.terraform_remote_state.prod.outputs.aws_region
+}
+
+resource "github_actions_secret" "toolkit_aws_access_key" {
+  repository      = "toolkit"
+  secret_name     = "AWS_ACCESS_KEY_ID"
+  plaintext_value = data.terraform_remote_state.prod.outputs.aws_access_key
+}
+
+resource "github_actions_secret" "tookit_aws_secret_key" {
+  repository      = "toolkit"
+  secret_name     = "AWS_SECRET_ACCESS_KEY"
+  plaintext_value = data.terraform_remote_state.prod.outputs.aws_secret_key
+}
+
 # Infra
 resource "github_actions_variable" "infra_org" {
   repository    = "infra"
