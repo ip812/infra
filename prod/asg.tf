@@ -53,7 +53,7 @@ resource "aws_iam_policy" "asg_policy" {
 
 resource "aws_iam_role_policy_attachment" "asg_policy_attachment" {
   role       = aws_iam_role.asg_role.name
-  policy_arn = aws_iam_policy.asg_policy.name
+  policy_arn = aws_iam_policy.asg_policy.arn
 }
 
 resource "aws_iam_instance_profile" "ec2_instance_profile" {
