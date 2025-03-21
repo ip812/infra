@@ -20,7 +20,7 @@ resource "aws_iam_role_policy_attachment" "hello_function_vpc_policy" {
 }
 
 resource "aws_lambda_function" "hello_function" {
-  function_name = "hello-function"
+  function_name = "hello"
   timeout       = 5
   image_uri     = "678468774710.dkr.ecr.eu-central-1.amazonaws.com/ip812/hello:0.1.0"
   package_type  = "Image"
@@ -54,7 +54,7 @@ resource "aws_iam_role_policy_attachment" "pg_query_exec_function_vpc_policy" {
 }
 
 resource "aws_lambda_function" "pg_query_exec_function" {
-  function_name = "pg-query-exec-function"
+  function_name = "pg-query-exec"
   timeout       = 5
   image_uri     = "678468774710.dkr.ecr.eu-central-1.amazonaws.com/ip812/pg-query-exec:0.1.0"
   package_type  = "Image"
