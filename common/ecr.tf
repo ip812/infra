@@ -24,6 +24,11 @@ resource "aws_ecr_repository" "hello_ecr_repository" {
   image_tag_mutability = "IMMUTABLE"
 }
 
+resource "aws_ecr_repository" "lambda_deploy_notification_ecr_repository" {
+  name                 = "${data.terraform_remote_state.prod.outputs.org}/lambda-deploy-notification"
+  image_tag_mutability = "IMMUTABLE"
+}
+
 resource "aws_ecr_repository" "pg_query_exec_ecr_repository" {
   name                 = "${data.terraform_remote_state.prod.outputs.org}/pg-query-exec"
   image_tag_mutability = "IMMUTABLE"
