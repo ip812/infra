@@ -56,7 +56,7 @@ resource "aws_iam_role_policy_attachment" "pg_query_exec_function_vpc_policy" {
 resource "aws_lambda_function" "pg_query_exec_function" {
   function_name = "pg-query-exec"
   timeout       = 5
-  image_uri     = "678468774710.dkr.ecr.eu-central-1.amazonaws.com/ip812/pg-query-exec:0.1.0"
+  image_uri     = "678468774710.dkr.ecr.eu-central-1.amazonaws.com/ip812/pg-query-exec:0.1.1"
   package_type  = "Image"
   role          = aws_iam_role.pg_query_exec_function_role.arn
   vpc_config {
