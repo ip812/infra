@@ -92,6 +92,7 @@ resource "aws_launch_template" "asg_lt" {
 
     # AWS credentials & config
     echo "Setting up AWS credentials starts"
+    echo "Setting up AWS credentials starts"
     mkdir -p ~/.aws
     echo -e "[default]\nregion = ${var.aws_region}\noutput = json" > ~/.aws/config
     echo -e "[default]\naws_access_key_id = ${var.aws_access_key}\naws_secret_access_key = ${var.aws_secret_key}" > ~/.aws/credentials
