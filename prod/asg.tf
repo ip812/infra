@@ -168,7 +168,7 @@ resource "aws_autoscaling_group" "asg" {
   force_delete              = true
   wait_for_capacity_timeout = "0"
   health_check_type         = "EC2"
-  health_check_grace_period = 10 
+  health_check_grace_period = 60
   termination_policies      = ["OldestInstance"]
   instance_refresh {
     strategy = "Rolling"
@@ -182,6 +182,6 @@ resource "aws_autoscaling_policy" "asg_scale_in_policy" {
   name                   = "${var.org}-${var.env}-asg-scale-in"
   scaling_adjustment     = -1
   adjustment_type        = "ChangeInCapacity"
-  cooldown               = 10
+  cooldown               = 60
   autoscaling_group_name = aws_autoscaling_group.asg.name
 }
