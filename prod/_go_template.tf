@@ -40,7 +40,7 @@ resource "aws_lambda_invocation" "create_go_template_db" {
   function_name = aws_lambda_function.pg_query_exec_function.function_name
   input = jsonencode({
     database_name = "postgres",
-    query         = "SELECT 'CREATE DATABASE \"${var.go_template_db_name}\"' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = '${var.go_template_db_name}');",
+    query         = "CREATE DATABASE ${var.go_template_db_name};",
     ssl_mode      = var.go_template_db_ssl_mode,
   })
   triggers = {
