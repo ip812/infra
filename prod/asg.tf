@@ -174,6 +174,7 @@ resource "aws_autoscaling_group" "asg" {
     strategy = "Rolling"
     preferences {
       min_healthy_percentage = 50
+      scale_in_protected_instances = "Refresh"
     }
   }
 }
