@@ -18,7 +18,7 @@ resource "aws_cloudwatch_metric_alarm" "asg_high_cpu_alarm" {
     AutoScalingGroupName = aws_autoscaling_group.asg.name
   }
   alarm_actions = [
-    aws_autoscaling_policy.asg_scale_in_policy.arn
+    aws_autoscaling_policy.asg_recreate_policy.arn
   ]
 }
 

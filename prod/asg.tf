@@ -173,16 +173,18 @@ resource "aws_autoscaling_group" "asg" {
   instance_refresh {
     strategy = "Rolling"
     preferences {
-      min_healthy_percentage = 50
+      min_healthy_percentage       = 100
       scale_in_protected_instances = "Refresh"
     }
   }
 }
 
-resource "aws_autoscaling_policy" "asg_scale_in_policy" {
-  name                   = "${var.org}-${var.env}-asg-scale-in"
-  scaling_adjustment     = -1
-  adjustment_type        = "ChangeInCapacity"
-  cooldown               = 60
+resource "aws_autoscaling_policy" "asg_recreate_policy" {
+  name                   = "${var.org}-${var.env}-asg-recreate-policy"
   autoscaling_group_name = aws_autoscaling_group.asg.name
+  adjustment_type        = "ExactCapacity"
+  policy_type            = "SimpleScaling"
+  enabled                = true
+  cooldown               = 60
+  scaling_adjustment     = 1
 }
