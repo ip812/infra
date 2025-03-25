@@ -162,13 +162,14 @@ resource "aws_autoscaling_group" "asg" {
   name                      = "${var.org}-${var.env}-asg"
   desired_capacity          = 1
   max_size                  = 1
-  min_size                  = 1
+  min_size                  = 0
   vpc_zone_identifier       = [aws_subnet.public_subnet_a.id, aws_subnet.public_subnet_b.id]
   force_delete              = true
   wait_for_capacity_timeout = "0"
   health_check_type         = "EC2"
   health_check_grace_period = 60
   termination_policies      = ["OldestInstance"]
+  enabled_metrics           = ["GroupInServiceInstances"]
   instance_refresh {
     strategy = "Rolling"
     preferences {
@@ -178,8 +179,18 @@ resource "aws_autoscaling_group" "asg" {
   }
 }
 
-resource "aws_autoscaling_policy" "asg_recreate_policy" {
-  name                   = "${var.org}-${var.env}-asg-recreate-policy"
+resource "aws_autoscaling_policy" "asg_scale_in_policy" {
+  name                   = "${var.org}-${var.env}-asg-scale-in-policy"
+  autoscaling_group_name = aws_autoscaling_group.asg.name
+  adjustment_type        = "ExactCapacity"
+  policy_type            = "SimpleScaling"
+  enabled                = true
+  cooldown               = 60
+  scaling_adjustment     = 0
+}
+
+resource "aws_autoscaling_policy" "asg_scale_out_policy" {
+  name                   = "${var.org}-${var.env}-asg-scale-out-policy"
   autoscaling_group_name = aws_autoscaling_group.asg.name
   adjustment_type        = "ExactCapacity"
   policy_type            = "SimpleScaling"
