@@ -160,7 +160,7 @@ resource "aws_launch_template" "asg_lt" {
 resource "aws_autoscaling_group" "asg" {
   launch_template {
     id      = aws_launch_template.asg_lt.id
-    version = "$Latest"
+    version = aws_launch_template.asg_lt.latest_version
   }
   name                      = "${var.org}-${var.env}-asg"
   desired_capacity          = 1
