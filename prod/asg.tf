@@ -75,6 +75,9 @@ resource "aws_launch_template" "asg_lt" {
   iam_instance_profile {
     name = aws_iam_instance_profile.ec2_instance_profile.name
   }
+  monitoring {
+    enabled = true
+  }
   user_data = base64encode(<<-EOF
     #!/bin/bash
     # Dependencies
