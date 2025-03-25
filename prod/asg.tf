@@ -85,7 +85,6 @@ resource "aws_launch_template" "asg_lt" {
     apt-get update -y
     apt-get install -y tmux vim curl unzip
     echo "Updating and installing dependencies ends"
-    echo "Updating and installing dependencies ends"
 
     # AWS CLI
     echo "Installing AWS CLI starts"
