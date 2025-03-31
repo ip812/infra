@@ -1,3 +1,3 @@
 variable "env_prod" {
-  type      = string
+  type = string
 }
