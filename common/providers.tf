@@ -43,6 +43,6 @@ provider "aws" {
 }
 
 provider "github" {
-  token = data.terraform_remote_state.prod.outputs.github_access_token
+  token = data.terraform_remote_state.prod.outputs.gh_access_token
   owner = data.terraform_remote_state.prod.outputs.org
 }

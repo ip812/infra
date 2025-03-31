@@ -119,7 +119,7 @@ resource "aws_launch_template" "asg_lt" {
     # Swarm init & secrets
     echo "Setting up Docker Swarm starts"
     docker swarm init
-    printf ${var.pgadmin_password} | docker secret create pgadmin_password -
+    printf ${var.db_password} | docker secret create pgadmin_password -
     printf ${var.go_template_domain} | docker secret create go_template_domain -
     printf ${var.go_template_port} | docker secret create go_template_port -
     printf ${var.go_template_db_name} | docker secret create go_template_db_name -
@@ -136,7 +136,7 @@ resource "aws_launch_template" "asg_lt" {
     echo "Triggering Docker Swarm's deployment starts"
     curl -X POST \
       -H "Accept: application/vnd.github+json" \
-      -H "Authorization: token ${var.github_access_token}" \
+      -H "Authorization: token ${var.gh_access_token}" \
       -H "X-GitHub-Api-Version: 2022-11-28" \
       https://api.github.com/repos/ip812/apps/actions/workflows/deploy.yml/dispatches \
       -d '{"ref": "main"}'

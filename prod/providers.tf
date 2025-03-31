@@ -31,28 +31,28 @@ output "aws_secret_key" {
   sensitive = true
 }
 
-variable "cloudflare_api_token" {
+variable "cf_api_token" {
   type      = string
   sensitive = true
 }
 
-variable "cloudflare_account_id" {
+variable "cf_account_id" {
   type      = string
   sensitive = true
 }
 
-variable "cloudflare_ip812_zone_id" {
+variable "cf_ip812_zone_id" {
   type      = string
   sensitive = true
 }
 
-variable "github_access_token" {
+variable "gh_access_token" {
   type      = string
   sensitive = true
 }
 
-output "github_access_token" {
-  value     = var.github_access_token
+output "gh_access_token" {
+  value     = var.gh_access_token
   sensitive = true
 }
 
@@ -87,5 +87,5 @@ provider "aws" {
 }
 
 provider "cloudflare" {
-  api_token = var.cloudflare_api_token
+  api_token = var.cf_api_token
 }

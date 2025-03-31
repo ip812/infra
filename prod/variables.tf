@@ -14,13 +14,13 @@ variable "env" {
   type = string
 }
 
-variable "discord_deployments_webhook_url" {
+variable "dsc_deployments_webhook_url" {
   type      = string
   sensitive = true
 }
 
-output "discord_deployments_webhook_url" {
-  value     = var.discord_deployments_webhook_url
+output "dsc_deployments_webhook_url" {
+  value     = var.dsc_deployments_webhook_url
   sensitive = true
 }
 

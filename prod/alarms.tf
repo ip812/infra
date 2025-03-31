@@ -37,7 +37,3 @@ resource "aws_cloudwatch_metric_alarm" "asg_two_instances_alarm" {
   }
   insufficient_data_actions = []
 }
-
-################################################################################
-#                                Grafana Cloud                                 #
-################################################################################

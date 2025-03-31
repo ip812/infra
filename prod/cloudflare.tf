@@ -2,13 +2,13 @@
 #                                   Variables                                  #
 ################################################################################
 
-variable "tunnel_name" {
+variable "cf_tunnel_name" {
   type      = string
   sensitive = true
 }
 
-# $ openssl rand -base64 64
-variable "tunnel_secret" {
+# openssl rand -base64 64 | tr -d '\n'
+variable "cf_tunnel_secret" {
   type      = string
   sensitive = true
 }
@@ -17,20 +17,20 @@ variable "tunnel_secret" {
 #                                   Tunnels                                    #
 ################################################################################
 
-resource "cloudflare_zero_trust_tunnel_cloudflared" "tunnel" {
-  account_id = var.cloudflare_account_id
-  name       = var.tunnel_name
-  secret     = var.tunnel_secret
+resource "cloudflare_zero_trust_tunnel_cloudflared" "cf_tunnel" {
+  account_id = var.cf_account_id
+  name       = var.cf_tunnel_name
+  secret     = var.cf_tunnel_secret
 }
 
-output "tunnel_token" {
-  value     = cloudflare_zero_trust_tunnel_cloudflared.tunnel.tunnel_token
+output "cf_tunnel_token" {
+  value     = cloudflare_zero_trust_tunnel_cloudflared.cf_tunnel.tunnel_token
   sensitive = true
 }
 
-resource "cloudflare_zero_trust_tunnel_cloudflared_config" "tunnel_cfg" {
-  account_id = var.cloudflare_account_id
-  tunnel_id  = cloudflare_zero_trust_tunnel_cloudflared.tunnel.id
+resource "cloudflare_zero_trust_tunnel_cloudflared_config" "cf_tunnel_cfg" {
+  account_id = var.cf_account_id
+  tunnel_id  = cloudflare_zero_trust_tunnel_cloudflared.cf_tunnel.id
   config {
     ingress_rule {
       hostname = cloudflare_record.traefik_dns_record.hostname

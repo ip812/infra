@@ -31,13 +31,13 @@ resource "github_actions_variable" "infra_org" {
 resource "github_actions_secret" "infra_github_access_token" {
   repository      = "infra"
   secret_name     = "GH_ACCESS_TOKEN"
-  plaintext_value = data.terraform_remote_state.prod.outputs.github_access_token
+  plaintext_value = data.terraform_remote_state.prod.outputs.gh_access_token
 }
 
-resource "github_actions_secret" "infra_discord_deployments_webhook_url" {
+resource "github_actions_secret" "infra_dsc_deployments_webhook_url" {
   repository      = "infra"
   secret_name     = "DISCORD_DEPLOYMENTS_WEBHOOK_URL"
-  plaintext_value = data.terraform_remote_state.prod.outputs.discord_deployments_webhook_url
+  plaintext_value = data.terraform_remote_state.prod.outputs.dsc_deployments_webhook_url
 }
 
 # Apps
@@ -68,19 +68,19 @@ resource "github_actions_secret" "apps_aws_secret_key" {
 resource "github_actions_secret" "apps_github_access_token" {
   repository      = "apps"
   secret_name     = "GH_ACCESS_TOKEN"
-  plaintext_value = data.terraform_remote_state.prod.outputs.github_access_token
+  plaintext_value = data.terraform_remote_state.prod.outputs.gh_access_token
 }
 
-resource "github_actions_secret" "apps_tunnel_token" {
+resource "github_actions_secret" "apps_cf_tunnel_token" {
   repository      = "apps"
   secret_name     = "CF_TUNNEL_TOKEN"
-  plaintext_value = data.terraform_remote_state.prod.outputs.tunnel_token
+  plaintext_value = data.terraform_remote_state.prod.outputs.cf_tunnel_token
 }
 
-resource "github_actions_secret" "apps_discord_deployments_webhook_url" {
+resource "github_actions_secret" "apps_dsc_deployments_webhook_url" {
   repository      = "apps"
   secret_name     = "DISCORD_DEPLOYMENTS_WEBHOOK_URL"
-  plaintext_value = data.terraform_remote_state.prod.outputs.discord_deployments_webhook_url
+  plaintext_value = data.terraform_remote_state.prod.outputs.dsc_deployments_webhook_url
 }
 
 # lambdas
@@ -105,7 +105,7 @@ resource "github_actions_secret" "lambdas_aws_region" {
 resource "github_actions_secret" "lambdas_github_access_token" {
   repository      = "lambdas"
   secret_name     = "GH_ACCESS_TOKEN"
-  plaintext_value = data.terraform_remote_state.prod.outputs.github_access_token
+  plaintext_value = data.terraform_remote_state.prod.outputs.gh_access_token
 }
 
 # go-template
@@ -130,5 +130,5 @@ resource "github_actions_secret" "go_template_aws_region" {
 resource "github_actions_secret" "go_template_github_access_token" {
   repository      = "go-template"
   secret_name     = "GH_ACCESS_TOKEN"
-  plaintext_value = data.terraform_remote_state.prod.outputs.github_access_token
+  plaintext_value = data.terraform_remote_state.prod.outputs.gh_access_token
 }

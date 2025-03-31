@@ -25,9 +25,9 @@ variable "go_template_db_ssl_mode" {
 ################################################################################
 
 resource "cloudflare_record" "go_template_dns_record" {
-  zone_id = var.cloudflare_ip812_zone_id
+  zone_id = var.cf_ip812_zone_id
   name    = var.go_template_domain
-  content = cloudflare_zero_trust_tunnel_cloudflared.tunnel.cname
+  content = cloudflare_zero_trust_tunnel_cloudflared.cf_tunnel.cname
   type    = "CNAME"
   ttl     = 1
   proxied = true
