@@ -2,27 +2,27 @@
 #                                   Variables                                  #
 ################################################################################
 
-variable "db_username" {
+variable "pg_username" {
   type      = string
   sensitive = true
 }
 
-variable "db_password" {
+variable "pg_password" {
   type      = string
   sensitive = true
 }
 
 ################################################################################
-#                                    DB                                        #
+#                                   Postgres                                   #
 ################################################################################
 
-resource "aws_db_subnet_group" "db_subnet_group" {
-  name       = "${var.org}-${var.env}-db-subnet-group"
+resource "aws_db_subnet_group" "pg_subnet_group" {
+  name       = "${var.org}-${var.env}-pg-subnet-group"
   subnet_ids = [aws_subnet.private_subnet_a.id, aws_subnet.private_subnet_b.id]
   tags       = local.default_tags
 }
 
-resource "aws_security_group" "db_sg" {
+resource "aws_security_group" "pg_sg" {
   vpc_id = aws_vpc.vpc.id
   ingress = [
     {
@@ -53,20 +53,20 @@ resource "aws_security_group" "db_sg" {
   tags = local.default_tags
 }
 
-resource "aws_db_instance" "db" {
+resource "aws_db_instance" "pg" {
   allocated_storage                     = 20
   engine                                = "postgres"
   engine_version                        = "16.8"
-  identifier                            = "db-${var.org}"
+  identifier                            = "pg-${var.org}"
   instance_class                        = "db.t4g.micro"
-  db_subnet_group_name                  = aws_db_subnet_group.db_subnet_group.name
-  vpc_security_group_ids                = [aws_security_group.db_sg.id]
+  db_subnet_group_name                  = aws_db_subnet_group.pg_subnet_group.name
+  vpc_security_group_ids                = [aws_security_group.pg_sg.id]
   storage_encrypted                     = false
   publicly_accessible                   = false
   delete_automated_backups              = false
   skip_final_snapshot                   = true
-  username                              = var.db_username
-  password                              = var.db_password
+  username                              = var.pg_username
+  password                              = var.pg_password
   apply_immediately                     = true
   multi_az                              = false
   iam_database_authentication_enabled   = false
@@ -75,4 +75,12 @@ resource "aws_db_instance" "db" {
   backup_window                         = "00:00-01:00"
   backup_retention_period               = 7
   tags                                  = local.default_tags
+
+  lifecycle {
+    replace_triggered_by = [
+      aws_security_group.pg_sg,
+      aws_security_group.pg_sg.ingress,
+      aws_security_group.pg_sg.egress
+    ]
+  }
 }

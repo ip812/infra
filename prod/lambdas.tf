@@ -65,9 +65,9 @@ resource "aws_lambda_function" "pg_query_exec_function" {
   }
   environment {
     variables = {
-      DB_HOST     = aws_db_instance.db.endpoint
-      DB_USERNAME = var.db_username
-      DB_PASSWORD = var.db_password
+      DB_HOST     = aws_db_instance.pg.endpoint
+      DB_USERNAME = var.pg_username
+      DB_PASSWORD = var.pg_password
     }
   }
   tags = local.default_tags

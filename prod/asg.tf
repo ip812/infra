@@ -119,13 +119,13 @@ resource "aws_launch_template" "asg_lt" {
     # Swarm init & secrets
     echo "Setting up Docker Swarm starts"
     docker swarm init
-    printf ${var.db_password} | docker secret create pgadmin_password -
+    printf ${var.pg_password} | docker secret create pgadmin_password -
     printf ${var.go_template_domain} | docker secret create go_template_domain -
     printf ${var.go_template_port} | docker secret create go_template_port -
     printf ${var.go_template_db_name} | docker secret create go_template_db_name -
-    printf ${var.db_username} | docker secret create go_template_db_username -
-    printf ${var.db_password} | docker secret create go_template_db_password -
-    printf ${aws_db_instance.db.endpoint} | docker secret create go_template_db_endpoint -
+    printf ${var.pg_username} | docker secret create go_template_db_username -
+    printf ${var.pg_password} | docker secret create go_template_db_password -
+    printf ${aws_db_instance.pg.endpoint} | docker secret create go_template_db_endpoint -
     printf ${var.go_template_db_ssl_mode} | docker secret create go_template_db_ssl_mode -
     printf ${var.aws_region} | docker secret create go_template_aws_region -
     printf ${var.aws_access_key} | docker secret create go_template_aws_access_key_id -
@@ -179,6 +179,14 @@ resource "aws_autoscaling_group" "asg" {
       min_healthy_percentage       = 100
       scale_in_protected_instances = "Refresh"
     }
+  }
+
+  lifecycle {
+    replace_triggered_by = [
+      aws_security_group.asg_sg,
+      aws_security_group.asg_sg.ingress,
+      aws_security_group.asg_sg.egress
+    ]
   }
 }
 

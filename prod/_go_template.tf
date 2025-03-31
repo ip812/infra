@@ -46,7 +46,7 @@ resource "aws_lambda_invocation" "create_go_template_db" {
   })
   triggers = {
     redeployment = sha1(jsonencode([
-      aws_db_instance.db.id
+      aws_db_instance.pg.id
     ]))
   }
 }
