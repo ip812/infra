@@ -7,8 +7,18 @@ variable "pg_username" {
   sensitive = true
 }
 
+output "pg_username" {
+  value     = var.pg_username
+  sensitive = true
+}
+
 variable "pg_password" {
   type      = string
+  sensitive = true
+}
+
+output "pg_password" {
+  value     = var.pg_password
   sensitive = true
 }
 
@@ -83,4 +93,8 @@ resource "aws_db_instance" "pg" {
       aws_security_group.pg_sg.egress
     ]
   }
+}
+
+output "pg_endpoint" {
+  value = aws_db_instance.pg.endpoint
 }

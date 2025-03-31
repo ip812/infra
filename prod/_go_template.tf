@@ -15,6 +15,11 @@ variable "go_template_db_name" {
   sensitive = true
 }
 
+output "go_template_db_name" {
+  value     = var.go_template_db_name
+  sensitive = true
+}
+
 variable "go_template_db_ssl_mode" {
   type      = string
   sensitive = true
