@@ -61,8 +61,18 @@ variable "hcp_client_id" {
   sensitive = true
 }
 
+output "hcp_client_id" {
+  value     = var.hcp_client_id
+  sensitive = true
+}
+
 variable "hcp_client_secret" {
   type      = string
+  sensitive = true
+}
+
+output "hcp_client_secret" {
+  value     = var.hcp_client_secret
   sensitive = true
 }
 
