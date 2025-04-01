@@ -61,18 +61,8 @@ variable "hcp_client_id" {
   sensitive = true
 }
 
-output "hcp_client_id" {
-  value     = var.hcp_client_id
-  sensitive = true
-}
-
 variable "hcp_client_secret" {
   type      = string
-  sensitive = true
-}
-
-output "hcp_client_secret" {
-  value     = var.hcp_client_secret
   sensitive = true
 }
 
@@ -107,6 +97,10 @@ terraform {
       source  = "cloudflare/cloudflare"
       version = "4.49.1"
     }
+    hcp = {
+      source  = "hashicorp/hcp"
+      version = "0.104.0"
+    }
   }
 }
 
@@ -118,4 +112,10 @@ provider "aws" {
 
 provider "cloudflare" {
   api_token = var.cf_api_token
+}
+
+provider "hcp" {
+  client_id     = var.hcp_client_id
+  client_secret = var.hcp_client_secret
+  project_id    = var.hcp_project_id
 }
