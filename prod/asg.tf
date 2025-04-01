@@ -109,38 +109,26 @@ resource "aws_launch_template" "asg_lt" {
     ln -s /home/ubuntu/.vm-dotfiles/.vimrc /root/.vimrc
     echo "Setting up dotfiles ends"
 
-    # Docker
-    echo "Installing Docker starts"
-    curl -fsSl https://get.docker.com | sh
-    gpasswd -a ubuntu docker
-    aws ecr get-login-password --region ${var.aws_region} | docker login --username AWS --password-stdin 678468774710.dkr.ecr.${var.aws_region}.amazonaws.com
-    echo "Installing Docker ends"
+    # k3s
+    curl -sfL https://get.k3s.io | sh -
+    echo "K3s installed"
+    systemctl start k3s
+    echo "K3s started"
 
-    # Swarm init & secrets
-    echo "Setting up Docker Swarm starts"
-    docker swarm init
-    printf ${var.pg_password} | docker secret create pgadmin_password -
-    printf ${var.go_template_domain} | docker secret create go_template_domain -
-    printf ${var.go_template_port} | docker secret create go_template_port -
-    printf ${var.go_template_db_name} | docker secret create go_template_db_name -
-    printf ${var.pg_username} | docker secret create go_template_db_username -
-    printf ${var.pg_password} | docker secret create go_template_db_password -
-    printf ${aws_db_instance.pg.endpoint} | docker secret create go_template_db_endpoint -
-    printf ${var.go_template_db_ssl_mode} | docker secret create go_template_db_ssl_mode -
-    printf ${var.aws_region} | docker secret create go_template_aws_region -
-    printf ${var.aws_access_key} | docker secret create go_template_aws_access_key_id -
-    printf ${var.aws_secret_key} | docker secret create go_template_aws_secret_access_key -
-    echo "Setting up Docker Swarm ends"
+    # Helm
+    curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+    echo "Helm installed"
 
-    # Trigger deploy pipeline
-    echo "Triggering Docker Swarm's deployment starts"
-    curl -X POST \
-      -H "Accept: application/vnd.github+json" \
-      -H "Authorization: token ${var.gh_access_token}" \
-      -H "X-GitHub-Api-Version: 2022-11-28" \
-      https://api.github.com/repos/ip812/apps/actions/workflows/deploy.yml/dispatches \
-      -d '{"ref": "main"}'
-    echo "Triggering Docker Swarm's deployment ends"
+    # Bootstrap
+    helm repo add hashicorp https://helm.releases.hashicorp.com
+    helm install vault-secrets-operator hashicorp/vault-secrets-operator \
+      --namespace vault \
+      --create-namespace
+
+    kubectl create secret generic hcp-credentials \
+      --namespace vault \
+      --from-literal=clientID=${var.hcp_client_id} \
+      --from-literal=clientSecret=${var.hcp_client_secret}
   EOF
   )
   dynamic "tag_specifications" {
