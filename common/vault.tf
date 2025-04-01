@@ -30,6 +30,13 @@ resource "hcp_vault_secrets_secret" "prod_pg_username" {
 
 resource "hcp_vault_secrets_secret" "prod_pg_password" {
   app_name     = var.env_prod
-  secret_name  = "pg+password"
+  secret_name  = "pg_password"
   secret_value = data.terraform_remote_state.prod.outputs.pg_password
 }
+
+resource "hcp_vault_secrets_secret" "prod_go_template_pg_name" {
+  app_name     = var.env_prod
+  secret_name  = "pg"
+  secret_value = data.terraform_remote_state.prod.outputs.go_template_db_name
+}
+
