@@ -46,3 +46,8 @@ resource "hcp_vault_secrets_secret" "prod_go_template_pg_name" {
   secret_value = data.terraform_remote_state.prod.outputs.go_template_db_name
 }
 
+resource "hcp_vault_secrets_secret" "prod_slk_bot_token" {
+  app_name     = var.env_prod
+  secret_name  = "slk_bot_token"
+  secret_value = data.terraform_remote_state.prod.outputs.slk_bot_token
+}
