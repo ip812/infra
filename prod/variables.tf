@@ -24,6 +24,16 @@ output "dsc_deployments_webhook_url" {
   sensitive = true
 }
 
+variable "slk_bot_token" {
+  type      = string
+  sensitive = true
+}
+
+output "slk_bot_token" {
+  value     = var.slk_bot_token
+  sensitive = true
+}
+
 locals {
   default_tags = {
     Organization = var.org
