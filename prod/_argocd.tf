@@ -1,25 +1,25 @@
-resource "cloudflare_record" "traefik_dns_record" {
+resource "cloudflare_record" "argocd_dns_record" {
   zone_id = var.cf_ip812_zone_id
-  name    = "traefik"
+  name    = "argocd"
   content = cloudflare_zero_trust_tunnel_cloudflared.cf_tunnel.cname
   type    = "CNAME"
   ttl     = 1
   proxied = true
 }
 
-resource "cloudflare_zero_trust_access_application" "traefik_zt_app" {
+resource "cloudflare_zero_trust_access_application" "argocd_zt_app" {
   zone_id                   = var.cf_ip812_zone_id
-  name                      = "traefik"
-  domain                    = "traefik.${var.org}.com"
+  name                      = "argocd"
+  domain                    = "argocd.${var.org}.com"
   type                      = "self_hosted"
   session_duration          = "24h"
   auto_redirect_to_identity = true
 }
 
-resource "cloudflare_zero_trust_access_policy" "traefik_ap" {
+resource "cloudflare_zero_trust_access_policy" "argocd_ap" {
   zone_id        = var.cf_ip812_zone_id
-  application_id = cloudflare_zero_trust_access_application.traefik_zt_app.id
-  name           = "traefik"
+  application_id = cloudflare_zero_trust_access_application.argocd_zt_app.id
+  name           = "argocd"
   decision       = "allow"
   precedence     = 1
   include {

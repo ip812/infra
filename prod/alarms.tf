@@ -1,7 +1,3 @@
-################################################################################
-#                                     AWS                                      #
-################################################################################
-
 resource "aws_cloudwatch_metric_alarm" "asg_high_cpu_alarm" {
   alarm_name          = "asg-high-cpu-alarm"
   comparison_operator = "GreaterThanOrEqualToThreshold"
