@@ -66,7 +66,7 @@ resource "random_string" "asg_suffix" {
 resource "aws_launch_template" "asg_lt" {
   name_prefix            = "asg-lt-"
   image_id               = "ami-0a628e1e89aaedf80"
-  instance_type          = "t2.micro"
+  instance_type          = "t3.medium"
   vpc_security_group_ids = [aws_security_group.asg_sg.id]
   iam_instance_profile {
     name = aws_iam_instance_profile.ec2_instance_profile.name
@@ -74,68 +74,69 @@ resource "aws_launch_template" "asg_lt" {
   monitoring {
     enabled = true
   }
+
   user_data = base64encode(<<-EOF
     #!/bin/bash
-    # Dependencies
-    echo "Updating and installing dependencies starts"
+
+    echo "Updating and installing dependencies"
     apt-get update -y
-    apt-get install -y tmux vim curl unzip
-    echo "Updating and installing dependencies ends"
+    apt-get install -y curl wget unzip vim tmux git
 
-    # AWS CLI
-    echo "Installing AWS CLI starts"
-    curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-    unzip awscliv2.zip
-    ./aws/install
-    echo "Installing AWS CLI ends"
+    echo "Installing AWS CLI"
+    curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/tmp/awscliv2.zip"
+    unzip /tmp/awscliv2.zip -d /tmp
+    /tmp/aws/install
 
-    # AWS credentials & config
-    echo "Setting up AWS credentials starts"
-    mkdir -p ~/.aws
-    echo -e "[default]\nregion = ${var.aws_region}\noutput = json" > ~/.aws/config
-    echo -e "[default]\naws_access_key_id = ${var.aws_access_key}\naws_secret_access_key = ${var.aws_secret_key}" > ~/.aws/credentials
-    echo "Setting up AWS credentials ends"
+    echo "Setting up AWS credentials"
+    mkdir -p /root/.aws
+    chmod 700 /root/.aws
+    echo -e "[default]\nregion = ${var.aws_region}\noutput = json" > /root/.aws/config
+    echo -e "[default]\naws_access_key_id = ${var.aws_access_key}\naws_secret_access_key = ${var.aws_secret_key}" > /root/.aws/credentials
 
-    # Dotfiles
-    echo "Setting up dotfiles starts"
-    cd /home/ubuntu
-    git clone https://github.com/iypetrov/.vm-dotfiles.git
-    chmod -R ugo+r /home/ubuntu/.vm-dotfiles
-    ln -s /home/ubuntu/.vm-dotfiles/.tmux.conf /root/.tmux.conf
-    ln -s /home/ubuntu/.vm-dotfiles/.vimrc /root/.vimrc
-    echo "Setting up dotfiles ends"
-
-    # k3s
-    curl -sfL https://get.k3s.io | sh -
-    echo "K3s installed"
+    echo "Installing k3s"
+    curl -sfL https://get.k3s.io | sh -s - --write-kubeconfig-mode 644
+    mkdir -p ~/.kube
+    cp /etc/rancher/k3s/k3s.yaml ~/.kube/config
+    chown $(id -u):$(id -g) ~/.kube/config
+    export KUBECONFIG=~/.kube/config
+    systemctl enable k3s
     systemctl start k3s
-    echo "K3s started"
 
-    # Helm
+    echo "Setting up kubectl"
+    curl -LO "https://dl.k8s.io/release/v1.32.0/bin/linux/amd64/kubectl"
+    chmod +x kubectl
+    mv kubectl /usr/local/bin/kubectl
+
+    echo "Installing Helm"
     curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
-    echo "Helm installed"
 
-    # Bootstrap
+    echo "Setup k8s cluster"
     git clone https://${var.gh_access_token}@github.com/ip812/apps.git
-
+    kubectl create namespace argocd
+    kubectl create namespace ip812
+    kubectl create secret generic argocd-notifications-secret \
+      --namespace argocd \
+      --from-literal=slack-token="${var.slk_bot_token}"
     kubectl create secret generic hcp-credentials \
-      --namespace hcp-vault \
-      --from-literal=clientID=${var.hcp_client_id} \
-      --from-literal=clientSecret=${var.hcp_client_secret}
-    kubectl create secret generic slk-bot-token \
-      --namespace hcp-vault \
-      --from-literal=clientID=${var.slk_bot_token}
-
-    kubectl apply -f ./bootstrap/ --recursive
-
+      --namespace ip812 \
+      --from-literal=clientID="${var.hcp_client_id}" \
+      --from-literal=clientSecret="${var.hcp_client_secret}"
+    kubectl create secret docker-registry ecr-secret \
+      --namespace ip812 \
+      --docker-server=678468774710.dkr.ecr.${var.aws_region}.amazonaws.com \
+      --docker-username=AWS \
+      --docker-password=$(aws ecr get-login-password --region ${var.aws_region})
     helm repo add hashicorp https://helm.releases.hashicorp.com
-	  helm install vault-secrets-operator hashicorp/vault-secrets-operator -n hcp-vault --create-namespace
-	  helm repo add traefik https://helm.traefik.io/traefik
-	  helm install traefik traefik/traefik -n traefik -f values/traefik.yml --create-namespace
-	  helm repo add argo https://argoproj.github.io/argo-helm
-	  helm install updater argo/argocd-image-updater -n argocd -f values/image-updater.yaml
+    helm install vault-secrets-operator hashicorp/vault-secrets-operator -n ip812 --timeout 10m0s --wait
+    helm repo add traefik https://helm.traefik.io/traefik
+    helm install traefik traefik/traefik -f apps/values/traefik.yaml -n ip812 --timeout 10m0s --wait
+    helm repo add argo https://argoproj.github.io/argo-helm
+    helm install argocd argo/argo-cd -f apps/values/argocd.yaml -n argocd --timeout 10m0s --wait
+    helm install updater argo/argocd-image-updater -f apps/values/argocd-image-updater.yaml -n argocd --timeout 10m0s --wait
+    kubectl apply -k ./apps/manifests/prod
   EOF
   )
+
   dynamic "tag_specifications" {
     for_each = toset(["instance"])
     content {

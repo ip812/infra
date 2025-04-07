@@ -7,15 +7,10 @@ on:
       - main
     paths:
       - prod/**
-  repository_dispatch:
-    types: [update-lambda]
 
 env:
   TF_CLOUD_ORGANIZATION: ${{ vars.ORG }}
   TF_API_TOKEN: ${{ secrets.TF_API_TOKEN }}
-  IMAGE_NAME: ${{ github.event.client_payload.image_name }}
-  IMAGE_TAG: ${{ github.event.client_payload.image_tag }}
-  COMMIT_URL: ${{ github.event.client_payload.commit_url }}
 
 jobs:
   tf-apply-prod:
@@ -50,82 +45,3 @@ jobs:
         if: ${{ fromJSON(steps.create-run.outputs.payload).data.attributes.actions.IsConfirmable }}
         with:
           run: ${{ steps.create-run.outputs.run_id }}
-
-  tf-apply-common:
-    runs-on: ubuntu-24.04
-    needs: tf-apply-prod
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v1
-        with:
-          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
-
-      - name: Upload Terraform configuration to HCP
-        uses: hashicorp/tfc-workflows-github/actions/upload-configuration@v1.3.2
-        id: upload
-        with:
-          workspace: common
-          directory: common
-
-      - name: Create Terraform apply run
-        uses: hashicorp/tfc-workflows-github/actions/create-run@v1.3.2
-        id: create-run
-        with:
-          workspace: common
-          configuration_version: ${{ steps.upload.outputs.configuration_version_id }}
-
-      - name: Apply Terraform run
-        uses: hashicorp/tfc-workflows-github/actions/apply-run@v1.3.2
-        id: apply
-        if: ${{ fromJSON(steps.create-run.outputs.payload).data.attributes.actions.IsConfirmable }}
-        with:
-          run: ${{ steps.create-run.outputs.run_id }}
-
-  discord-notification:
-    runs-on: ubuntu-24.04
-    needs: tf-apply-prod
-    if: ${{ always() }}
-  
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Checkout toolkit
-        uses: actions/checkout@v4
-        with:
-          repository: ip812/toolkit
-          token: ${{ secrets.GH_ACCESS_TOKEN }}
-          path: toolkit
-  
-      - name: Send notification to Discord's deployments channel for the new version of the Lambda function
-        run: |
-          set -e
-
-          ENV="prod"
-          COMMIT_LINK="${{ env.COMMIT_URL }}"
-          ACTION_LINK="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-
-          # The automated Lambda deployment will be executed only from the repository_dispatch event
-          if [[ "${{ github.event_name }}" = "repository_dispatch" ]]; then
-            if [[ "${{ needs.tf-apply-prod.result }}" == "success" ]]; then
-              TITLE="Deployment Lambda"
-              DESCRIPTION="**${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}** was deployed **successfully**."
-              STATUS="success"
-              FIELDS="Environment=${ENV},Commit=${COMMIT_LINK},Action=${ACTION_LINK}" 
-              DISCORD_DEPLOYMENTS_WEBHOOK_URL=${{ secrets.DISCORD_DEPLOYMENTS_WEBHOOK_URL }}
-              toolkit/scripts/send-discord-notification.sh "${TITLE}" "${DESCRIPTION}" "${STATUS}" "${FIELDS}" "${DISCORD_DEPLOYMENTS_WEBHOOK_URL}"
-              echo "${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} was deployed successfully"
-            else
-              TITLE="Deployment Lambda"
-              DESCRIPTION="**${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}** **failed** to deploy."
-              STATUS="failure"
-              FIELDS="Environment=${ENV},Commit=${COMMIT_LINK},Action=${ACTION_LINK}" 
-              DISCORD_DEPLOYMENTS_WEBHOOK_URL=${{ secrets.DISCORD_DEPLOYMENTS_WEBHOOK_URL }}
-              toolkit/scripts/send-discord-notification.sh "${TITLE}" "${DESCRIPTION}" "${STATUS}" "${FIELDS}" "${DISCORD_DEPLOYMENTS_WEBHOOK_URL}"
-              echo "${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} failed to deploy"
-            fi
-          fi
