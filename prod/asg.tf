@@ -116,15 +116,24 @@ resource "aws_launch_template" "asg_lt" {
     echo "Helm installed"
 
     # Bootstrap
-    helm repo add hashicorp https://helm.releases.hashicorp.com
-    helm install vault-secrets-operator hashicorp/vault-secrets-operator \
-      --namespace vault \
-      --create-namespace
+    git clone https://${var.gh_access_token}@github.com/ip812/apps.git
 
     kubectl create secret generic hcp-credentials \
-      --namespace vault \
+      --namespace hcp-vault \
       --from-literal=clientID=${var.hcp_client_id} \
       --from-literal=clientSecret=${var.hcp_client_secret}
+    kubectl create secret generic slk-bot-token \
+      --namespace hcp-vault \
+      --from-literal=clientID=${var.slk_bot_token}
+
+    kubectl apply -f ./bootstrap/ --recursive
+
+    helm repo add hashicorp https://helm.releases.hashicorp.com
+	  helm install vault-secrets-operator hashicorp/vault-secrets-operator -n hcp-vault --create-namespace
+	  helm repo add traefik https://helm.traefik.io/traefik
+	  helm install traefik traefik/traefik -n traefik -f values/traefik.yml --create-namespace
+	  helm repo add argo https://argoproj.github.io/argo-helm
+	  helm install updater argo/argocd-image-updater -n argocd -f values/image-updater.yaml
   EOF
   )
   dynamic "tag_specifications" {
