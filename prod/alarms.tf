@@ -5,11 +5,11 @@ resource "aws_cloudwatch_metric_alarm" "asg_high_cpu_alarm" {
   metric_name         = "CPUUtilization"
   namespace           = "AWS/EC2"
   period              = 60
-  statistic           = "Average"
-  threshold           = 75
+  statistic           = "Maximum"
+  threshold           = 90
   actions_enabled     = true
   alarm_actions       = [aws_autoscaling_policy.asg_scale_out_policy.arn]
-  alarm_description   = "Alarm when CPU exceeds 75%"
+  alarm_description   = "Alarm when CPU exceeds max threshold"
   dimensions = {
     AutoScalingGroupName = aws_autoscaling_group.asg.name
   }
