@@ -94,6 +94,7 @@ resource "aws_launch_template" "asg_lt" {
     echo -e "[default]\naws_access_key_id = ${var.aws_access_key}\naws_secret_access_key = ${var.aws_secret_key}" > /root/.aws/credentials
 
     echo "Installing k3s"
+    export INSTALL_K3S_EXEC="server --disable=traefik" 
     curl -sfL https://get.k3s.io | sh -s - --write-kubeconfig-mode 644
     mkdir -p ~/.kube
     cp /etc/rancher/k3s/k3s.yaml ~/.kube/config
@@ -129,7 +130,8 @@ resource "aws_launch_template" "asg_lt" {
       --namespace ip812 \
       --docker-server=678468774710.dkr.ecr.${var.aws_region}.amazonaws.com \
       --docker-username=AWS \
-      --docker-password=$(aws ecr get-login-password --region ${var.aws_region})
+      --docker-password=$(aws ecr get-login-password --region ${var.aws_region}) \
+      --docker-email=ilia.yavorov.petrov@gmail.com
     helm repo add hashicorp https://helm.releases.hashicorp.com
     helm install vault-secrets-operator hashicorp/vault-secrets-operator -n ip812 --timeout 10m0s --wait
     helm repo add traefik https://helm.traefik.io/traefik
