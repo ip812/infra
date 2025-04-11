@@ -107,6 +107,10 @@ resource "aws_launch_template" "asg_lt" {
     chmod +x kubectl
     mv kubectl /usr/local/bin/kubectl
 
+    echo "Setting up k9s"
+    wget https://github.com/derailed/k9s/releases/download/v0.32.5/k9s_linux_amd64.deb
+    apt install ./k9s_linux_amd64.deb
+
     echo "Installing Helm"
     curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 
