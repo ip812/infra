@@ -80,7 +80,7 @@ resource "aws_launch_template" "asg_lt" {
 
     echo "Updating and installing dependencies"
     apt-get update -y
-    apt-get install -y curl wget unzip vim tmux git
+    apt-get install -y curl wget unzip make vim tmux git
 
     echo "Installing AWS CLI"
     curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/tmp/awscliv2.zip"
