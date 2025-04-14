@@ -32,21 +32,12 @@ resource "cloudflare_record" "go_template_dns_record" {
 ################################################################################
 #                                     APP                                      #
 ################################################################################
+
 resource "aws_lambda_invocation" "create_go_template_db" {
   function_name = aws_lambda_function.pg_query_exec_function.function_name
   input = jsonencode({
     database_name = "postgres",
-    query         = <<-EOT
-      DO $$
-      BEGIN
-         IF NOT EXISTS (
-            SELECT FROM pg_database WHERE datname = '${var.go_template_db_name}'
-         ) THEN
-            CREATE DATABASE "${var.go_template_db_name}";
-         END IF;
-      END
-      $$;
-    EOT
+    query         = "CREATE DATABASE \"${var.go_template_db_name}\";",
   })
   triggers = {
     redeployment = sha1(jsonencode([
