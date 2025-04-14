@@ -31,7 +31,7 @@ resource "aws_lambda_function" "hello_function" {
   }
   environment {
     variables = {
-      APP_ENV     = var.env
+      APP_ENV = var.env
     }
   }
   tags = local.default_tags

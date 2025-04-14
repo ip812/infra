@@ -9,11 +9,11 @@ resource "aws_cloudwatch_metric_alarm" "asg_high_cpu_alarm" {
   threshold           = 90
   actions_enabled     = true
   alarm_description   = "Alarm when ASG CPU exceeds max threshold"
-  alarm_actions       = [
+  alarm_actions = [
     aws_sns_topic.alarms_topic.arn,
     aws_autoscaling_policy.asg_scale_out_policy.arn
   ]
-  ok_actions       = [
+  ok_actions = [
     aws_sns_topic.alarms_topic.arn
   ]
   insufficient_data_actions = []
@@ -23,17 +23,17 @@ resource "aws_cloudwatch_metric_alarm" "asg_high_cpu_alarm" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "asg_two_instances_alarm" {
-  alarm_name          = "asg-two-instances-alarm"
-  comparison_operator = "GreaterThanOrEqualToThreshold"
-  evaluation_periods  = 1
-  metric_name         = "GroupInServiceInstances"
-  namespace           = "AWS/AutoScaling"
-  period              = 60
-  statistic           = "Maximum"
-  threshold           = 2
-  actions_enabled     = true
-  alarm_actions       = [aws_autoscaling_policy.asg_scale_in_policy.arn]
-  alarm_description   = "Triggers when the ASG has 2 instances"
+  alarm_name                = "asg-two-instances-alarm"
+  comparison_operator       = "GreaterThanOrEqualToThreshold"
+  evaluation_periods        = 1
+  metric_name               = "GroupInServiceInstances"
+  namespace                 = "AWS/AutoScaling"
+  period                    = 60
+  statistic                 = "Maximum"
+  threshold                 = 2
+  actions_enabled           = true
+  alarm_actions             = [aws_autoscaling_policy.asg_scale_in_policy.arn]
+  alarm_description         = "Triggers when the ASG has 2 instances"
   insufficient_data_actions = []
   dimensions = {
     AutoScalingGroupName = aws_autoscaling_group.asg.name
@@ -87,7 +87,7 @@ resource "awscc_chatbot_slack_channel_configuration" "alarms_slack_channel" {
   slack_channel_id   = "C08KHNUASJ3"
   slack_workspace_id = "T08L95ER4JV"
   logging_level      = "INFO"
-  sns_topic_arns     = [
+  sns_topic_arns = [
     aws_sns_topic.alarms_topic.arn
   ]
 }

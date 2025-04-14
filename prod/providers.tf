@@ -104,7 +104,7 @@ terraform {
       version = "5.77.0"
     }
     awscc = {
-      source = "hashicorp/awscc"
+      source  = "hashicorp/awscc"
       version = "1.35.0"
     }
     cloudflare = {
@@ -125,7 +125,7 @@ provider "aws" {
 }
 
 provider "awscc" {
-  region     = var.aws_region
+  region = var.aws_region
 }
 
 provider "cloudflare" {

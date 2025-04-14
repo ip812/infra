@@ -96,6 +96,6 @@ resource "aws_db_instance" "pg" {
 }
 
 output "pg_endpoint" {
-  value = aws_db_instance.pg.endpoint
+  value     = aws_db_instance.pg.endpoint
   sensitive = true
 }
