@@ -115,7 +115,7 @@ resource "aws_launch_template" "asg_lt" {
     echo "Installing Helm"
     curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 
-    echo "Setup k8s cluster"
+    echo "Setting up k8s cluster"
     git clone https://${var.gh_access_token}@github.com/ip812/apps.git
     kubectl create namespace argocd
     kubectl create namespace ip812
