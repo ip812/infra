@@ -8,12 +8,18 @@ resource "aws_cloudwatch_metric_alarm" "asg_high_cpu_alarm" {
   statistic           = "Maximum"
   threshold           = 90
   actions_enabled     = true
-  alarm_actions       = [aws_autoscaling_policy.asg_scale_out_policy.arn]
-  alarm_description   = "Alarm when CPU exceeds max threshold"
+  alarm_description   = "Alarm when ASG CPU exceeds max threshold"
+  alarm_actions       = [
+    aws_sns_topic.alarms_topic.arn,
+    aws_autoscaling_policy.asg_scale_out_policy.arn
+  ]
+  ok_actions       = [
+    aws_sns_topic.alarms_topic.arn
+  ]
+  insufficient_data_actions = []
   dimensions = {
     AutoScalingGroupName = aws_autoscaling_group.asg.name
   }
-  insufficient_data_actions = []
 }
 
 resource "aws_cloudwatch_metric_alarm" "asg_two_instances_alarm" {
@@ -23,13 +29,65 @@ resource "aws_cloudwatch_metric_alarm" "asg_two_instances_alarm" {
   metric_name         = "GroupInServiceInstances"
   namespace           = "AWS/AutoScaling"
   period              = 60
-  statistic           = "Average"
+  statistic           = "Maximum"
   threshold           = 2
   actions_enabled     = true
   alarm_actions       = [aws_autoscaling_policy.asg_scale_in_policy.arn]
   alarm_description   = "Triggers when the ASG has 2 instances"
+  insufficient_data_actions = []
   dimensions = {
     AutoScalingGroupName = aws_autoscaling_group.asg.name
   }
-  insufficient_data_actions = []
+}
+
+resource "aws_sns_topic" "alarms_topic" {
+  name = "alarms-notifications"
+}
+
+resource "aws_iam_role" "alarms_chatbot_role" {
+  name = "alarms-chatbot-role"
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect    = "Allow",
+        Principal = { Service = "chatbot.amazonaws.com" },
+        Action    = "sts:AssumeRole"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_policy" "alarms_chatbot_policy" {
+  name = "alarms-chatbot-policy"
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect = "Allow",
+        Action = [
+          "cloudwatch:DescribeAlarms",
+          "cloudwatch:GetMetricData",
+          "sns:Publish"
+        ],
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "alarms_chatbot_policy_attachment" {
+  role       = aws_iam_role.alarms_chatbot_role.name
+  policy_arn = aws_iam_policy.alarms_chatbot_policy.arn
+}
+
+resource "awscc_chatbot_slack_channel_configuration" "alarms_slack_channel" {
+  configuration_name = "alarms-slack-bot"
+  iam_role_arn       = aws_iam_role.alarms_chatbot_role.arn
+  slack_channel_id   = "C08KHNUASJ3"
+  slack_workspace_id = "T08L95ER4JV"
+  logging_level      = "INFO"
+  sns_topic_arns     = [
+    aws_sns_topic.alarms_topic.arn
+  ]
 }
