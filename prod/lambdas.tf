@@ -132,7 +132,7 @@ resource "aws_iam_role_policy_attachment" "lambda_deploys_chatbot_policy_attachm
 resource "awscc_chatbot_slack_channel_configuration" "lambda_deploys_slack_channel" {
   configuration_name = "lambda-deploys-slack-bot"
   iam_role_arn       = aws_iam_role.lambda_deploys_chatbot_role.arn
-  slack_channel_id   = "C08KHNUASJ3"
+  slack_channel_id   = "C08NQMY5MA4"
   slack_workspace_id = "T08L95ER4JV"
   logging_level      = "INFO"
   sns_topic_arns = [
