@@ -22,6 +22,24 @@ resource "aws_cloudwatch_metric_alarm" "asg_high_cpu_alarm" {
   }
 }
 
+resource "aws_cloudwatch_metric_alarm" "asg_two_instances_alarm" {
+  alarm_name                = "asg-two-instances-alarm"
+  comparison_operator       = "GreaterThanOrEqualToThreshold"
+  evaluation_periods        = 1
+  metric_name               = "GroupInServiceInstances"
+  namespace                 = "AWS/AutoScaling"
+  period                    = 60
+  statistic                 = "Maximum"
+  threshold                 = 2
+  actions_enabled           = true
+  alarm_actions             = [aws_autoscaling_policy.asg_scale_in_policy.arn]
+  alarm_description         = "Triggers when the ASG has 2 instances"
+  insufficient_data_actions = []
+  dimensions = {
+    AutoScalingGroupName = aws_autoscaling_group.asg.name
+  }
+}
+
 resource "aws_cloudwatch_metric_alarm" "rds_high_cpu_alarm" {
   alarm_name          = "rds-high-cpu-alarm"
   comparison_operator = "GreaterThanOrEqualToThreshold"
@@ -41,7 +59,7 @@ resource "aws_cloudwatch_metric_alarm" "rds_high_cpu_alarm" {
   ]
   insufficient_data_actions = []
   dimensions = {
-     DBInstanceIdentifier = aws_db_instance.pg.id
+     DBInstanceIdentifier = aws_db_instance.pg.identifier
   }
 }
 
@@ -64,25 +82,7 @@ resource "aws_cloudwatch_metric_alarm" "rds_low_storage_alarm" {
   ]
   insufficient_data_actions = []
   dimensions = {
-    DBInstanceIdentifier = aws_db_instance.pg.id
-  }
-}
-
-resource "aws_cloudwatch_metric_alarm" "asg_two_instances_alarm" {
-  alarm_name                = "asg-two-instances-alarm"
-  comparison_operator       = "GreaterThanOrEqualToThreshold"
-  evaluation_periods        = 1
-  metric_name               = "GroupInServiceInstances"
-  namespace                 = "AWS/AutoScaling"
-  period                    = 60
-  statistic                 = "Maximum"
-  threshold                 = 2
-  actions_enabled           = true
-  alarm_actions             = [aws_autoscaling_policy.asg_scale_in_policy.arn]
-  alarm_description         = "Triggers when the ASG has 2 instances"
-  insufficient_data_actions = []
-  dimensions = {
-    AutoScalingGroupName = aws_autoscaling_group.asg.name
+     DBInstanceIdentifier = aws_db_instance.pg.identifier
   }
 }
 

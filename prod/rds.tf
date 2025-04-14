@@ -26,28 +26,6 @@ output "pg_password" {
 #                                   Postgres                                   #
 ################################################################################
 
-resource "aws_iam_role" "rds_monitoring_role" {
-  name = "rds-monitoring-role"
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [
-      {
-        Action = "sts:AssumeRole",
-        Effect = "Allow",
-        Principal = {
-          Service = "monitoring.rds.amazonaws.com"
-        }
-      }
-    ]
-  })
-}
-
-resource "aws_iam_role_policy_attachment" "rds_monitoring_policy_attachment" {
-  role       = aws_iam_role.rds_monitoring_role.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonRDSEnhancedMonitoringRole"
-}
-
 resource "aws_db_subnet_group" "pg_subnet_group" {
   name       = "${var.org}-${var.env}-pg-subnet-group"
   subnet_ids = [aws_subnet.private_subnet_a.id, aws_subnet.private_subnet_b.id]
@@ -102,8 +80,6 @@ resource "aws_db_instance" "pg" {
   apply_immediately                     = true
   multi_az                              = false
   iam_database_authentication_enabled   = false
-  monitoring_interval                   = 60
-  monitoring_role_arn                   = aws_iam_role.rds_monitoring_role.arn
   performance_insights_enabled          = true
   performance_insights_retention_period = 7
   backup_window                         = "00:00-01:00"
