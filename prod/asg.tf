@@ -126,7 +126,7 @@ resource "aws_launch_template" "asg_lt" {
       --namespace ip812 \
       --from-literal=clientID="${var.hcp_client_id}" \
       --from-literal=clientSecret="${var.hcp_client_secret}"
-    kubectl create secret docker-registry ecr-secret \
+    kubectl create secret docker-registry ecr-creds \
       --namespace argocd \
       --docker-server=678468774710.dkr.ecr.${var.aws_region}.amazonaws.com \
       --docker-username=AWS \
