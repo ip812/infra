@@ -80,6 +80,7 @@ resource "aws_db_instance" "pg" {
   apply_immediately                     = true
   multi_az                              = false
   iam_database_authentication_enabled   = false
+  monitoring_interval                   = 60
   performance_insights_enabled          = true
   performance_insights_retention_period = 7
   backup_window                         = "00:00-01:00"
