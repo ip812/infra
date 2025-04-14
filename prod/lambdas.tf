@@ -29,6 +29,11 @@ resource "aws_lambda_function" "hello_function" {
     subnet_ids         = [aws_subnet.public_subnet_a.id, aws_subnet.public_subnet_b.id]
     security_group_ids = [aws_security_group.asg_sg.id]
   }
+  environment {
+    variables = {
+      APP_ENV     = var.env
+    }
+  }
   tags = local.default_tags
 }
 
@@ -65,9 +70,11 @@ resource "aws_lambda_function" "pg_query_exec_function" {
   }
   environment {
     variables = {
+      APP_ENV     = var.env
       DB_HOST     = aws_db_instance.pg.endpoint
       DB_USERNAME = var.pg_username
       DB_PASSWORD = var.pg_password
+      DB_SSL_MODE = "require"
     }
   }
   tags = local.default_tags
