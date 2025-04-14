@@ -20,11 +20,6 @@ output "go_template_db_name" {
   sensitive = true
 }
 
-variable "go_template_db_ssl_mode" {
-  type      = string
-  sensitive = true
-}
-
 ################################################################################
 #                                     DNS                                      #
 ################################################################################
@@ -47,7 +42,6 @@ resource "aws_lambda_invocation" "create_go_template_db" {
   input = jsonencode({
     database_name = "postgres",
     query         = "CREATE DATABASE \"${var.go_template_db_name}\";",
-    ssl_mode      = var.go_template_db_ssl_mode,
   })
   triggers = {
     redeployment = sha1(jsonencode([
