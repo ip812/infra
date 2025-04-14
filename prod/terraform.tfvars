@@ -17,6 +17,4 @@ cf_tunnel_name = "ip812_tunnel"
 pgadmin_domain = "pgadmin"
 
 go_template_domain      = "template"
-go_template_port        = "8080"
 go_template_db_name     = "go-template"
-go_template_db_ssl_mode = "require"

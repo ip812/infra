@@ -6,10 +6,6 @@ variable "go_template_domain" {
   type = string
 }
 
-variable "go_template_port" {
-  type = string
-}
-
 variable "go_template_db_name" {
   type      = string
   sensitive = true
