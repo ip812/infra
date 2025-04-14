@@ -1,3 +1,7 @@
+################################################################################
+#                                    Alarms                                    #
+################################################################################
+
 resource "aws_cloudwatch_metric_alarm" "asg_high_cpu_alarm" {
   alarm_name          = "asg-high-cpu-alarm"
   comparison_operator = "GreaterThanOrEqualToThreshold"
@@ -89,6 +93,10 @@ resource "aws_cloudwatch_metric_alarm" "rds_low_storage_alarm" {
   }
   tags       = local.default_tags
 }
+
+################################################################################
+#                                 Notifications                                #
+################################################################################
 
 resource "aws_sns_topic" "alarms_topic" {
   name = "alarms-notifications"
