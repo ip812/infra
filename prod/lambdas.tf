@@ -160,7 +160,7 @@ resource "aws_cloudwatch_event_target" "sns_target" {
 }
 
 resource "aws_sns_topic_policy" "allow_eventbridge" {
-  arn    = aws_sns_topic.lambda_deploys.arn
+  arn    = aws_sns_topic.lambda_deploys_topic.arn
   policy = jsonencode({
     Version = "2012-10-17",
     Statement = [{
