@@ -93,20 +93,13 @@ resource "aws_launch_template" "asg_lt" {
     echo -e "[default]\nregion = ${var.aws_region}\noutput = json" > /root/.aws/config
     echo -e "[default]\naws_access_key_id = ${var.aws_access_key}\naws_secret_access_key = ${var.aws_secret_key}" > /root/.aws/credentials
 
-    echo "Installing k3s"
-    export INSTALL_K3S_EXEC="server --disable=traefik" 
-    curl -sfL https://get.k3s.io | sh -s - --write-kubeconfig-mode 644
-    mkdir -p ~/.kube
-    cp /etc/rancher/k3s/k3s.yaml ~/.kube/config
-    chown $(id -u):$(id -g) ~/.kube/config
-    export KUBECONFIG=~/.kube/config
-    systemctl enable k3s
-    systemctl start k3s
+    echo "Installing MicroK8s"
+    apt install snapd
+    snap install microk8s --classic
+    microk8s status --wait-ready
 
     echo "Setting up kubectl"
-    curl -LO "https://dl.k8s.io/release/v1.32.0/bin/linux/amd64/kubectl"
-    chmod +x kubectl
-    mv kubectl /usr/local/bin/kubectl
+    sudo ln -s /snap/bin/microk8s.kubectl /usr/local/bin/kubectl
 
     echo "Setting up k9s"
     wget https://github.com/derailed/k9s/releases/download/v0.32.5/k9s_linux_amd64.deb
