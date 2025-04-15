@@ -93,37 +93,30 @@ resource "aws_launch_template" "asg_lt" {
     echo -e "[default]\nregion = ${var.aws_region}\noutput = json" > /root/.aws/config
     echo -e "[default]\naws_access_key_id = ${var.aws_access_key}\naws_secret_access_key = ${var.aws_secret_key}" > /root/.aws/credentials
 
-    echo "Installing MicroK8s"
-    apt install snapd
-    snap install microk8s --classic
-    microk8s status --wait-ready
-    microk8s.kubectl config view --raw > $HOME/.kube/config
-
-    echo "Setting up kubectl"
-    ln -s /snap/bin/microk8s.kubectl /usr/local/bin/kubectl
-    echo "alias kubectl='microk8s kubectl'" >> /root/.bashrc
-    echo "alias k='microk8s kubectl'" >> /root/.bashrc
-
-    echo "Setting up k9s"
-    wget https://github.com/derailed/k9s/releases/download/v0.32.5/k9s_linux_amd64.deb
-    apt install ./k9s_linux_amd64.deb
+    echo "Installing k0s"
+    curl -sSf https://get.k0s.sh | sh
+    k0s install controller --single
+    k0s start
+    export KUBECONFIG=/etc/k0s/k0s.yaml
+    echo "alias kubectl='k0s kubectl'" >> /root/.bashrc
+    echo "alias k='k0s kubectl'" >> /root/.bashrc
 
     echo "Installing Helm"
     curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 
     echo "Setting up k8s cluster"
     git clone https://${var.gh_access_token}@github.com/ip812/apps.git
-    microk8s kubectl create namespace argocd
-    microk8s kubectl create namespace ip812
-    microk8s kubectl create secret generic argocd-notifications-secret \
+    k0s kubectl create namespace argocd
+    k0s kubectl create namespace ip812
+    k0s kubectl create secret generic argocd-notifications-secret \
       --namespace argocd \
       --from-literal=slack-token="${var.slk_argocd_bot_token}"
     # Not enough resources to run HCP Vault
-    # microk8s kubectl create secret generic hcp-credentials \
+    # k0s kubectl create secret generic hcp-credentials \
     #   --namespace ip812 \
     #   --from-literal=clientID="${var.hcp_client_id}" \
     #   --from-literal=clientSecret="${var.hcp_client_secret}"
-    microk8s kubectl create secret docker-registry hcp-vault-secrets-app \
+    k0s kubectl create secret docker-registry hcp-vault-secrets-app \
       --namespace ip812 \
       --from-literal=aws_access_key="${var.aws_access_key}" \
       --from-literal=aws_secret_key="${var.aws_secret_key}" \
@@ -133,19 +126,20 @@ resource "aws_launch_template" "asg_lt" {
       --from-literal=pg_username="${var.pg_username}" \
       --from-literal=pg_password="${var.pg_password}" \
       --from-literal=go_template_pg_name="${var.go_template_db_name}"
-    microk8s kubectl create secret docker-registry ecr-secret \
+    k0s kubectl create secret docker-registry ecr-secret \
       --namespace ip812 \
       --docker-server=678468774710.dkr.ecr.${var.aws_region}.amazonaws.com \
       --docker-username=AWS \
       --docker-password=$(aws ecr get-login-password --region ${var.aws_region}) \
       --docker-email=ilia.yavorov.petrov@gmail.com
-    microk8s helm3 repo add hashicorp https://helm.releases.hashicorp.com
-    microk8s helm3 install vault-secrets-operator hashicorp/vault-secrets-operator -n ip812
-    microk8s helm3 repo add traefik https://helm.traefik.io/traefik
-    microk8s helm3 install traefik traefik/traefik -f apps/values/traefik.yaml -n ip812
-    microk8s helm3 repo add argo https://argoproj.github.io/argo-helm
-    microk8s helm3 install argocd argo/argo-cd -f apps/values/argocd.yaml -n argocd
-    microk8s kubectl apply -k ./apps/manifests/prod
+    # Not enough resources to run HCP Vault
+    # helm repo add hashicorp https://helm.releases.hashicorp.com
+    # helm install vault-secrets-operator hashicorp/vault-secrets-operator -n ip812
+    helm repo add traefik https://helm.traefik.io/traefik
+    helm install traefik traefik/traefik -f apps/values/traefik.yaml -n ip812
+    helm repo add argo https://argoproj.github.io/argo-helm
+    helm install argocd argo/argo-cd -f apps/values/argocd.yaml -n argocd
+    k0s kubectl apply -k ./apps/manifests/prod
   EOF
   )
 
