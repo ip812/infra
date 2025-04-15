@@ -36,15 +36,14 @@ jobs:
           workspace: prod
           configuration_version: ${{ steps.upload.outputs.configuration_version_id }}
 
+      - name: Run Terraform plan
+        uses: hashicorp/tfc-workflows-github/actions/run@v1.3.2
+        id: run
+        with:
+          run_id: ${{ steps.create-run.outputs.run_id }}
+
       - name: Create Terraform plan output 
         uses: hashicorp/tfc-workflows-github/actions/plan-output@v1.3.2
         id: plan-output
         with:
           plan: ${{ steps.run.outputs.plan_id }}
-
-      - name: Reference plan output
-        run: |
-          echo "Plan status: ${{ steps.plan-output.outputs.plan_status }}"
-          echo "Resources to Add: ${{ steps.plan-output.outputs.add }}"
-          echo "Resources to Change: ${{ steps.plan-output.outputs.change }}"
-          echo "Resources to Destroy: ${{ steps.plan-output.outputs.destroy }}"
