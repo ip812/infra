@@ -64,3 +64,36 @@ jobs:
             echo "Drift detected or invalid plan. Values: add=$add, change=$change, destroy=$destroy, plan_status=$plan_status, status=$status"
             exit 1
           fi
+
+      - name: Send Slack notification
+        if: always()
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLK_GITHUB_BOT_TOKEN }}
+          SLACK_CHANNEL: terraform 
+          DRIFT_CHECK_RESULT: ${{ steps.check-plan.outcome }}
+        run: |
+          RUN_URL="https://github.com/ip812/infra/actions/runs/${GITHUB_RUN_ID}"
+          curl --header "Authorization: Bearer $TF_API_TOKEN" https://app.terraform.io/api/v2/plans/${{ steps.create-run.outputs.plan_id }} | jq -r '.data.attributes.url'
+
+          if [ "${DRIFT_CHECK_RESULT}" = "success" ]; then
+            STATUS="✅ Drift check passed"
+            COLOR="#2eb886"
+          else
+            STATUS="❌ Drift check failed"
+            COLOR="#e01e5a"
+          fi
+
+          curl -X POST "https://slack.com/api/chat.postMessage" \
+            -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"channel\": \"${SLACK_CHANNEL}\",
+              \"attachments\": [
+                {
+                  \"color\": \"${COLOR}\",
+                  \"title\": \"Drift check\",
+                  \"title_link\": \"${RUN_URL}\",
+                  \"text\": \"${STATUS} in *prod*\",
+                }
+              ]
+            }"
