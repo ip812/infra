@@ -47,3 +47,22 @@ jobs:
         id: plan-output
         with:
           plan: ${{ steps.create-run.outputs.plan_id }}
+
+      
+      - name: Check if plan matches expected values
+        id: check-plan
+        run: |
+          plan_output="${{ steps.plan-output.outputs.plan }}"
+
+          add=$(echo "$plan_output" | jq -r '.add')
+          change=$(echo "$plan_output" | jq -r '.change')
+          destroy=$(echo "$plan_output" | jq -r '.destroy')
+          plan_status=$(echo "$plan_output" | jq -r '.plan_status')
+          status=$(echo "$plan_output" | jq -r '.status')
+
+          if [[ "$add" == "0" && "$change" == "0" && "$destroy" == "0" && "$plan_status" == "finished" && "$status" == "Success" ]]; then
+            echo "Plan is valid. No drift detected."
+          else
+            echo "Drift detected or invalid plan. Values: add=$add, change=$change, destroy=$destroy, plan_status=$plan_status, status=$status"
+            exit 1
+          fi
