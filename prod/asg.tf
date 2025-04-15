@@ -97,10 +97,10 @@ resource "aws_launch_template" "asg_lt" {
     curl -sSf https://get.k0s.sh | sh
     k0s install controller --single
     k0s start
-    export KUBECONFIG=/etc/k0s/k0s.yaml
+    cp /var/lib/k0s/pki/admin.conf ~/admin.conf
+    export KUBECONFIG=~/admin.conf
     echo "alias kubectl='k0s kubectl'" >> /root/.bashrc
     echo "alias k='k0s kubectl'" >> /root/.bashrc
-    sleep 120 
 
     echo "Installing Helm"
     curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
