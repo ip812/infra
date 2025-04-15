@@ -25,3 +25,37 @@ jobs:
           directory: prod/
           quiet: true
           framework: terraform
+
+      - name: Send Slack notification
+        if: always()
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLK_BOT_TOKEN }}
+          SLACK_CHANNEL: terraform 
+          CHECKOV_RESULT: ${{ steps.checkov.outcome }}
+        run: |
+          JOB_URL="https://github.com/${GITHUB_REPO}/actions/runs/${GITHUB_RUN_ID}"
+
+          if [ "${CHECKOV_RESULT}" = "success" ]; then
+            STATUS="✅ Checkov scan passed"
+            COLOR="#2eb886"
+          else
+            STATUS="❌ Checkov scan failed"
+            COLOR="#e01e5a"
+          fi
+
+          curl -X POST "https://slack.com/api/chat.postMessage" \
+            -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"channel\": \"${SLACK_CHANNEL}\",
+              \"attachments\": [
+                {
+                  \"color\": \"${COLOR}\",
+                  \"title\": \"${STATUS}\",
+                  \"title_link\": \"${JOB_URL}\",
+                  \"text\": \"${STATUS} in *prod/*\",
+                  \"footer\": \"GitHub Actions - Checkov Scan\",
+                  \"ts\": $(date +%s)
+                }
+              ]
+            }"

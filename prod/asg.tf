@@ -97,6 +97,7 @@ resource "aws_launch_template" "asg_lt" {
     apt install snapd
     snap install microk8s --classic
     microk8s status --wait-ready
+    microk8s.kubectl config view --raw > $HOME/.kube/config
 
     echo "Setting up kubectl"
     ln -s /snap/bin/microk8s.kubectl /usr/local/bin/kubectl
@@ -128,11 +129,11 @@ resource "aws_launch_template" "asg_lt" {
       --docker-password=$(aws ecr get-login-password --region ${var.aws_region}) \
       --docker-email=ilia.yavorov.petrov@gmail.com
     microk8s helm3 repo add hashicorp https://helm.releases.hashicorp.com
-    microk8s helm3 install vault-secrets-operator hashicorp/vault-secrets-operator -n ip812 --timeout 10m0s --wait
+    microk8s helm3 install vault-secrets-operator hashicorp/vault-secrets-operator -n ip812
     microk8s helm3 repo add traefik https://helm.traefik.io/traefik
-    microk8s helm3 install traefik traefik/traefik -f apps/values/traefik.yaml -n ip812 --timeout 10m0s --wait
+    microk8s helm3 install traefik traefik/traefik -f apps/values/traefik.yaml -n ip812
     microk8s helm3 repo add argo https://argoproj.github.io/argo-helm
-    microk8s helm3 install argocd argo/argo-cd -f apps/values/argocd.yaml -n argocd --timeout 10m0s --wait
+    microk8s helm3 install argocd argo/argo-cd -f apps/values/argocd.yaml -n argocd
     microk8s kubectl apply -k ./apps/manifests/prod
   EOF
   )

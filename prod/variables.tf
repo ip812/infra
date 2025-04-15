@@ -25,6 +25,11 @@ variable "slk_bot_token" {
   sensitive = true
 }
 
+output "slk_bot_token" {
+  value     = var.slk_bot_token
+  sensitive = true
+}
+
 locals {
   default_tags = {
     Organization = var.org

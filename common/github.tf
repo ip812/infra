@@ -32,8 +32,8 @@ resource "github_actions_secret" "infra_github_access_token" {
 
 resource "github_actions_secret" "infra_dsc_deployments_webhook_url" {
   repository      = "infra"
-  secret_name     = "DISCORD_DEPLOYMENTS_WEBHOOK_URL"
-  plaintext_value = data.terraform_remote_state.prod.outputs.dsc_deployments_webhook_url
+  secret_name     = "SLK_BOT_TOKEN"
+  plaintext_value = data.terraform_remote_state.prod.outputs.slk_bot_token
 }
 
 # Apps
