@@ -38,7 +38,7 @@ jobs:
           SLACK_CHANNEL: terraform 
           CHECKOV_RESULT: ${{ steps.checkov.outcome }}
         run: |
-          JOB_URL="https://github.com/${GITHUB_REPO}/actions/runs/${GITHUB_RUN_ID}"
+          JOB_URL="https://github.com/ip812/infra/actions/runs/${GITHUB_RUN_ID}"
 
           if [ "${CHECKOV_RESULT}" = "success" ]; then
             STATUS="✅ Checkov scan passed"
@@ -56,11 +56,9 @@ jobs:
               \"attachments\": [
                 {
                   \"color\": \"${COLOR}\",
-                  \"title\": \"${STATUS}\",
+                  \"title\": \"Checkov Scan\",
                   \"title_link\": \"${JOB_URL}\",
-                  \"text\": \"${STATUS} in *prod/*\",
-                  \"footer\": \"GitHub Actions - Checkov Scan\",
-                  \"ts\": $(date +%s)
+                  \"text\": \"${STATUS} in *prod*",
                 }
               ]
             }"
