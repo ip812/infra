@@ -1,9 +1,14 @@
 ---
 name: Prod Drift Check 
 
+# on:
+#   schedule:
+#     - cron: '*/5 * * * *'
+
 on:
-  schedule:
-    - cron: '*/5 * * * *'
+  push:
+    branches:
+      - main
 
 env:
   TF_CLOUD_ORGANIZATION: ${{ vars.ORG }}
@@ -36,14 +41,8 @@ jobs:
           workspace: prod
           configuration_version: ${{ steps.upload.outputs.configuration_version_id }}
 
-      - name: Run Terraform plan
-        uses: hashicorp/tfc-workflows-github/actions/run@v1.3.2
-        id: run
-        with:
-          run_id: ${{ steps.create-run.outputs.run_id }}
-
       - name: Create Terraform plan output 
         uses: hashicorp/tfc-workflows-github/actions/plan-output@v1.3.2
         id: plan-output
         with:
-          plan: ${{ steps.run.outputs.plan_id }}
+          plan: ${{ steps.create-run.outputs.plan_id }}
