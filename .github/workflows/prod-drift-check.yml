@@ -52,13 +52,11 @@ jobs:
       - name: Check if plan matches expected values
         id: check-plan
         run: |
-          plan_output="${{ steps.plan-output.outputs.plan }}"
-
-          add=$(echo "$plan_output" | jq -r '.add')
-          change=$(echo "$plan_output" | jq -r '.change')
-          destroy=$(echo "$plan_output" | jq -r '.destroy')
-          plan_status=$(echo "$plan_output" | jq -r '.plan_status')
-          status=$(echo "$plan_output" | jq -r '.status')
+          add="${{ steps.plan-output.outputs.add }}"
+          change="${{ steps.plan-output.outputs.change }}"
+          destroy="${{ steps.plan-output.outputs.destroy }}"
+          plan_status="${{ steps.plan-output.outputs.plan_status }}"
+          status="${{ steps.plan-output.outputs.status }}"
 
           if [[ "$add" == "0" && "$change" == "0" && "$destroy" == "0" && "$plan_status" == "finished" && "$status" == "Success" ]]; then
             echo "Plan is valid. No drift detected."
