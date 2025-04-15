@@ -99,9 +99,8 @@ resource "aws_launch_template" "asg_lt" {
     k0s start
     sleep 30 && k0s start
     systemctl enable k0scontroller
-    mkdir ~/.kube
-    cp /var/lib/k0s/pki/admin.conf ~/.kube/config
-    chown $USER:$USER ~/.kube/config
+    export KUBECONFIG=/var/lib/k0s/pki/admin.conf
+    echo "export KUBECONFIG=/var/lib/k0s/pki/admin.conf" >> /root/.bashrc
 
     echo "alias kubectl='k0s kubectl'" >> /root/.bashrc
     echo "alias k='k0s kubectl'" >> /root/.bashrc
