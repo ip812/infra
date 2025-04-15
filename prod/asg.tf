@@ -100,6 +100,10 @@ resource "aws_launch_template" "asg_lt" {
     export KUBECONFIG=/etc/k0s/k0s.yaml
     echo "alias kubectl='k0s kubectl'" >> /root/.bashrc
     echo "alias k='k0s kubectl'" >> /root/.bashrc
+    until k0s kubectl get nodes &>/dev/null; do
+      echo "Waiting for k0s to be ready..."
+      sleep 5
+    done
 
     echo "Installing Helm"
     curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
