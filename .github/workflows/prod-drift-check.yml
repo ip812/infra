@@ -47,7 +47,6 @@ jobs:
         id: plan-output
         with:
           plan: ${{ steps.create-run.outputs.plan_id }}
-
       
       - name: Check if plan matches expected values
         id: check-plan
@@ -72,8 +71,7 @@ jobs:
           SLACK_CHANNEL: terraform 
           DRIFT_CHECK_RESULT: ${{ steps.check-plan.outcome }}
         run: |
-          RUN_URL="https://github.com/ip812/infra/actions/runs/${GITHUB_RUN_ID}"
-          curl --header "Authorization: Bearer $TF_API_TOKEN" https://app.terraform.io/api/v2/plans/${{ steps.create-run.outputs.plan_id }} | jq
+          RUN_URL="https://app.terraform.io/app/ip812/workspaces/prod/runs/${{ steps.create-run.outputs.run_id }}"
 
           if [ "${DRIFT_CHECK_RESULT}" = "success" ]; then
             STATUS="✅ Drift check passed"
