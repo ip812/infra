@@ -118,10 +118,21 @@ resource "aws_launch_template" "asg_lt" {
     microk8s kubectl create secret generic argocd-notifications-secret \
       --namespace argocd \
       --from-literal=slack-token="${var.slk_argocd_bot_token}"
-    microk8s kubectl create secret generic hcp-credentials \
+    # Not enough resources to run HCP Vault
+    # microk8s kubectl create secret generic hcp-credentials \
+    #   --namespace ip812 \
+    #   --from-literal=clientID="${var.hcp_client_id}" \
+    #   --from-literal=clientSecret="${var.hcp_client_secret}"
+    microk8s kubectl create secret docker-registry hcp-vault-secrets-app \
       --namespace ip812 \
-      --from-literal=clientID="${var.hcp_client_id}" \
-      --from-literal=clientSecret="${var.hcp_client_secret}"
+      --from-literal=aws_access_key="${var.aws_access_key}" \
+      --from-literal=aws_secret_key="${var.aws_secret_key}" \
+      --from-literal=aws_region="${var.aws_region}" \
+      --from-literal=cf_tunnel_token="${cloudflare_zero_trust_tunnel_cloudflared.cf_tunnel.tunnel_token}" \
+      --from-literal=pg_endpoint="${aws_db_instance.pg.endpoint}" \
+      --from-literal=pg_username="${var.pg_username}" \
+      --from-literal=pg_password="${var.pg_password}" \
+      --from-literal=go_template_pg_name="${var.go_template_db_name}"
     microk8s kubectl create secret docker-registry ecr-secret \
       --namespace ip812 \
       --docker-server=678468774710.dkr.ecr.${var.aws_region}.amazonaws.com \
