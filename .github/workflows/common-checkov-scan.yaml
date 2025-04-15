@@ -1,5 +1,5 @@
 ---
-name: Prod Checkov Scan
+name: Common Checkov Scan
 
 on:
   schedule:
@@ -22,7 +22,7 @@ jobs:
         id: checkov
         uses: bridgecrewio/checkov-action@master
         with:
-          directory: prod/
+          directory: common/
           quiet: true
           framework: terraform
 
@@ -53,7 +53,7 @@ jobs:
                   \"color\": \"${COLOR}\",
                   \"title\": \"Checkov Scan\",
                   \"title_link\": \"${JOB_URL}\",
-                  \"text\": \"${STATUS} in *prod*\",
+                  \"text\": \"${STATUS} in *common*\",
                 }
               ]
             }"

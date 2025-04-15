@@ -1,5 +1,5 @@
 ---
-name: Prod Drift Check 
+name: Common Drift Check 
 
 on:
   schedule:
@@ -26,14 +26,14 @@ jobs:
         uses: hashicorp/tfc-workflows-github/actions/upload-configuration@v1.3.2
         id: upload
         with:
-          workspace: prod
-          directory: prod 
+          workspace: common
+          directory: common
 
       - name: Create Terraform create run
         uses: hashicorp/tfc-workflows-github/actions/create-run@v1.3.2
         id: create-run
         with:
-          workspace: prod
+          workspace: common
           configuration_version: ${{ steps.upload.outputs.configuration_version_id }}
           plan_only: true
 
@@ -66,7 +66,7 @@ jobs:
           SLACK_CHANNEL: terraform 
           DRIFT_CHECK_RESULT: ${{ steps.check-plan.outcome }}
         run: |
-          RUN_URL="https://app.terraform.io/app/ip812/workspaces/prod/runs/${{ steps.create-run.outputs.run_id }}"
+          RUN_URL="https://app.terraform.io/app/ip812/workspaces/common/runs/${{ steps.create-run.outputs.run_id }}"
 
           if [ "${DRIFT_CHECK_RESULT}" = "success" ]; then
             STATUS="✅ Drift check passed"
@@ -86,7 +86,7 @@ jobs:
                   \"color\": \"${COLOR}\",
                   \"title\": \"Drift check\",
                   \"title_link\": \"${RUN_URL}\",
-                  \"text\": \"${STATUS} in *prod*\",
+                  \"text\": \"${STATUS} in *common*\",
                 }
               ]
             }"
