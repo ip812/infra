@@ -1,19 +1,16 @@
 ---
-name: Deploy Prod
+name: Prod Drift Check 
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - prod/**
+  schedule:
+    - cron: '*/5 * * * *'
 
 env:
   TF_CLOUD_ORGANIZATION: ${{ vars.ORG }}
   TF_API_TOKEN: ${{ secrets.TF_API_TOKEN }}
 
 jobs:
-  tf-apply-prod:
+  tf-drift-check-prod:
     runs-on: ubuntu-24.04
 
     steps:
@@ -32,16 +29,22 @@ jobs:
           workspace: prod
           directory: prod 
 
-      - name: Create Terraform apply run
+      - name: Create Terraform create run
         uses: hashicorp/tfc-workflows-github/actions/create-run@v1.3.2
         id: create-run
         with:
           workspace: prod
           configuration_version: ${{ steps.upload.outputs.configuration_version_id }}
 
-      - name: Apply Terraform run
-        uses: hashicorp/tfc-workflows-github/actions/apply-run@v1.3.2
-        id: apply
-        if: ${{ fromJSON(steps.create-run.outputs.payload).data.attributes.actions.IsConfirmable }}
+      - name: Create Terraform plan output 
+        uses: hashicorp/tfc-workflows-github/actions/plan-output@v1.3.2
+        id: plan-output
         with:
-          run: ${{ steps.create-run.outputs.run_id }}
+          plan: ${{ steps.run.outputs.plan_id }}
+
+      - name: Reference plan output
+        run: |
+          echo "Plan status: ${{ steps.plan-output.outputs.plan_status }}"
+          echo "Resources to Add: ${{ steps.plan-output.outputs.add }}"
+          echo "Resources to Change: ${{ steps.plan-output.outputs.change }}"
+          echo "Resources to Destroy: ${{ steps.plan-output.outputs.destroy }}"

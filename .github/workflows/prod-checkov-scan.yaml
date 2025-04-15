@@ -1,0 +1,23 @@
+---
+name: Prod Checkov Scan
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+
+jobs:
+  tf-drift-check-prod:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Checkov action
+        id: checkov
+        uses: bridgecrewio/checkov-action@master
+        with:
+          directory: prod/
+          quiet: true
+          framework: terraform
+          use_enforcement_rules: true

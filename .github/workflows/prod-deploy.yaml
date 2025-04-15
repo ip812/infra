@@ -1,19 +1,19 @@
 ---
-name: Deploy Common
+name: Prod Deploy 
 
 on:
   push:
     branches:
       - main
     paths:
-      - common/**
+      - prod/**
 
 env:
   TF_CLOUD_ORGANIZATION: ${{ vars.ORG }}
   TF_API_TOKEN: ${{ secrets.TF_API_TOKEN }}
 
 jobs:
-  terraform-cloud-apply-run-common:
+  tf-apply-prod:
     runs-on: ubuntu-24.04
 
     steps:
@@ -29,14 +29,14 @@ jobs:
         uses: hashicorp/tfc-workflows-github/actions/upload-configuration@v1.3.2
         id: upload
         with:
-          workspace: common 
-          directory: common
+          workspace: prod
+          directory: prod 
 
       - name: Create Terraform apply run
         uses: hashicorp/tfc-workflows-github/actions/create-run@v1.3.2
         id: create-run
         with:
-          workspace: common
+          workspace: prod
           configuration_version: ${{ steps.upload.outputs.configuration_version_id }}
 
       - name: Apply Terraform run
