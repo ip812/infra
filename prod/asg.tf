@@ -97,16 +97,29 @@ resource "aws_launch_template" "asg_lt" {
     curl -sSf https://get.k0s.sh | sh
     k0s install controller --single
     k0s start
+    
     export KUBECONFIG=/etc/k0s/k0s.yaml
+    
     echo "alias kubectl='k0s kubectl'" >> /root/.bashrc
     echo "alias k='k0s kubectl'" >> /root/.bashrc
-    until k0s kubectl get nodes &>/dev/null; do
+    
+    echo "Waiting for Kubernetes API server to be ready..."
+    timeout=300
+    elapsed=0
+    interval=5
+    
+    while ! k0s kubectl get nodes --no-headers &>/dev/null; do
       echo "Waiting for k0s to be ready..."
-      sleep 5
+      sleep $interval
+      elapsed=$((elapsed + interval))
+      if [ "$elapsed" -ge "$timeout" ]; then
+        echo "Timeout waiting for k0s to be ready"
+        exit 1
+      fi
     done
+    echo "k0s is ready!"
 
     echo "Installing Helm"
-    curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 
     echo "Setting up k8s cluster"
     git clone https://${var.gh_access_token}@github.com/ip812/apps.git
