@@ -10,7 +10,7 @@ env:
   TF_API_TOKEN: ${{ secrets.TF_API_TOKEN }}
 
 jobs:
-  tf-drift-check-prod:
+  terraform-cloud-drift-check:
     runs-on: ubuntu-24.04
 
     steps:

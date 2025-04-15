@@ -6,12 +6,17 @@ on:
     - cron: '*/5 * * * *'
 
 jobs:
-  tf-drift-check-prod:
+  checkov-scan:
     runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.8
 
       - name: Run Checkov action
         id: checkov
@@ -20,4 +25,3 @@ jobs:
           directory: prod/
           quiet: true
           framework: terraform
-          use_enforcement_rules: true
