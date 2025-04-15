@@ -99,7 +99,9 @@ resource "aws_launch_template" "asg_lt" {
     microk8s status --wait-ready
 
     echo "Setting up kubectl"
-    sudo ln -s /snap/bin/microk8s.kubectl /usr/local/bin/kubectl
+    ln -s /snap/bin/microk8s.kubectl /usr/local/bin/kubectl
+    echo "alias kubectl='microk8s kubectl'" >> /root/.bashrc
+    echo "alias k='microk8s kubectl'" >> /root/.bashrc
 
     echo "Setting up k9s"
     wget https://github.com/derailed/k9s/releases/download/v0.32.5/k9s_linux_amd64.deb
@@ -110,16 +112,16 @@ resource "aws_launch_template" "asg_lt" {
 
     echo "Setting up k8s cluster"
     git clone https://${var.gh_access_token}@github.com/ip812/apps.git
-    kubectl create namespace argocd
-    kubectl create namespace ip812
-    kubectl create secret generic argocd-notifications-secret \
+    microk8s kubectl create namespace argocd
+    microk8s kubectl create namespace ip812
+    microk8s kubectl create secret generic argocd-notifications-secret \
       --namespace argocd \
       --from-literal=slack-token="${var.slk_bot_token}"
-    kubectl create secret generic hcp-credentials \
+    microk8s kubectl create secret generic hcp-credentials \
       --namespace ip812 \
       --from-literal=clientID="${var.hcp_client_id}" \
       --from-literal=clientSecret="${var.hcp_client_secret}"
-    kubectl create secret docker-registry ecr-secret \
+    microk8s kubectl create secret docker-registry ecr-secret \
       --namespace ip812 \
       --docker-server=678468774710.dkr.ecr.${var.aws_region}.amazonaws.com \
       --docker-username=AWS \
@@ -131,7 +133,7 @@ resource "aws_launch_template" "asg_lt" {
     helm install traefik traefik/traefik -f apps/values/traefik.yaml -n ip812 --timeout 10m0s --wait
     helm repo add argo https://argoproj.github.io/argo-helm
     helm install argocd argo/argo-cd -f apps/values/argocd.yaml -n argocd --timeout 10m0s --wait
-    kubectl apply -k ./apps/manifests/prod
+    microk8s kubectl apply -k ./apps/manifests/prod
   EOF
   )
 
