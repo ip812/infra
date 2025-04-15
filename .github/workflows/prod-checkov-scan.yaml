@@ -58,7 +58,7 @@ jobs:
                   \"color\": \"${COLOR}\",
                   \"title\": \"Checkov Scan\",
                   \"title_link\": \"${JOB_URL}\",
-                  \"text\": \"${STATUS} in *prod*",
+                  \"text\": \"${STATUS} in *prod*\",
                 }
               ]
             }"
