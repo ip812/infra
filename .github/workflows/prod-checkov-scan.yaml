@@ -29,7 +29,7 @@ jobs:
       - name: Send Slack notification
         if: always()
         env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLK_BOT_TOKEN }}
+          SLACK_BOT_TOKEN: ${{ secrets.SLK_GITHUB_BOT_TOKEN }}
           SLACK_CHANNEL: terraform 
           CHECKOV_RESULT: ${{ steps.checkov.outcome }}
         run: |
