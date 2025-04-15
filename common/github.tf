@@ -30,10 +30,10 @@ resource "github_actions_secret" "infra_github_access_token" {
   plaintext_value = data.terraform_remote_state.prod.outputs.gh_access_token
 }
 
-resource "github_actions_secret" "infra_dsc_deployments_webhook_url" {
+resource "github_actions_secret" "infra_slk_github_bot_token" {
   repository      = "infra"
-  secret_name     = "SLK_BOT_TOKEN"
-  plaintext_value = data.terraform_remote_state.prod.outputs.slk_bot_token
+  secret_name     = "SLK_GITHUB_BOT_TOKEN"
+  plaintext_value = data.terraform_remote_state.prod.outputs.slk_github_bot_token
 }
 
 # Apps
@@ -71,12 +71,6 @@ resource "github_actions_secret" "apps_cf_tunnel_token" {
   repository      = "apps"
   secret_name     = "CF_TUNNEL_TOKEN"
   plaintext_value = data.terraform_remote_state.prod.outputs.cf_tunnel_token
-}
-
-resource "github_actions_secret" "apps_dsc_deployments_webhook_url" {
-  repository      = "apps"
-  secret_name     = "DISCORD_DEPLOYMENTS_WEBHOOK_URL"
-  plaintext_value = data.terraform_remote_state.prod.outputs.dsc_deployments_webhook_url
 }
 
 # lambdas

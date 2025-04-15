@@ -10,23 +10,18 @@ variable "env" {
   type = string
 }
 
-variable "dsc_deployments_webhook_url" {
+variable "slk_argocd_bot_token" {
   type      = string
   sensitive = true
 }
 
-output "dsc_deployments_webhook_url" {
-  value     = var.dsc_deployments_webhook_url
-  sensitive = true
-}
-
-variable "slk_bot_token" {
+variable "slk_github_bot_token" {
   type      = string
   sensitive = true
 }
 
-output "slk_bot_token" {
-  value     = var.slk_bot_token
+output "slk_github_bot_token" {
+  value     = var.slk_github_bot_token
   sensitive = true
 }
 

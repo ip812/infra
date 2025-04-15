@@ -117,7 +117,7 @@ resource "aws_launch_template" "asg_lt" {
     microk8s kubectl create namespace ip812
     microk8s kubectl create secret generic argocd-notifications-secret \
       --namespace argocd \
-      --from-literal=slack-token="${var.slk_bot_token}"
+      --from-literal=slack-token="${var.slk_argocd_bot_token}"
     microk8s kubectl create secret generic hcp-credentials \
       --namespace ip812 \
       --from-literal=clientID="${var.hcp_client_id}" \
