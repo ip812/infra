@@ -96,7 +96,7 @@ resource "aws_launch_template" "asg_lt" {
     echo "Installing k0s & Helm"
     curl -sSf https://get.k0s.sh | sh
     k0s install controller --single
-    k0s start
+    sleep 30 && k0s start
     systemctl enable k0scontroller
     export KUBECONFIG=/var/lib/k0s/pki/admin.conf
     echo "export KUBECONFIG=/var/lib/k0s/pki/admin.conf" >> /root/.bashrc
