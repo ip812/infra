@@ -78,22 +78,18 @@ resource "aws_launch_template" "asg_lt" {
   user_data = base64encode(<<-EOF
     #!/bin/bash
 
-    echo "Updating and installing dependencies"
     apt-get update -y
     apt-get install -y curl wget unzip make git vim tmux
 
-    echo "Installing AWS CLI"
     curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/tmp/awscliv2.zip"
     unzip /tmp/awscliv2.zip -d /tmp
     /tmp/aws/install
 
-    echo "Setting up AWS credentials"
     mkdir -p /root/.aws
     chmod 700 /root/.aws
     echo -e "[default]\nregion = ${var.aws_region}\noutput = json" > /root/.aws/config
     echo -e "[default]\naws_access_key_id = ${var.aws_access_key}\naws_secret_access_key = ${var.aws_secret_key}" > /root/.aws/credentials
 
-    echo "Installing Kubernetes & Helm"
     curl -sSf https://get.k0s.sh | sh
     k0s install controller --single
     k0s start
@@ -105,7 +101,6 @@ resource "aws_launch_template" "asg_lt" {
     echo "Waiting for Kubernetes API to become available..." && until k0s kubectl get nodes >/dev/null 2>&1; do echo "Still waiting for the API..." && sleep 5; done && echo "Kubernetes API is ready."
     curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 
-    echo "Setting up Kubernetes cluster"
     git clone https://${var.gh_access_token}@github.com/ip812/apps.git
     k0s kubectl create namespace ip812
     # Will create a single secret hcp-vault-secrets-app if in future we add HCP Vault
