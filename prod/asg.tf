@@ -99,9 +99,9 @@ resource "aws_launch_template" "asg_lt" {
     k0s start
     sleep 30 && k0s start
     systemctl enable k0scontroller
+
     export KUBECONFIG=/var/lib/k0s/pki/admin.conf
     echo "export KUBECONFIG=/var/lib/k0s/pki/admin.conf" >> /root/.bashrc
-
     echo "alias kubectl='k0s kubectl'" >> /root/.bashrc
     echo "alias k='k0s kubectl'" >> /root/.bashrc
 
@@ -110,27 +110,27 @@ resource "aws_launch_template" "asg_lt" {
 
     echo "Setting up k8s cluster"
     git clone https://${var.gh_access_token}@github.com/ip812/apps.git
-    k0s kubectl create namespace argocd
     k0s kubectl create namespace ip812
-    k0s kubectl create secret generic argocd-notifications-secret \
-      --namespace argocd \
-      --slack-token="${var.slk_argocd_bot_token}"
-    k0s kubectl create secret generic hcp-credentials \
+    # Will create a single secret hcp-vault-secrets-app if in future we add HCP Vault
+    # The HCP Vault wihtout license allows to populate secret only in a single namespace(Vault Secrets Operator)
+    k0s kubectl create secret generic hcp-vault-secrets-app \
       --namespace ip812 \
-      --from-literal=clientID="${var.hcp_client_id}" \
-      --from-literal=clientSecret="${var.hcp_client_secret}"
+      --from-literal=aws_access_key="${var.aws_access_key}" \
+      --from-literal=aws_secret_key="${var.aws_secret_key}" \
+      --from-literal=aws_region="${var.aws_region}" \
+      --from-literal=cf_tunnel_token="${cloudflare_zero_trust_tunnel_cloudflared.cf_tunnel.tunnel_token}" \
+      --from-literal=pg_endpoint="${aws_db_instance.pg.endpoint}" \
+      --from-literal=pg_username="${var.pg_username}" \
+      --from-literal=pg_password="${var.pg_password}" \
+      --from-literal=go_template_pg_name="${var.go_template_db_name}"
     k0s kubectl create secret docker-registry ecr-secret \
       --namespace ip812 \
       --docker-server=678468774710.dkr.ecr.${var.aws_region}.amazonaws.com \
       --docker-username=AWS \
       --docker-password=$(aws ecr get-login-password --region ${var.aws_region}) \
       --docker-email=ilia.yavorov.petrov@gmail.com
-    helm repo add hashicorp https://helm.releases.hashicorp.com
-    helm install vault-secrets-operator hashicorp/vault-secrets-operator -n ip812
     helm repo add traefik https://helm.traefik.io/traefik
     helm install traefik traefik/traefik -f apps/values/traefik.yaml -n ip812
-    helm repo add argo https://argoproj.github.io/argo-helm
-    helm install argocd argo/argo-cd -f apps/values/argocd.yaml -n argocd
     k0s kubectl apply -k ./apps/manifests/prod
   EOF
   )
