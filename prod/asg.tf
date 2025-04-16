@@ -93,22 +93,19 @@ resource "aws_launch_template" "asg_lt" {
     echo -e "[default]\nregion = ${var.aws_region}\noutput = json" > /root/.aws/config
     echo -e "[default]\naws_access_key_id = ${var.aws_access_key}\naws_secret_access_key = ${var.aws_secret_key}" > /root/.aws/credentials
 
-    echo "Installing k0s"
+    echo "Installing k0s & Helm"
     curl -sSf https://get.k0s.sh | sh
     k0s install controller --single
     k0s start
     sleep 30 && k0s start
     systemctl enable k0scontroller
-
     export KUBECONFIG=/var/lib/k0s/pki/admin.conf
     echo "export KUBECONFIG=/var/lib/k0s/pki/admin.conf" >> /root/.bashrc
     echo "alias kubectl='k0s kubectl'" >> /root/.bashrc
     echo "alias k='k0s kubectl'" >> /root/.bashrc
-
-    echo "Installing Helm"
     curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 
-    echo "Setting up k8s cluster"
+    echo "Setting up Kubernetes cluster"
     git clone https://${var.gh_access_token}@github.com/ip812/apps.git
     k0s kubectl create namespace ip812
     # Will create a single secret hcp-vault-secrets-app if in future we add HCP Vault
