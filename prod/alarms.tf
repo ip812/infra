@@ -24,7 +24,7 @@ resource "aws_cloudwatch_metric_alarm" "asg_high_cpu_alarm" {
   dimensions = {
     AutoScalingGroupName = aws_autoscaling_group.asg.name
   }
-  tags       = local.default_tags
+  tags = local.default_tags
 }
 
 resource "aws_cloudwatch_metric_alarm" "asg_two_instances_alarm" {
@@ -43,7 +43,7 @@ resource "aws_cloudwatch_metric_alarm" "asg_two_instances_alarm" {
   dimensions = {
     AutoScalingGroupName = aws_autoscaling_group.asg.name
   }
-  tags       = local.default_tags
+  tags = local.default_tags
 }
 
 resource "aws_cloudwatch_metric_alarm" "rds_high_cpu_alarm" {
@@ -65,9 +65,9 @@ resource "aws_cloudwatch_metric_alarm" "rds_high_cpu_alarm" {
   ]
   insufficient_data_actions = []
   dimensions = {
-     DBInstanceIdentifier = aws_db_instance.pg.identifier
+    DBInstanceIdentifier = aws_db_instance.pg.identifier
   }
-  tags       = local.default_tags
+  tags = local.default_tags
 }
 
 resource "aws_cloudwatch_metric_alarm" "rds_low_storage_alarm" {
@@ -89,9 +89,9 @@ resource "aws_cloudwatch_metric_alarm" "rds_low_storage_alarm" {
   ]
   insufficient_data_actions = []
   dimensions = {
-     DBInstanceIdentifier = aws_db_instance.pg.identifier
+    DBInstanceIdentifier = aws_db_instance.pg.identifier
   }
-  tags       = local.default_tags
+  tags = local.default_tags
 }
 
 ################################################################################
