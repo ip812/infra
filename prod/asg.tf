@@ -96,12 +96,13 @@ resource "aws_launch_template" "asg_lt" {
     echo "Installing k0s & Helm"
     curl -sSf https://get.k0s.sh | sh
     k0s install controller --single
-    sleep 30 && k0s start
+    k0s start
     systemctl enable k0scontroller
     export KUBECONFIG=/var/lib/k0s/pki/admin.conf
     echo "export KUBECONFIG=/var/lib/k0s/pki/admin.conf" >> /root/.bashrc
     echo "alias kubectl='k0s kubectl'" >> /root/.bashrc
     echo "alias k='k0s kubectl'" >> /root/.bashrc
+    echo "Waiting for Kubernetes API to become available..." && until k0s kubectl get nodes >/dev/null 2>&1; do echo "Still waiting for the API..." && sleep 5; done && echo "Kubernetes API is ready."
     curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 
     echo "Setting up Kubernetes cluster"
