@@ -105,7 +105,7 @@ resource "aws_launch_template" "asg_lt" {
     echo "alias k='k0s kubectl'" >> /root/.bashrc
     curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 
-    echo "Setting up Kubernetes cluster"
+    echo "Setting up k0s cluster"
     git clone https://${var.gh_access_token}@github.com/ip812/apps.git
     k0s kubectl create namespace ip812
     # Will create a single secret hcp-vault-secrets-app if in future we add HCP Vault
