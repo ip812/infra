@@ -93,7 +93,7 @@ resource "aws_launch_template" "asg_lt" {
     echo -e "[default]\nregion = ${var.aws_region}\noutput = json" > /root/.aws/config
     echo -e "[default]\naws_access_key_id = ${var.aws_access_key}\naws_secret_access_key = ${var.aws_secret_key}" > /root/.aws/credentials
 
-    echo "Installing k0s & Helm"
+    echo "Installing Kubernetes & Helm"
     curl -sSf https://get.k0s.sh | sh
     k0s install controller --single
     k0s start
