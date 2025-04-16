@@ -37,10 +37,6 @@ resource "cloudflare_zero_trust_tunnel_cloudflared_config" "cf_tunnel_cfg" {
       service  = "http://traefik.ip812.svc.cluster.local:8081"
     }
     ingress_rule {
-      hostname = cloudflare_record.argocd_dns_record.hostname
-      service  = "http://traefik.ip812.svc.cluster.local:8081"
-    }
-    ingress_rule {
       hostname = cloudflare_record.pgadmin_dns_record.hostname
       service  = "http://traefik.ip812.svc.cluster.local:8081"
     }

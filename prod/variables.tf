@@ -10,11 +10,6 @@ variable "env" {
   type = string
 }
 
-variable "slk_argocd_bot_token" {
-  type      = string
-  sensitive = true
-}
-
 variable "slk_github_bot_token" {
   type      = string
   sensitive = true
