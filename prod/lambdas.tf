@@ -22,7 +22,7 @@ resource "aws_iam_role_policy_attachment" "hello_function_vpc_policy" {
 resource "aws_lambda_function" "hello_function" {
   function_name = "hello"
   timeout       = 5
-  image_uri     = "678468774710.dkr.ecr.eu-central-1.amazonaws.com/ip812/hello:420.9.0"
+  image_uri     = "678468774710.dkr.ecr.eu-central-1.amazonaws.com/ip812/hello:42.0.0"
   package_type  = "Image"
   role          = aws_iam_role.hello_function_role.arn
   vpc_config {
