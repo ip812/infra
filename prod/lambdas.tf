@@ -104,7 +104,7 @@ resource "aws_iam_role_policy_attachment" "ecr_push_notifier_function_vpc_policy
 resource "aws_lambda_function" "ecr_push_notifier_function" {
   function_name = "ecr-push-notifier"
   timeout       = 60
-  image_uri     = "678468774710.dkr.ecr.eu-central-1.amazonaws.com/ip812/ecr-push-notifier:0.3.0"
+  image_uri     = "678468774710.dkr.ecr.eu-central-1.amazonaws.com/ip812/ecr-push-notifier:0.3.1"
   package_type  = "Image"
   role          = aws_iam_role.ecr_push_notifier_function_role.arn
   environment {
