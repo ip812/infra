@@ -79,3 +79,42 @@ resource "aws_lambda_function" "pg_query_exec_function" {
   }
   tags = local.default_tags
 }
+
+# ecr-push-notifier
+resource "aws_iam_role" "ecr_push_notifier_function_role" {
+  name = "${var.org}-${var.env}-ecr-push-notifier-function-role"
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Action = "sts:AssumeRole"
+      Effect = "Allow"
+      Principal = {
+        Service = "lambda.amazonaws.com"
+      }
+    }]
+  })
+  tags = local.default_tags
+}
+
+resource "aws_iam_role_policy_attachment" "ecr_push_notifier_function_vpc_policy" {
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
+  role       = aws_iam_role.ecr_push_notifier_function_role.name
+}
+
+resource "aws_lambda_function" "ecr_push_notifier_function" {
+  function_name = "ecr-push-notifier"
+  timeout       = 5
+  image_uri     = "678468774710.dkr.ecr.eu-central-1.amazonaws.com/ip812/ecr-push-notifier:0.1.0"
+  package_type  = "Image"
+  role          = aws_iam_role.ecr_push_notifier_function_role.arn
+  vpc_config {
+    subnet_ids         = [aws_subnet.public_subnet_a.id, aws_subnet.public_subnet_b.id]
+    security_group_ids = [aws_security_group.asg_sg.id]
+  }
+  environment {
+    variables = {
+      APP_ENV     = var.env
+    }
+  }
+  tags = local.default_tags
+}
