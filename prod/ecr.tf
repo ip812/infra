@@ -10,15 +10,15 @@ resource "aws_cloudwatch_event_rule" "ecr_push_rule" {
   })
 }
 
-resource "aws_cloudwatch_event_target" "lambda_target" {
+resource "aws_cloudwatch_event_target" "lambda_ecr_push_notifier" {
   rule      = aws_cloudwatch_event_rule.ecr_push_rule.name
-  arn       = aws_lambda_function.hello_function.arn
+  arn       = aws_lambda_function.ecr_push_notifier_function.arn
 }
 
 resource "aws_lambda_permission" "allow_eventbridge" {
   statement_id  = "AllowExecutionFromEventBridge"
   action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.hello_function.function_name
+  function_name = aws_lambda_function.ecr_push_notifier_function.function_name
   principal     = "events.amazonaws.com"
   source_arn    = aws_cloudwatch_event_rule.ecr_push_rule.arn
 }
