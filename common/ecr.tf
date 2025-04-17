@@ -28,3 +28,8 @@ resource "aws_ecr_repository" "pg_query_exec_ecr_repository" {
   name                 = "${data.terraform_remote_state.prod.outputs.org}/pg-query-exec"
   image_tag_mutability = "IMMUTABLE"
 }
+
+resource "aws_ecr_repository" "ecr_push_notifier_ecr_repository" {
+  name                 = "${data.terraform_remote_state.prod.outputs.org}/ecr-push-notifier"
+  image_tag_mutability = "IMMUTABLE"
+}
