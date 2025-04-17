@@ -46,6 +46,11 @@ variable "cf_ip812_zone_id" {
   sensitive = true
 }
 
+variable "gh_username" {
+  type      = string
+  sensitive = true
+}
+
 variable "gh_access_token" {
   type      = string
   sensitive = true

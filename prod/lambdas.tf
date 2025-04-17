@@ -113,7 +113,9 @@ resource "aws_lambda_function" "ecr_push_notifier_function" {
   }
   environment {
     variables = {
-      APP_ENV     = var.env
+      APP_ENV           = var.env
+      GIT_USERNAME      = var.gh_username
+      GIT_ACCESS_TOKEN  = var.gh_access_token
     }
   }
   tags = local.default_tags
