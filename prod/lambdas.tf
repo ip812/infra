@@ -107,10 +107,6 @@ resource "aws_lambda_function" "ecr_push_notifier_function" {
   image_uri     = "678468774710.dkr.ecr.eu-central-1.amazonaws.com/ip812/ecr-push-notifier:0.2.3"
   package_type  = "Image"
   role          = aws_iam_role.ecr_push_notifier_function_role.arn
-  vpc_config {
-    subnet_ids         = [aws_subnet.public_subnet_a.id, aws_subnet.public_subnet_b.id]
-    security_group_ids = [aws_security_group.asg_sg.id]
-  }
   environment {
     variables = {
       APP_ENV           = var.env
