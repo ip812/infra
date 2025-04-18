@@ -2,17 +2,17 @@ resource "aws_cloudwatch_event_rule" "ecr_push_rule" {
   name        = "ecr-image-push"
   description = "Trigger Lambda on ECR image push (any repository)"
   event_pattern = jsonencode({
-    source       = ["aws.ecr"],
+    source        = ["aws.ecr"],
     "detail-type" = ["ECR Image Action"],
-    detail       = {
+    detail = {
       "action-type" = ["PUSH"]
     }
   })
 }
 
 resource "aws_cloudwatch_event_target" "lambda_ecr_push_notifier" {
-  rule      = aws_cloudwatch_event_rule.ecr_push_rule.name
-  arn       = aws_lambda_function.ecr_push_notifier_function.arn
+  rule = aws_cloudwatch_event_rule.ecr_push_rule.name
+  arn  = aws_lambda_function.ecr_push_notifier_function.arn
 }
 
 resource "aws_lambda_permission" "allow_eventbridge" {

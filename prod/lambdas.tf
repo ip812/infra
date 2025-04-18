@@ -109,10 +109,10 @@ resource "aws_lambda_function" "ecr_push_notifier_function" {
   role          = aws_iam_role.ecr_push_notifier_function_role.arn
   environment {
     variables = {
-      APP_ENV           = var.env
-      GIT_USERNAME      = var.gh_username
-      GIT_ACCESS_TOKEN  = var.gh_access_token
-      SLACK_BOT_TOKEN  = var.slk_github_bot_token
+      APP_ENV              = var.env
+      GIT_USERNAME         = var.gh_username
+      GIT_ACCESS_TOKEN     = var.gh_access_token
+      SLACK_BOT_TOKEN      = var.slk_github_bot_token
       SLACK_AWS_CHANNEL_ID = var.slk_aws_channel_id
       SLACK_K8S_CHANNEL_ID = var.slk_k8s_channel_id
     }
