@@ -20,6 +20,16 @@ output "slk_github_bot_token" {
   sensitive = true
 }
 
+variable "slk_aws_channel_id" {
+  type      = string
+  sensitive = true
+}
+
+variable "slk_k8s_channel_id" {
+  type      = string
+  sensitive = true
+}
+
 locals {
   default_tags = {
     Organization = var.org
