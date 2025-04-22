@@ -66,7 +66,7 @@ resource "random_string" "asg_suffix" {
 resource "aws_launch_template" "asg_lt" {
   name_prefix            = "asg-lt-"
   image_id               = "ami-0a628e1e89aaedf80"
-  instance_type          = "t3.small"
+  instance_type          = "t3.micro"
   vpc_security_group_ids = [aws_security_group.asg_sg.id]
   iam_instance_profile {
     name = aws_iam_instance_profile.ec2_instance_profile.name
