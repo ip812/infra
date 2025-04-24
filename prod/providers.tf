@@ -91,6 +91,10 @@ output "hcp_project_id" {
   sensitive = true
 }
 
+variable "gf_cloud_access_policy_token" {
+  type      = string
+  sensitive = true
+}
 ################################################################################
 #                                  Providers                                   #
 ################################################################################
@@ -120,6 +124,10 @@ terraform {
       source  = "hashicorp/hcp"
       version = "0.104.0"
     }
+    grafana = {
+      source  = "grafana/grafana"
+      version = "3.22.3"
+    }
   }
 }
 
@@ -143,4 +151,37 @@ provider "hcp" {
   client_id     = var.hcp_client_id
   client_secret = var.hcp_client_secret
   project_id    = var.hcp_project_id
+}
+
+provider "grafana" {
+  alias                     = "cloud"
+  cloud_access_policy_token = var.gf_cloud_access_policy_token
+}
+
+resource "grafana_cloud_stack" "stack" {
+  provider    = grafana.cloud
+  name        = "${var.org}.grafana.net"
+  slug        = var.org
+  region_slug = "eu"
+}
+
+resource "grafana_cloud_stack_service_account" "cloud_sa" {
+  provider    = grafana.cloud
+  stack_slug  = grafana_cloud_stack.stack.slug
+  name        = var.org
+  role        = "Admin"
+  is_disabled = false
+}
+
+resource "grafana_cloud_stack_service_account_token" "cloud_sa" {
+  provider           = grafana.cloud
+  stack_slug         = grafana_cloud_stack.stack.slug
+  name               = "terraform serviceaccount key"
+  service_account_id = grafana_cloud_stack_service_account.cloud_sa.id
+}
+
+provider "grafana" {
+  alias = "stack"
+  url   = grafana_cloud_stack.stack.url
+  auth  = grafana_cloud_stack_service_account_token.cloud_sa.key
 }
