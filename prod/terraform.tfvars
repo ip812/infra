@@ -14,6 +14,9 @@ aws_private_subnet_b_cidr = "10.0.4.0/24"
 
 cf_tunnel_name = "ip812_tunnel"
 
+gf_region_slug    = "prod-eu-west-2"
+gf_aws_account_id = "008923505280"
+
 pgadmin_domain = "pgadmin"
 
 go_template_domain  = "template"
