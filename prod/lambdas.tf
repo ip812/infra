@@ -71,7 +71,7 @@ resource "aws_lambda_function" "pg_query_exec_function" {
   environment {
     variables = {
       APP_ENV     = var.env
-      DB_HOST     = aws_db_instance.pg.endpoint
+      DB_ENDPOINT = aws_db_instance.pg.endpoint
       DB_USERNAME = var.pg_username
       DB_PASSWORD = var.pg_password
       DB_SSL_MODE = "require"
