@@ -33,16 +33,12 @@ resource "cloudflare_zero_trust_tunnel_cloudflared_config" "cf_tunnel_cfg" {
   tunnel_id  = cloudflare_zero_trust_tunnel_cloudflared.cf_tunnel.id
   config {
     ingress_rule {
-      hostname = cloudflare_record.traefik_dns_record.hostname
-      service  = "http://traefik.ip812.svc.cluster.local:9000"
-    }
-    ingress_rule {
       hostname = cloudflare_record.pgadmin_dns_record.hostname
-      service  = "http://traefik.ip812.svc.cluster.local:9000"
+      service  = "http://pgadmin-svc.ip812.svc.cluster.local:9000"
     }
     ingress_rule {
       hostname = cloudflare_record.go_template_dns_record.hostname
-      service  = "http://traefik.ip812.svc.cluster.local:9000"
+      service  = "http://go-template-svc.ip812.svc.cluster.local:9000"
     }
     ingress_rule {
       service = "http_status:404"
