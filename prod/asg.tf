@@ -101,7 +101,6 @@ resource "aws_launch_template" "asg_lt" {
     echo "Waiting for Kubernetes API to become available..." && until k0s kubectl get nodes >/dev/null 2>&1; do echo "Still waiting for the API..." && sleep 5; done && echo "Kubernetes API is ready."
     curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 
-    echo "hello"
     git clone https://${var.gh_access_token}@github.com/ip812/apps.git
     k0s kubectl create namespace ip812
     # Will create a single secret hcp-vault-secrets-app if in future we add HCP Vault
@@ -122,8 +121,6 @@ resource "aws_launch_template" "asg_lt" {
       --docker-username=AWS \
       --docker-password=$(aws ecr get-login-password --region ${var.aws_region}) \
       --docker-email=ilia.yavorov.petrov@gmail.com
-    helm repo add traefik https://helm.traefik.io/traefik
-    helm install traefik traefik/traefik -f apps/values/traefik.yaml -n ip812
     k0s kubectl apply -k ./apps/manifests/prod
   EOF
   )
