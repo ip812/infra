@@ -116,7 +116,7 @@ resource "grafana_cloud_provider_aws_cloudwatch_scrape_job" "aws_cw_scrape_job" 
     name = "AWS/EC2"
     metric {
       name       = "CPUUtilization"
-      statistics = ["Average"]
+      statistics = ["Average", "Maximum"]
     }
     metric {
       name       = "DiskReadOps"
@@ -172,30 +172,6 @@ resource "grafana_cloud_provider_aws_cloudwatch_scrape_job" "aws_cw_scrape_job" 
     }
     metric {
       name       = "WriteLatency"
-      statistics = ["Average"]
-    }
-  }
-
-  service {
-    name = "AWS/Lambda"
-    metric {
-      name       = "Invocations"
-      statistics = ["Sum"]
-    }
-    metric {
-      name       = "Duration"
-      statistics = ["Average"]
-    }
-    metric {
-      name       = "Errors"
-      statistics = ["Sum"]
-    }
-    metric {
-      name       = "Throttles"
-      statistics = ["Sum"]
-    }
-    metric {
-      name       = "IteratorAge"
       statistics = ["Average"]
     }
   }
