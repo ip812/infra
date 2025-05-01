@@ -123,6 +123,7 @@ resource "aws_launch_template" "asg_lt" {
     k0s kubectl create namespace monitoring
     echo 'export PROMETHEUS_URL="${grafana_cloud_stack.stack.prometheus_url}"' >> ~/.bashrc
     echo 'export LOKI_URL="${grafana_cloud_stack.stack.logs_url}"' >> ~/.bashrc
+    echo 'export GRAFANA_CLOUD_ACCESS_POLICY_TOKEN"="${grafana_cloud_access_policy_token.access_policy_token.token}"' >> ~/.bashrc
     source ~/.bashrc
     helm repo add grafana https://grafana.github.io/helm-charts
     helm install grafana grafana/grafana \
