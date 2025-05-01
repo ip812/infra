@@ -103,9 +103,7 @@ resource "aws_launch_template" "asg_lt" {
 
     git clone https://${var.gh_access_token}@github.com/ip812/apps.git
     k0s kubectl create namespace ip812
-    # Will create a single secret hcp-vault-secrets-app if in future we add HCP Vault
-    # The HCP Vault wihtout license allows to populate secret only in a single namespace(Vault Secrets Operator)
-    k0s kubectl create secret generic hcp-vault-secrets-app \
+    k0s kubectl create secret generic ip812-secrets \
       --namespace ip812 \
       --from-literal=aws_access_key="${var.aws_access_key}" \
       --from-literal=aws_secret_key="${var.aws_secret_key}" \

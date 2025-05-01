@@ -33,10 +33,6 @@ terraform {
       source  = "hashicorp/aws"
       version = "5.77.0"
     }
-    vault = {
-      source  = "hashicorp/vault"
-      version = "4.7.0"
-    }
     github = {
       source  = "integrations/github"
       version = "6.4.0"
@@ -55,8 +51,6 @@ provider "aws" {
   access_key = data.terraform_remote_state.prod.outputs.aws_access_key
   secret_key = data.terraform_remote_state.prod.outputs.aws_secret_key
 }
-
-provider "vault" {}
 
 provider "github" {
   token = data.terraform_remote_state.prod.outputs.gh_access_token
