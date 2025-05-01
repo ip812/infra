@@ -25,10 +25,6 @@ terraform {
   }
 
   required_providers {
-    hcp = {
-      source  = "hashicorp/hcp"
-      version = "0.104.0"
-    }
     aws = {
       source  = "hashicorp/aws"
       version = "5.77.0"
@@ -38,12 +34,6 @@ terraform {
       version = "6.4.0"
     }
   }
-}
-
-provider "hcp" {
-  client_id     = data.terraform_remote_state.prod.outputs.hcp_client_id
-  client_secret = data.terraform_remote_state.prod.outputs.hcp_client_secret
-  project_id    = data.terraform_remote_state.prod.outputs.hcp_project_id
 }
 
 provider "aws" {

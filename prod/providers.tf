@@ -61,36 +61,6 @@ output "gh_access_token" {
   sensitive = true
 }
 
-variable "hcp_client_id" {
-  type      = string
-  sensitive = true
-}
-
-output "hcp_client_id" {
-  value     = var.hcp_client_id
-  sensitive = true
-}
-
-variable "hcp_client_secret" {
-  type      = string
-  sensitive = true
-}
-
-output "hcp_client_secret" {
-  value     = var.hcp_client_secret
-  sensitive = true
-}
-
-variable "hcp_project_id" {
-  type      = string
-  sensitive = true
-}
-
-output "hcp_project_id" {
-  value     = var.hcp_project_id
-  sensitive = true
-}
-
 variable "gf_cloud_access_policy_token" {
   type      = string
   sensitive = true
@@ -121,10 +91,6 @@ terraform {
       source  = "cloudflare/cloudflare"
       version = "4.49.1"
     }
-    hcp = {
-      source  = "hashicorp/hcp"
-      version = "0.104.0"
-    }
     time = {
       source  = "hashicorp/time"
       version = "0.13.1-alpha1"
@@ -150,12 +116,6 @@ provider "awscc" {
 
 provider "cloudflare" {
   api_token = var.cf_api_token
-}
-
-provider "hcp" {
-  client_id     = var.hcp_client_id
-  client_secret = var.hcp_client_secret
-  project_id    = var.hcp_project_id
 }
 
 provider "grafana" {

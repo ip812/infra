@@ -119,6 +119,13 @@ resource "aws_launch_template" "asg_lt" {
       --docker-username=AWS \
       --docker-password=$(aws ecr get-login-password --region ${var.aws_region}) \
       --docker-email=ilia.yavorov.petrov@gmail.com
+
+    k0s kubectl create namespace monitoring
+    helm repo add grafana https://grafana.github.io/helm-charts
+    helm install grafana grafana/grafana \
+      --namespace monitoring \
+      --values apps/values/monitoring.yaml
+
     k0s kubectl apply -k ./apps/manifests/prod
   EOF
   )
