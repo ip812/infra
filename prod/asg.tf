@@ -126,6 +126,7 @@ resource "aws_launch_template" "asg_lt" {
     echo 'export GRAFANA_CLOUD_ACCESS_POLICY_TOKEN="${grafana_cloud_access_policy_token.access_policy_token.token}"' >> ~/.bashrc
     source ~/.bashrc
     helm repo add grafana https://grafana.github.io/helm-charts
+    helm repo update
     helm install grafana-agent grafana/agent \
       --namespace monitoring \
       --values apps/values/monitoring.yaml
