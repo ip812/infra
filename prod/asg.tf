@@ -131,21 +131,21 @@ cluster:
 destinations:
   - name: grafana-cloud-metrics
     type: prometheus
-    url: https://prometheus-prod-24-prod-eu-west-2.grafana.net/api/prom/push
+    url: ${grafana_cloud_stack.stack.prometheus_remote_write_endpoint}
     auth:
       type: basic
       username: "2411911"
       password: ${var.gf_cloud_access_policy_token}
   - name: grafana-cloud-logs
     type: loki
-    url: https://logs-prod-012.grafana.net/loki/api/v1/push
+    url: ${grafana_cloud_stack.stack.logs_url}/loki/api/v1/push
     auth:
       type: basic
       username: "1201632"
       password: ${var.gf_cloud_access_policy_token}
   - name: grafana-cloud-traces
     type: otlp
-    url: https://tempo-prod-10-prod-eu-west-2.grafana.net:443
+    url: ${grafana_cloud_stack.stack.traces_url}
     protocol: grpc
     auth:
       type: basic
@@ -199,7 +199,7 @@ alloy-metrics:
         value: grafana-k8s-monitoring-$(CLUSTER_NAME)-$(NAMESPACE)-$(POD_NAME)
   remoteConfig:
     enabled: true
-    url: https://fleet-management-prod-011.grafana.net
+    url: ${grafana_cloud_stack.stack.fleet_management_url} 
     auth:
       type: basic
       username: "1243836"
@@ -227,7 +227,7 @@ alloy-singleton:
         value: grafana-k8s-monitoring-$(CLUSTER_NAME)-$(NAMESPACE)-$(POD_NAME)
   remoteConfig:
     enabled: true
-    url: https://fleet-management-prod-011.grafana.net
+    url: ${grafana_cloud_stack.stack.fleet_management_url} 
     auth:
       type: basic
       username: "1243836"
@@ -259,7 +259,7 @@ alloy-logs:
         value: grafana-k8s-monitoring-$(CLUSTER_NAME)-$(NAMESPACE)-alloy-logs-$(NODE_NAME)
   remoteConfig:
     enabled: true
-    url: https://fleet-management-prod-011.grafana.net
+    url: ${grafana_cloud_stack.stack.fleet_management_url} 
     auth:
       type: basic
       username: "1243836"
@@ -304,7 +304,7 @@ alloy-receiver:
         value: grafana-k8s-monitoring-$(CLUSTER_NAME)-$(NAMESPACE)-alloy-receiver-$(NODE_NAME)
   remoteConfig:
     enabled: true
-    url: https://fleet-management-prod-011.grafana.net
+    url: ${grafana_cloud_stack.stack.fleet_management_url} 
     auth:
       type: basic
       username: "1243836"
