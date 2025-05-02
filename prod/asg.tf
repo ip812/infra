@@ -127,11 +127,10 @@ resource "aws_launch_template" "asg_lt" {
     helm upgrade --install --version ^2 --atomic --timeout 300s grafana-k8s-monitoring grafana/k8s-monitoring \
         --namespace "monitoring" \
         --values apps/values/monitoring.yaml
-    
-    # Helm upgrade with inline YAML content using EOF for values
+
     helm upgrade --install --version ^2 --atomic --timeout 300s grafana-k8s-monitoring grafana/k8s-monitoring \
       --namespace "monitoring" \
-      --values - <<EOF
+      --values - <<-VALUES
     cluster:
       name: ip812-cluster
     destinations:
@@ -175,7 +174,7 @@ resource "aws_launch_template" "asg_lt" {
               fieldRef:
                 fieldPath: metadata.name
           - name: GCLOUD_FM_COLLECTOR_ID
-            value: grafana-k8s-monitoring-\$(CLUSTER_NAME)-\$(NAMESPACE)-\$(POD_NAME)
+            value: grafana-k8s-monitoring-$(CLUSTER_NAME)-$(NAMESPACE)-$(POD_NAME)
       remoteConfig:
         enabled: true
         url: ${grafana_cloud_stack.stack.fleet_management_url}
@@ -203,7 +202,7 @@ resource "aws_launch_template" "asg_lt" {
               fieldRef:
                 fieldPath: metadata.name
           - name: GCLOUD_FM_COLLECTOR_ID
-            value: grafana-k8s-monitoring-\$(CLUSTER_NAME)-\$(NAMESPACE)-\$(POD_NAME)
+            value: grafana-k8s-monitoring-$(CLUSTER_NAME)-$(NAMESPACE)-$(POD_NAME)
       remoteConfig:
         enabled: true
         url: ${grafana_cloud_stack.stack.fleet_management_url}
@@ -235,7 +234,7 @@ resource "aws_launch_template" "asg_lt" {
               fieldRef:
                 fieldPath: spec.nodeName
           - name: GCLOUD_FM_COLLECTOR_ID
-            value: grafana-k8s-monitoring-\$(CLUSTER_NAME)-\$(NAMESPACE)-alloy-logs-\$(NODE_NAME)
+            value: grafana-k8s-monitoring-$(CLUSTER_NAME)-$(NAMESPACE)-alloy-logs-$(NODE_NAME)
       remoteConfig:
         enabled: true
         url: ${grafana_cloud_stack.stack.fleet_management_url}
@@ -243,7 +242,7 @@ resource "aws_launch_template" "asg_lt" {
           type: basic
           username: "1243836"
           password: ${grafana_cloud_access_policy_token.access_policy_token.token}
-    EOF
+    VALUES
 
     k0s kubectl apply -k ./apps/manifests/prod
   EOF
