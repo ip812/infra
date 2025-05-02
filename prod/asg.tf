@@ -159,18 +159,6 @@ destinations:
       enabled: true
 clusterMetrics:
   enabled: true
-  opencost:
-    enabled: true
-    metricsSource: grafana-cloud-metrics
-    opencost:
-      exporter:
-        defaultClusterId: ip812-cluster
-      prometheus:
-        existingSecretName: grafana-cloud-metrics-grafana-k8s-monitoring
-        external:
-          url: ${grafana_cloud_stack.stack.prometheus_url} 
-  kepler:
-    enabled: true
 clusterEvents:
   enabled: true
 podLogs:
