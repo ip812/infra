@@ -125,7 +125,7 @@ helm repo add grafana https://grafana.github.io/helm-charts
 helm repo update
 helm upgrade --install --version ^2 grafana-k8s-monitoring grafana/k8s-monitoring \
   --namespace monitoring \
-  --values - <<'VALUES'
+  --values - <<VALUES
 cluster:
   name: ip812-cluster
 destinations:
