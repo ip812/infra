@@ -21,6 +21,22 @@ resource "grafana_cloud_stack" "stack" {
   region_slug = var.gf_region_slug
 }
 
+output "prometheus_remote_endpoint" {
+  value = grafana_cloud_stack.stack.prometheus_remote_endpoint
+}
+
+output "logs_url" {
+  value = grafana_cloud_stack.stack.logs_url
+}
+
+output "trace_url" {
+  value = grafana_cloud_stack.stack.traces_url
+}
+
+output "fleet_management_url" {
+  value = grafana_cloud_stack.stack.fleet_management_url
+}
+
 resource "grafana_cloud_access_policy" "access_policy" {
   provider     = grafana.cloud
   region       = var.gf_region_slug
