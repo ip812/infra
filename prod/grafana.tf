@@ -116,35 +116,23 @@ resource "grafana_cloud_provider_aws_cloudwatch_scrape_job" "aws_cw_scrape_job" 
     scrape_interval_seconds = 600
     metric {
       name       = "CPUUtilization"
-      statistics = ["Average"]
-    }
-    metric {
-      name       = "FreeStorageSpace"
-      statistics = ["Average"]
+      statistics = ["Average", "Maximum"]
     }
     metric {
       name       = "ReadIOPS"
-      statistics = ["Average"]
+      statistics = ["Average", "Maximum"]
     }
     metric {
       name       = "WriteIOPS"
-      statistics = ["Average"]
-    }
-    metric {
-      name       = "DatabaseConnections"
-      statistics = ["Average"]
-    }
-    metric {
-      name       = "DiskQueueDepth"
-      statistics = ["Average"]
+      statistics = ["Average", "Maximum"]
     }
     metric {
       name       = "ReadLatency"
-      statistics = ["Average"]
+      statistics = ["Average", "Maximum"]
     }
     metric {
       name       = "WriteLatency"
-      statistics = ["Average"]
+      statistics = ["Average", "Maximum"]
     }
   }
 }
