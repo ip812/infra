@@ -123,7 +123,7 @@ k0s kubectl create secret docker-registry ecr-secret \
 k0s kubectl create namespace monitoring
 helm repo add grafana https://grafana.github.io/helm-charts
 helm repo update
-helm upgrade --install --version ^2 --atomic --timeout 300s grafana-k8s-monitoring grafana/k8s-monitoring \
+helm upgrade --install --version ^2 grafana-k8s-monitoring grafana/k8s-monitoring \
   --namespace monitoring \
   --values - <<'VALUES'
 cluster:
