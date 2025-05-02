@@ -111,35 +111,6 @@ resource "grafana_cloud_provider_aws_cloudwatch_scrape_job" "aws_cw_scrape_job" 
   stack_id                = grafana_cloud_stack.stack.id
   name                    = "${var.org}-${var.env}-aws-cloudwatch-scrape-job"
   aws_account_resource_id = grafana_cloud_provider_aws_account.aws_acc.resource_id
-
-  service {
-    name = "AWS/EC2"
-    metric {
-      name       = "CPUUtilization"
-      statistics = ["Average", "Maximum"]
-    }
-    metric {
-      name       = "DiskReadOps"
-      statistics = ["Average"]
-    }
-    metric {
-      name       = "DiskWriteOps"
-      statistics = ["Average"]
-    }
-    metric {
-      name       = "NetworkIn"
-      statistics = ["Average"]
-    }
-    metric {
-      name       = "NetworkOut"
-      statistics = ["Average"]
-    }
-    metric {
-      name       = "StatusCheckFailed"
-      statistics = ["Average"]
-    }
-  }
-
   service {
     name = "AWS/RDS"
     metric {
