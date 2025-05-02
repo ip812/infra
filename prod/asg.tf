@@ -128,6 +128,8 @@ helm upgrade --install --version ^2 grafana-k8s-monitoring grafana/k8s-monitorin
   --values - <<VALUES
 cluster:
   name: ip812-cluster
+global:
+  scrapeInterval: "600s"
 destinations:
   - name: grafana-cloud-metrics
     type: prometheus
