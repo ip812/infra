@@ -120,13 +120,13 @@ resource "aws_launch_template" "asg_lt" {
       --docker-password=$(aws ecr get-login-password --region ${var.aws_region}) \
       --docker-email=ilia.yavorov.petrov@gmail.com
 
-    echo 'export PROMETHEUS_URL="${grafana_cloud_stack.stack.prometheus_url}"' >> ~/.bashrc
+    echo 'export PROMETHEUS_URL="${grafana_cloud_stack.stack.prometheus_url}"' >> /root/.bashrc
     export PROMETHEUS_URL="${grafana_cloud_stack.stack.prometheus_url}"
-    echo 'export LOGS_URL="${grafana_cloud_stack.stack.logs_url}"' >> ~/.bashrc
+    echo 'export LOGS_URL="${grafana_cloud_stack.stack.logs_url}"' >> /root/.bashrc
     export LOGS_URL="${grafana_cloud_stack.stack.logs_url}"
-    echo 'export FLEET_MANAGEMENT_URL="${grafana_cloud_stack.stack.fleet_management_url}"' >> ~/.bashrc
+    echo 'export FLEET_MANAGEMENT_URL="${grafana_cloud_stack.stack.fleet_management_url}"' >> /root/.bashrc
     export FLEET_MANAGEMENT_URL="${grafana_cloud_stack.stack.fleet_management_url}"
-    echo 'export GRAFANA_CLOUD_ACCESS_POLICY_TOKEN="${grafana_cloud_access_policy_token.access_policy_token.token}"' >> ~/.bashrc
+    echo 'export GRAFANA_CLOUD_ACCESS_POLICY_TOKEN="${grafana_cloud_access_policy_token.access_policy_token.token}"' >> /root/.bashrc
     export GRAFANA_CLOUD_ACCESS_POLICY_TOKEN="${grafana_cloud_access_policy_token.access_policy_token.token}"
 
     k0s kubectl create namespace monitoring
