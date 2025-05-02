@@ -120,23 +120,130 @@ resource "aws_launch_template" "asg_lt" {
       --docker-password=$(aws ecr get-login-password --region ${var.aws_region}) \
       --docker-email=ilia.yavorov.petrov@gmail.com
 
-    echo 'export PROMETHEUS_URL="${grafana_cloud_stack.stack.prometheus_url}"' >> /root/.bashrc
-    export PROMETHEUS_URL="${grafana_cloud_stack.stack.prometheus_url}"
-    echo 'export LOGS_URL="${grafana_cloud_stack.stack.logs_url}"' >> /root/.bashrc
-    export LOGS_URL="${grafana_cloud_stack.stack.logs_url}"
-    echo 'export FLEET_MANAGEMENT_URL="${grafana_cloud_stack.stack.fleet_management_url}"' >> /root/.bashrc
-    export FLEET_MANAGEMENT_URL="${grafana_cloud_stack.stack.fleet_management_url}"
-    echo 'export GRAFANA_CLOUD_ACCESS_POLICY_TOKEN="${grafana_cloud_access_policy_token.access_policy_token.token}"' >> /root/.bashrc
-    export GRAFANA_CLOUD_ACCESS_POLICY_TOKEN="${grafana_cloud_access_policy_token.access_policy_token.token}"
-
     k0s kubectl create namespace monitoring
     helm repo add grafana https://grafana.github.io/helm-charts
     helm repo update
     helm search repo grafana
-    cat apps/values/monitoring.yaml
     helm upgrade --install --version ^2 --atomic --timeout 300s grafana-k8s-monitoring grafana/k8s-monitoring \
         --namespace "monitoring" \
         --values apps/values/monitoring.yaml
+    
+    # Helm upgrade with inline YAML content using EOF for values
+    helm upgrade --install --version ^2 --atomic --timeout 300s grafana-k8s-monitoring grafana/k8s-monitoring \
+      --namespace "monitoring" \
+      --values - <<EOF
+    cluster:
+      name: ip812-cluster
+    destinations:
+      - name: grafana-cloud-metrics
+        type: prometheus
+        url: ${grafana_cloud_stack.stack.prometheus_url}
+        auth:
+          type: basic
+          username: "2411911"
+          password: ${grafana_cloud_access_policy_token.access_policy_token.token}
+      - name: grafana-cloud-logs
+        type: loki
+        url: ${grafana_cloud_stack.stack.logs_url}
+        auth:
+          type: basic
+          username: "1201632"
+          password: ${grafana_cloud_access_policy_token.access_policy_token.token}
+    clusterMetrics:
+      enabled: true
+    clusterEvents:
+      enabled: true
+    podLogs:
+      enabled: true
+    alloy-metrics:
+      enabled: true
+      alloy:
+        extraEnv:
+          - name: GCLOUD_RW_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: alloy-metrics-remote-cfg-grafana-k8s-monitoring
+                key: password
+          - name: CLUSTER_NAME
+            value: ip812-cluster
+          - name: NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: GCLOUD_FM_COLLECTOR_ID
+            value: grafana-k8s-monitoring-\$(CLUSTER_NAME)-\$(NAMESPACE)-\$(POD_NAME)
+      remoteConfig:
+        enabled: true
+        url: ${grafana_cloud_stack.stack.fleet_management_url}
+        auth:
+          type: basic
+          username: "1243836"
+          password: ${grafana_cloud_access_policy_token.access_policy_token.token}
+    alloy-singleton:
+      enabled: true
+      alloy:
+        extraEnv:
+          - name: GCLOUD_RW_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: alloy-singleton-remote-cfg-grafana-k8s-monitoring
+                key: password
+          - name: CLUSTER_NAME
+            value: ip812-cluster
+          - name: NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: GCLOUD_FM_COLLECTOR_ID
+            value: grafana-k8s-monitoring-\$(CLUSTER_NAME)-\$(NAMESPACE)-\$(POD_NAME)
+      remoteConfig:
+        enabled: true
+        url: ${grafana_cloud_stack.stack.fleet_management_url}
+        auth:
+          type: basic
+          username: "1243836"
+          password: ${grafana_cloud_access_policy_token.access_policy_token.token}
+    alloy-logs:
+      enabled: true
+      alloy:
+        extraEnv:
+          - name: GCLOUD_RW_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: alloy-logs-remote-cfg-grafana-k8s-monitoring
+                key: password
+          - name: CLUSTER_NAME
+            value: ip812-cluster
+          - name: NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: NODE_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: spec.nodeName
+          - name: GCLOUD_FM_COLLECTOR_ID
+            value: grafana-k8s-monitoring-\$(CLUSTER_NAME)-\$(NAMESPACE)-alloy-logs-\$(NODE_NAME)
+      remoteConfig:
+        enabled: true
+        url: ${grafana_cloud_stack.stack.fleet_management_url}
+        auth:
+          type: basic
+          username: "1243836"
+          password: ${grafana_cloud_access_policy_token.access_policy_token.token}
+    EOF
 
     k0s kubectl apply -k ./apps/manifests/prod
   EOF
