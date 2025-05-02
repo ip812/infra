@@ -311,6 +311,8 @@ alloy-receiver:
       password: ${var.gf_cloud_access_policy_token}
 VALUES
 
+sleep 60
+
 k0s kubectl apply -k ./apps/manifests/prod
 EOF
   )
