@@ -135,14 +135,14 @@ destinations:
     auth:
       type: basic
       username: "2411911"
-      password: ${grafana_cloud_access_policy_token.access_policy_token.token}
+      password: ${var.gf_cloud_access_policy_token}
   - name: grafana-cloud-logs
     type: loki
     url: ${grafana_cloud_stack.stack.logs_url} 
     auth:
       type: basic
       username: "1201632"
-      password: ${grafana_cloud_access_policy_token.access_policy_token.token}
+      password: ${var.gf_cloud_access_policy_token}
   - name: grafana-cloud-traces
     type: otlp
     url: ${grafana_cloud_stack.stack.traces_url} 
@@ -150,7 +150,7 @@ destinations:
     auth:
       type: basic
       username: "1195943"
-      password: ${grafana_cloud_access_policy_token.access_policy_token.token}
+      password: ${var.gf_cloud_access_policy_token}
     metrics:
       enabled: false
     logs:
@@ -203,7 +203,7 @@ alloy-metrics:
     auth:
       type: basic
       username: "1243836"
-      password: ${grafana_cloud_access_policy_token.access_policy_token.token}
+      password: ${var.gf_cloud_access_policy_token}
 alloy-singleton:
   enabled: true
   alloy:
@@ -231,7 +231,7 @@ alloy-singleton:
     auth:
       type: basic
       username: "1243836"
-      password: ${grafana_cloud_access_policy_token.access_policy_token.token}
+      password: ${var.gf_cloud_access_policy_token}
 alloy-logs:
   enabled: true
   alloy:
@@ -263,7 +263,7 @@ alloy-logs:
     auth:
       type: basic
       username: "1243836"
-      password: ${grafana_cloud_access_policy_token.access_policy_token.token}
+      password: ${var.gf_cloud_access_policy_token}
 alloy-receiver:
   enabled: true
   alloy:
@@ -308,7 +308,7 @@ alloy-receiver:
     auth:
       type: basic
       username: "1243836"
-      password: ${grafana_cloud_access_policy_token.access_policy_token.token}
+      password: ${var.gf_cloud_access_policy_token}
 VALUES
 
 k0s kubectl apply -k ./apps/manifests/prod
