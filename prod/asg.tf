@@ -196,7 +196,7 @@ alloy-metrics:
           fieldRef:
             fieldPath: metadata.name
       - name: GCLOUD_FM_COLLECTOR_ID
-        value: grafana-k8s-monitoring-$(CLUSTER_NAME)-$(NAMESPACE)-$(POD_NAME)
+        value: grafana-k8s-monitoring-\$(CLUSTER_NAME)-\$(NAMESPACE)-\$(POD_NAME)
   remoteConfig:
     enabled: true
     url: ${grafana_cloud_stack.stack.fleet_management_url} 
@@ -224,7 +224,7 @@ alloy-singleton:
           fieldRef:
             fieldPath: metadata.name
       - name: GCLOUD_FM_COLLECTOR_ID
-        value: grafana-k8s-monitoring-$(CLUSTER_NAME)-$(NAMESPACE)-$(POD_NAME)
+        value: grafana-k8s-monitoring-\$(CLUSTER_NAME)-\$(NAMESPACE)-\$(POD_NAME)
   remoteConfig:
     enabled: true
     url: ${grafana_cloud_stack.stack.fleet_management_url} 
@@ -256,7 +256,7 @@ alloy-logs:
           fieldRef:
             fieldPath: spec.nodeName
       - name: GCLOUD_FM_COLLECTOR_ID
-        value: grafana-k8s-monitoring-$(CLUSTER_NAME)-$(NAMESPACE)-alloy-logs-$(NODE_NAME)
+        value: grafana-k8s-monitoring-\$(CLUSTER_NAME)-\$(NAMESPACE)-alloy-logs-\$(NODE_NAME)
   remoteConfig:
     enabled: true
     url: ${grafana_cloud_stack.stack.fleet_management_url} 
@@ -301,7 +301,7 @@ alloy-receiver:
           fieldRef:
             fieldPath: spec.nodeName
       - name: GCLOUD_FM_COLLECTOR_ID
-        value: grafana-k8s-monitoring-$(CLUSTER_NAME)-$(NAMESPACE)-alloy-receiver-$(NODE_NAME)
+        value: grafana-k8s-monitoring-\$(CLUSTER_NAME)-\$(NAMESPACE)-alloy-receiver-\$(NODE_NAME)
   remoteConfig:
     enabled: true
     url: ${grafana_cloud_stack.stack.fleet_management_url} 
@@ -330,6 +330,7 @@ EOF
 }
 
 resource "aws_autoscaling_group" "asg" {
+  depends_on = [grafana_cloud_provider_aws_account.aws_acc]
   launch_template {
     id      = aws_launch_template.asg_lt.id
     version = aws_launch_template.asg_lt.latest_version
@@ -352,7 +353,6 @@ resource "aws_autoscaling_group" "asg" {
       scale_in_protected_instances = "Refresh"
     }
   }
-
   lifecycle {
     replace_triggered_by = [
       aws_security_group.asg_sg,

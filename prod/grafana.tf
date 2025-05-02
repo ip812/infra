@@ -80,12 +80,12 @@ resource "aws_iam_role_policy" "grafana_labs_cloudwatch_integration_policy" {
   })
 }
 
-resource "time_sleep" "wait_60_seconds" {
+resource "time_sleep" "wait_300_seconds" {
   depends_on = [
     aws_iam_role.grafana_labs_cloudwatch_integration_role,
     aws_iam_role_policy.grafana_labs_cloudwatch_integration_policy,
   ]
-  create_duration = "60s"
+  create_duration = "300s"
 }
 
 ################################################################################
@@ -99,7 +99,7 @@ provider "grafana" {
 }
 
 resource "grafana_cloud_provider_aws_account" "aws_acc" {
-  depends_on = [time_sleep.wait_60_seconds]
+  depends_on = [time_sleep.wait_300_seconds]
   provider   = grafana.stack
   stack_id   = grafana_cloud_stack.stack.id
   role_arn   = aws_iam_role.grafana_labs_cloudwatch_integration_role.arn
