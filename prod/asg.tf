@@ -130,7 +130,7 @@ resource "aws_launch_template" "asg_lt" {
     helm repo add grafana https://grafana.github.io/helm-charts
     helm repo update
     helm upgrade --install --version ^2 --atomic --timeout 300s grafana-k8s-monitoring grafana/k8s-monitoring \
-        --namespace "monitoring" 
+        --namespace "monitoring" \
         --values apps/values/monitoring.yaml
 
     k0s kubectl apply -k ./apps/manifests/prod
