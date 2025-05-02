@@ -112,7 +112,8 @@ resource "grafana_cloud_provider_aws_cloudwatch_scrape_job" "aws_cw_scrape_job" 
   name                    = "${var.org}-${var.env}-aws-cloudwatch-scrape-job"
   aws_account_resource_id = grafana_cloud_provider_aws_account.aws_acc.resource_id
   service {
-    name = "AWS/RDS"
+    name                    = "AWS/RDS"
+    scrape_interval_seconds = 600
     metric {
       name       = "CPUUtilization"
       statistics = ["Average"]
