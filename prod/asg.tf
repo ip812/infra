@@ -134,14 +134,14 @@ destinations:
     url: ${grafana_cloud_stack.stack.prometheus_remote_write_endpoint}
     auth:
       type: basic
-      username: "2411911"
+      username: "${grafana_cloud_stack.stack.prometheus_user_id}"
       password: ${var.gf_cloud_access_policy_token}
   - name: grafana-cloud-logs
     type: loki
     url: ${grafana_cloud_stack.stack.logs_url}/loki/api/v1/push
     auth:
       type: basic
-      username: "1201632"
+      username: "${grafana_cloud_stack.stack.logs_user_id}"
       password: ${var.gf_cloud_access_policy_token}
   - name: grafana-cloud-traces
     type: otlp
@@ -149,7 +149,7 @@ destinations:
     protocol: grpc
     auth:
       type: basic
-      username: "1195943"
+      username: "${grafana_cloud_stack.stack.traces_user_id}"
       password: ${var.gf_cloud_access_policy_token}
     metrics:
       enabled: false
@@ -310,8 +310,6 @@ alloy-receiver:
       username: "1243836"
       password: ${var.gf_cloud_access_policy_token}
 VALUES
-
-sleep 60
 
 k0s kubectl apply -k ./apps/manifests/prod
 EOF
