@@ -1,12 +1,12 @@
 ---
-name: Prod Deploy 
+name: Terraform Apply
 
 on:
   push:
     branches:
       - main
     paths:
-      - prod/**
+      - terraform/**
 
 env:
   TF_CLOUD_ORGANIZATION: ${{ vars.ORG }}
@@ -30,7 +30,7 @@ jobs:
         id: upload
         with:
           workspace: prod
-          directory: prod 
+          directory: terraform
 
       - name: Create Terraform apply run
         uses: hashicorp/tfc-workflows-github/actions/create-run@v1.3.2

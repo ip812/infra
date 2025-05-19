@@ -1,0 +1,34 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pgadmin-deploy
+  namespace: avalon
+  labels:
+    app: pgadmin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pgadmin
+  template:
+    metadata:
+      labels:
+        app: pgadmin 
+    spec:
+      imagePullSecrets:
+        - name: github-cr-secret
+      containers:
+        - name: pgadmin
+          image: dpage/pgadmin4:9.1.0
+          ports:
+            - containerPort: 80
+              protocol: TCP
+          env:
+            - name: PGADMIN_DEFAULT_EMAIL
+              value: "ilia.yavorov.petrov@gmail.com"
+            - name: PGADMIN_DEFAULT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: avalon-secrets
+                  key: pg_password

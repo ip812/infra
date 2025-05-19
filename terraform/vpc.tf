@@ -1,39 +1,3 @@
-################################################################################
-#                                   Variables                                  #
-################################################################################
-
-variable "aws_az_a" {
-  type = string
-}
-
-variable "aws_az_b" {
-  type = string
-}
-
-variable "aws_vpc_cidr" {
-  type = string
-}
-
-variable "aws_public_subnet_a_cidr" {
-  type = string
-}
-
-variable "aws_public_subnet_b_cidr" {
-  type = string
-}
-
-variable "aws_private_subnet_a_cidr" {
-  type = string
-}
-
-variable "aws_private_subnet_b_cidr" {
-  type = string
-}
-
-################################################################################
-#                                  Networking                                  #
-################################################################################
-
 resource "aws_vpc" "vpc" {
   cidr_block = var.aws_vpc_cidr
   tags       = local.default_tags
