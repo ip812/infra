@@ -72,7 +72,7 @@ resource "aws_iam_role_policy_attachment" "python_hello_function_vpc_policy" {
 }
 
 resource "aws_lambda_function" "python_hello_function" {
-  function_name = "hello"
+  function_name = "python-hello"
   timeout       = 5
   image_uri     = "678468774710.dkr.ecr.eu-central-1.amazonaws.com/ip812/python-hello:1.0.1"
   package_type  = "Image"
