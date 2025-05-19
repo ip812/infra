@@ -50,7 +50,45 @@
 #   })
 #   tags = local.default_tags
 # }
-# 
+
+resource "aws_iam_role" "python_hello_function_role" {
+  name = "${var.org}-${var.env}-python-hello-function-role"
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Action = "sts:AssumeRole"
+      Effect = "Allow"
+      Principal = {
+        Service = "lambda.amazonaws.com"
+      }
+    }]
+  })
+  tags = local.default_tags
+}
+
+resource "aws_iam_role_policy_attachment" "python_hello_function_vpc_policy" {
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
+  role       = aws_iam_role.python_hello_function_role.name
+}
+
+resource "aws_lambda_function" "python_hello_function" {
+  function_name = "hello"
+  timeout       = 5
+  image_uri     = "678468774710.dkr.ecr.eu-central-1.amazonaws.com/ip812/python-hello:1.0.1"
+  package_type  = "Image"
+  role          = aws_iam_role.python_hello_function_role.arn
+  vpc_config {
+    subnet_ids         = [aws_subnet.public_subnet_a.id, aws_subnet.public_subnet_b.id]
+    security_group_ids = [aws_security_group.asg_sg.id]
+  }
+  environment {
+    variables = {
+      APP_ENV = var.env
+    }
+  }
+  tags = local.default_tags
+}
+
 # resource "aws_iam_role_policy_attachment" "pg_query_exec_function_vpc_policy" {
 #   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
 #   role       = aws_iam_role.pg_query_exec_function_role.name
