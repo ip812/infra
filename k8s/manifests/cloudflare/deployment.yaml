@@ -3,7 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: cloudflared
-  namespace: avalon
+  namespace: ip812
 spec:
   replicas: 1
   selector:
@@ -26,7 +26,7 @@ spec:
             - name: TUNNEL_TOKEN
               valueFrom:
                 secretKeyRef:
-                  name: avalon-secrets
+                  name: ip812-secrets
                   key: cf_tunnel_token
           livenessProbe:
             httpGet:

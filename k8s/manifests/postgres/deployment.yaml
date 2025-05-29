@@ -3,7 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: postgres-deploy
-  namespace: avalon
+  namespace: ip812
   labels:
     app: postgres
 spec:
@@ -28,15 +28,15 @@ spec:
             - name: POSTGRES_DB
               valueFrom:
                 secretKeyRef:
-                  name: avalon-secrets
+                  name: ip812-secrets
                   key: pg_endpoint
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
-                  name: avalon-secrets
+                  name: ip812-secrets
                   key: pg_username
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: avalon-secrets
+                  name: ip812-secrets
                   key: pg_password

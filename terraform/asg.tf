@@ -109,7 +109,7 @@ k0s kubectl create secret generic ip812-secrets \
   --from-literal=aws_secret_access_key="${var.aws_secret_access_key}" \
   --from-literal=aws_region="${var.aws_region}" \
   --from-literal=cf_tunnel_token="${cloudflare_zero_trust_tunnel_cloudflared.cf_tunnel.tunnel_token}" \
-  --from-literal=pg_endpoint="postgres-svc.avalon.svc.cluster.local:5432" \
+  --from-literal=pg_endpoint="postgres-svc.ip812.svc.cluster.local:5432" \
   --from-literal=pg_username="${var.pg_username}" \
   --from-literal=pg_password="${var.pg_password}" \
   --from-literal=go_template_pg_name="${var.go_template_db_name}"
@@ -123,7 +123,7 @@ k0s kubectl create secret docker-registry ecr-secret \
 k0s kubectl apply -k ./infra/k8s/manifests
 sleep 10
 
-k0s kubectl port-forward -n avalon svc/postgres-svc 5432:5432 >/dev/null 2>&1 & pf_pid=$!
+k0s kubectl port-forward -n ip812 svc/postgres-svc 5432:5432 >/dev/null 2>&1 & pf_pid=$!
 sleep 3
 PGPASSWORD="${var.pg_password}" psql -U ${var.pg_username} -h 127.0.0.1 -p 5432 -d postgres -c "CREATE DATABASE ${var.go_template_db_name};"
 kill $pf_pid

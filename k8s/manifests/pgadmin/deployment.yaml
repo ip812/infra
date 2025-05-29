@@ -3,7 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: pgadmin-deploy
-  namespace: avalon
+  namespace: ip812
   labels:
     app: pgadmin
 spec:
@@ -30,5 +30,5 @@ spec:
             - name: PGADMIN_DEFAULT_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: avalon-secrets
+                  name: ip812-secrets
                   key: pg_password
