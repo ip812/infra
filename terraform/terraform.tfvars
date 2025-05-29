@@ -20,4 +20,4 @@ gf_aws_account_id = "008923505280"
 pgadmin_domain = "pgadmin"
 
 go_template_domain  = "template"
-go_template_db_name = "go-template"
+go_template_db_name = "template"
