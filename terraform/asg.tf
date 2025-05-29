@@ -79,7 +79,7 @@ resource "aws_launch_template" "asg_lt" {
 #!/bin/bash
 
 apt-get update -y
-apt-get install -y curl wget unzip make git vim tmux
+apt-get install -y curl wget unzip make git vim tmux postgresql-client
 
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/tmp/awscliv2.zip"
 unzip /tmp/awscliv2.zip -d /tmp
@@ -120,7 +120,7 @@ k0s kubectl create secret docker-registry ecr-secret \
   --docker-password=$(aws ecr get-login-password --region ${var.aws_region}) \
   --docker-email=ilia.yavorov.petrov@gmail.com
 
-k0s kubectl apply -k ./infra/k8s/manifests/prod
+k0s kubectl apply -k ./infra/k8s/manifests
 sleep 10
 
 k0s kubectl port-forward -n avalon svc/postgres-svc 5432:5432 >/dev/null 2>&1 & pf_pid=$!
