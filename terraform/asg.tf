@@ -123,28 +123,46 @@ k0s kubectl create secret docker-registry ecr-secret \
 k0s kubectl apply -k ./infra/k8s/manifests
 sleep 10
 
+echo "⏳ Waiting for Postgres pod to be Ready..."
+for i in {1..30}; do
+  if k0s kubectl get pod -n ip812 -l app=postgres -o jsonpath='{.items[0].status.phase}' 2>/dev/null | grep -q Running; then
+    echo "✅ Postgres pod is running."
+    break
+  fi
+  echo "🔁 Still waiting for pod... ($i)"
+  sleep 2
+done
+
+# Final check
+if ! k0s kubectl get pod -n ip812 -l app=postgres -o jsonpath='{.items[0].status.phase}' | grep -q Running; then
+  echo "❌ Postgres pod is not ready after waiting. Exiting."
+  exit 1
+fi
+
+echo "🚪 Starting port-forward to postgres-svc..."
 k0s kubectl port-forward -n ip812 svc/postgres-svc 5432:5432 >/tmp/portforward.log 2>&1 &
 pf_pid=$!
+trap 'kill $pf_pid || true' EXIT
 
+# Wait for local port to be ready
 for i in {1..10}; do
   if nc -z 127.0.0.1 5432; then
     echo "✅ Port-forward established."
     break
   fi
-  echo "Waiting for port 5432 to be ready... ($i)"
+  echo "🔁 Waiting for port 5432 to be ready... ($i)"
   sleep 1
 done
 
 if ! nc -z 127.0.0.1 5432; then
-  echo "Failed to connect to postgres-svc on 127.0.0.1:5432"
-  echo "Port-forward logs:"
+  echo "❌ Port-forward failed. Port is not open after waiting."
   cat /tmp/portforward.log
-  kill $pf_pid || true
   exit 1
 fi
 
+# Run the psql command
+echo "📦 Running database creation SQL..."
 PGPASSWORD="${var.pg_password}" psql -U "${var.pg_username}" -h 127.0.0.1 -p 5432 -d postgres -c "CREATE DATABASE ${var.go_template_db_name};"
-kill $pf_pid
 EOF
   )
 
