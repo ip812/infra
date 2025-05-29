@@ -123,9 +123,27 @@ k0s kubectl create secret docker-registry ecr-secret \
 k0s kubectl apply -k ./infra/k8s/manifests
 sleep 10
 
-k0s kubectl port-forward -n ip812 svc/postgres-svc 5432:5432 >/dev/null 2>&1 & pf_pid=$!
-sleep 3
-PGPASSWORD="${var.pg_password}" psql -U ${var.pg_username} -h 127.0.0.1 -p 5432 -d postgres -c "CREATE DATABASE ${var.go_template_db_name};"
+k0s kubectl port-forward -n ip812 svc/postgres-svc 5432:5432 >/tmp/portforward.log 2>&1 &
+pf_pid=$!
+
+for i in {1..10}; do
+  if nc -z 127.0.0.1 5432; then
+    echo "✅ Port-forward established."
+    break
+  fi
+  echo "Waiting for port 5432 to be ready... ($i)"
+  sleep 1
+done
+
+if ! nc -z 127.0.0.1 5432; then
+  echo "Failed to connect to postgres-svc on 127.0.0.1:5432"
+  echo "Port-forward logs:"
+  cat /tmp/portforward.log
+  kill $pf_pid || true
+  exit 1
+fi
+
+PGPASSWORD="${var.pg_password}" psql -U "${var.pg_username}" -h 127.0.0.1 -p 5432 -d postgres -c "CREATE DATABASE ${var.go_template_db_name};"
 kill $pf_pid
 EOF
   )
