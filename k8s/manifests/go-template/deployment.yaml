@@ -20,7 +20,7 @@ spec:
         - name: ecr-secret
       containers:
         - name: go-template
-          image: 678468774710.dkr.ecr.eu-central-1.amazonaws.com/ip812/go-template:1.4.1
+          image: 678468774710.dkr.ecr.eu-central-1.amazonaws.com/ip812/go-template:1.6.0
           ports:
             - containerPort: 8080
               protocol: TCP
