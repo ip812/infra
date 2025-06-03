@@ -144,14 +144,13 @@ k0s kubectl port-forward -n ip812 svc/postgres-svc 5432:5432 >/tmp/portforward.l
 pf_pid=$!
 trap 'kill $pf_pid || true' EXIT
 
-# Wait for local port to be ready
 for i in {1..10}; do
   if nc -z 127.0.0.1 5432; then
     echo "✅ Port-forward established."
     break
   fi
   echo "🔁 Waiting for port 5432 to be ready... ($i)"
-  sleep 1
+  sleep 5
 done
 
 if ! nc -z 127.0.0.1 5432; then
