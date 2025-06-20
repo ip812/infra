@@ -120,7 +120,6 @@ k0s kubectl create secret docker-registry ecr-secret \
   --docker-password=$(aws ecr get-login-password --region ${var.aws_region}) \
   --docker-email=ilia.yavorov.petrov@gmail.com
 
-k0s kubectl apply -k ./infra/k8s/manifests
 helm install --namespace ip812 --wait postgres ./infra/k8s/charts/postgres
 helm install --namespace ip812 --wait go-template ./infra/k8s/charts/go-template
 helm install --namespace ip812 --wait cloudflare-tunnel ./infra/k8s/charts/cloudflare-tunnel
