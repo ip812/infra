@@ -121,6 +121,9 @@ k0s kubectl create secret docker-registry ecr-secret \
   --docker-email=ilia.yavorov.petrov@gmail.com
 
 k0s kubectl apply -k ./infra/k8s/manifests
+helm install --namespace ip812 --wait postgres ./infra/k8s/charts/postgres
+helm install --namespace ip812 --wait go-template ./infra/k8s/charts/go-template
+helm install --namespace ip812 --wait cloudflare-tunnel ./infra/k8s/charts/cloudflare-tunnel
 sleep 10
 
 echo "⏳ Waiting for Postgres pod to be Ready..."
