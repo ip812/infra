@@ -121,7 +121,7 @@ k0s kubectl create secret docker-registry ecr-secret \
   --docker-email=ilia.yavorov.petrov@gmail.com
 
 helm install --namespace ip812 --wait postgres ./infra/charts/postgres
-helm install --namespace ip812 --wait go-template ./infra/charts/go-template
+helm install --namespace ip812 --wait go-template ./infra/charts/app
 helm install --namespace ip812 --wait cloudflare-tunnel ./infra/charts/cloudflare-tunnel
 sleep 10
 
