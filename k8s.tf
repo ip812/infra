@@ -90,6 +90,9 @@ chmod 700 /root/.aws
 echo -e "[default]\nregion = ${var.aws_region}\noutput = json" > /root/.aws/config
 echo -e "[default]\naws_access_key_id = ${var.aws_access_key_id}\naws_secret_access_key = ${var.aws_secret_access_key}" > /root/.aws/credentials
 
+curl -fsSL https://tailscale.com/install.sh | sh
+tailscale up --authkey ${var.ts_auth_key} --ssh --hostname "asg-instance-${random_string.asg_suffix.result}"
+
 curl -sSf https://get.k0s.sh | sh
 k0s install controller --single
 k0s start

@@ -117,6 +117,11 @@ variable "cf_tunnel_secret" {
   sensitive = true
 }
 
+variable "ts_auth_key" {
+  type      = string
+  sensitive = true
+}
+
 variable "gf_region_slug" {
   type = string
 }
