@@ -1,7 +1,19 @@
 resource "aws_security_group" "asg_sg" {
   vpc_id  = aws_vpc.vpc.id
   ingress = []
-  egress  = []
+  egress = [
+    {
+      cidr_blocks      = ["0.0.0.0/0"]
+      description      = "session manager"
+      from_port        = 0
+      ipv6_cidr_blocks = []
+      prefix_list_ids  = []
+      protocol         = -1
+      security_groups  = []
+      self             = false
+      to_port          = 0
+    },
+  ]
   tags    = local.default_tags
 }
 
