@@ -6,8 +6,7 @@ on:
     branches:
       - main
     paths:
-      - terraform/**
-
+      - '**/*.tf'
 env:
   TF_CLOUD_ORGANIZATION: ${{ vars.ORG }}
   TF_API_TOKEN: ${{ secrets.TF_API_TOKEN }}
@@ -30,7 +29,7 @@ jobs:
         id: upload
         with:
           workspace: prod
-          directory: terraform
+          directory: .
 
       - name: Create Terraform apply run
         uses: hashicorp/tfc-workflows-github/actions/create-run@v1.3.2
