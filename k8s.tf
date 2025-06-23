@@ -4,7 +4,7 @@ resource "aws_security_group" "asg_sg" {
   egress = [
     {
       cidr_blocks      = ["0.0.0.0/0"]
-      description      = "session manager"
+      description      = "Allow all outbound traffic"
       from_port        = 0
       ipv6_cidr_blocks = []
       prefix_list_ids  = []
@@ -67,15 +67,12 @@ resource "aws_launch_template" "asg_lt" {
   name_prefix   = "asg-lt-"
   image_id      = "ami-0a628e1e89aaedf80"
   instance_type = "t3.medium"
+  vpc_security_group_ids = [aws_security_group.asg_sg.id]
   iam_instance_profile {
     name = aws_iam_instance_profile.ec2_instance_profile.name
   }
   monitoring {
     enabled = true
-  }
-  network_interfaces {
-    associate_public_ip_address = false
-    security_groups             = [aws_security_group.asg_sg.id]
   }
   user_data = base64encode(<<-EOF
 #!/bin/bash

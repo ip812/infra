@@ -12,7 +12,7 @@ resource "aws_subnet" "public_subnet_a" {
   vpc_id                  = aws_vpc.vpc.id
   cidr_block              = var.aws_public_subnet_a_cidr
   availability_zone       = var.aws_az_a
-  map_public_ip_on_launch = true
+  map_public_ip_on_launch = false
   tags                    = local.default_tags
 }
 
@@ -34,7 +34,7 @@ resource "aws_subnet" "public_subnet_b" {
   vpc_id                  = aws_vpc.vpc.id
   cidr_block              = var.aws_public_subnet_b_cidr
   availability_zone       = var.aws_az_b
-  map_public_ip_on_launch = true
+  map_public_ip_on_launch = false
   tags                    = local.default_tags
 }
 
@@ -50,20 +50,4 @@ resource "aws_route_table" "public_subnet_b_rt" {
 resource "aws_route_table_association" "public_subnet_b_rt_association" {
   subnet_id      = aws_subnet.public_subnet_b.id
   route_table_id = aws_route_table.public_subnet_b_rt.id
-}
-
-resource "aws_subnet" "private_subnet_a" {
-  vpc_id                  = aws_vpc.vpc.id
-  cidr_block              = var.aws_private_subnet_a_cidr
-  availability_zone       = var.aws_az_a
-  map_public_ip_on_launch = false
-  tags                    = local.default_tags
-}
-
-resource "aws_subnet" "private_subnet_b" {
-  vpc_id                  = aws_vpc.vpc.id
-  cidr_block              = var.aws_private_subnet_b_cidr
-  availability_zone       = var.aws_az_b
-  map_public_ip_on_launch = false
-  tags                    = local.default_tags
 }
