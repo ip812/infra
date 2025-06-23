@@ -81,7 +81,7 @@ echo -e "[default]\nregion = ${var.aws_region}\noutput = json" > /root/.aws/conf
 echo -e "[default]\naws_access_key_id = ${var.aws_access_key_id}\naws_secret_access_key = ${var.aws_secret_access_key}" > /root/.aws/credentials
 
 curl -fsSL https://tailscale.com/install.sh | sh
-tailscale up --authkey ${var.ts_auth_key} --hostname "${var.org}-${var.env}-k8s-node" --ssh
+tailscale up --authkey ${var.ts_auth_key} --hostname "${var.org}-${var.env}-${random_string.asg_suffix.id}" --ssh
 
 curl -sSf https://get.k0s.sh | sh
 k0s install controller --single
