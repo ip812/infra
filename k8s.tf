@@ -65,7 +65,7 @@ resource "random_string" "asg_suffix" {
 
 resource "aws_launch_template" "asg_lt" {
   name_prefix            = "asg-lt-"
-  image_id               = "ami-0609e6ae3b748ad3b"
+  image_id               = "ami-0e0528194efe67adf"
   instance_type          = "t3.medium"
   vpc_security_group_ids = [aws_security_group.asg_sg.id]
   iam_instance_profile {
@@ -76,30 +76,14 @@ resource "aws_launch_template" "asg_lt" {
   }
   user_data = base64encode(<<-EOF
 #!/bin/bash
+set -euxo pipefail
+
+snap enable microk8s
+microk8s start
+microk8s status --wait-ready
 
 git clone https://${var.gh_access_token}@github.com/ip812/infra.git
-export KUBECONFIG=/var/lib/k0s/pki/admin.conf
-k0s kubectl create namespace ip812
-k0s kubectl create secret generic ip812-secrets \
-  --namespace ip812 \
-  --from-literal=aws_access_key_id="${var.aws_access_key_id}" \
-  --from-literal=aws_secret_access_key="${var.aws_secret_access_key}" \
-  --from-literal=aws_region="${var.aws_region}" \
-  --from-literal=cf_tunnel_token="${cloudflare_zero_trust_tunnel_cloudflared.cf_tunnel.tunnel_token}" \
-  --from-literal=pg_endpoint="postgres-svc.ip812.svc.cluster.local:5432" \
-  --from-literal=pg_username="${var.pg_username}" \
-  --from-literal=pg_password="${var.pg_password}" \
-  --from-literal=go_template_pg_name="${var.go_template_db_name}"
-k0s kubectl create secret docker-registry ecr-secret \
-  --namespace ip812 \
-  --docker-server=678468774710.dkr.ecr.${var.aws_region}.amazonaws.com \
-  --docker-username=AWS \
-  --docker-password=$(aws ecr get-login-password --region ${var.aws_region}) \
-  --docker-email=ilia.yavorov.petrov@gmail.com
-
-helm install --namespace ip812 --wait postgres ./infra/charts/postgres
-helm install --namespace ip812 --wait go-template ./infra/charts/app
-helm install --namespace ip812 --wait cloudflare-tunnel ./infra/charts/cloudflare-tunnel
+microk8s kubectl create namespace ip812
 EOF
   )
 
