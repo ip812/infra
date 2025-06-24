@@ -14,7 +14,7 @@ resource "aws_security_group" "asg_sg" {
       to_port          = 0
     },
   ]
-  tags    = local.default_tags
+  tags = local.default_tags
 }
 
 resource "aws_iam_role" "asg_role" {
@@ -64,9 +64,9 @@ resource "random_string" "asg_suffix" {
 }
 
 resource "aws_launch_template" "asg_lt" {
-  name_prefix   = "asg-lt-"
-  image_id      = "ami-0a628e1e89aaedf80"
-  instance_type = "t3.medium"
+  name_prefix            = "asg-lt-"
+  image_id               = "ami-0609e6ae3b748ad3b"
+  instance_type          = "t3.medium"
   vpc_security_group_ids = [aws_security_group.asg_sg.id]
   iam_instance_profile {
     name = aws_iam_instance_profile.ec2_instance_profile.name
@@ -76,32 +76,6 @@ resource "aws_launch_template" "asg_lt" {
   }
   user_data = base64encode(<<-EOF
 #!/bin/bash
-
-apt-get update -y
-apt-get install -y curl wget unzip make git vim tmux postgresql-client
-
-curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/tmp/awscliv2.zip"
-unzip /tmp/awscliv2.zip -d /tmp
-/tmp/aws/install
-
-mkdir -p /root/.aws
-chmod 700 /root/.aws
-echo -e "[default]\nregion = ${var.aws_region}\noutput = json" > /root/.aws/config
-echo -e "[default]\naws_access_key_id = ${var.aws_access_key_id}\naws_secret_access_key = ${var.aws_secret_access_key}" > /root/.aws/credentials
-
-curl -fsSL https://tailscale.com/install.sh | sh
-tailscale up --authkey ${var.ts_auth_key} --hostname "${var.org}-${var.env}-${random_string.asg_suffix.id}" --ssh
-
-curl -sSf https://get.k0s.sh | sh
-k0s install controller --single
-k0s start
-systemctl enable k0scontroller
-export KUBECONFIG=/var/lib/k0s/pki/admin.conf
-echo "export KUBECONFIG=/var/lib/k0s/pki/admin.conf" >> /root/.bashrc
-echo "alias kubectl='k0s kubectl'" >> /root/.bashrc
-echo "alias k='k0s kubectl'" >> /root/.bashrc
-echo "Waiting for Kubernetes API to become available..." && until k0s kubectl get nodes >/dev/null 2>&1; do echo "Still waiting for the API..." && sleep 5; done && echo "Kubernetes API is ready."
-curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 
 git clone https://${var.gh_access_token}@github.com/ip812/infra.git
 k0s kubectl create namespace ip812
@@ -125,47 +99,6 @@ k0s kubectl create secret docker-registry ecr-secret \
 helm install --namespace ip812 --wait postgres ./infra/charts/postgres
 helm install --namespace ip812 --wait go-template ./infra/charts/app
 helm install --namespace ip812 --wait cloudflare-tunnel ./infra/charts/cloudflare-tunnel
-sleep 10
-
-echo "⏳ Waiting for Postgres pod to be Ready..."
-for i in {1..30}; do
-  if k0s kubectl get pod -n ip812 -l app=postgres -o jsonpath='{.items[0].status.phase}' 2>/dev/null | grep -q Running; then
-    echo "✅ Postgres pod is running."
-    break
-  fi
-  echo "🔁 Still waiting for pod... ($i)"
-  sleep 2
-done
-
-# Final check
-if ! k0s kubectl get pod -n ip812 -l app=postgres -o jsonpath='{.items[0].status.phase}' | grep -q Running; then
-  echo "❌ Postgres pod is not ready after waiting. Exiting."
-  exit 1
-fi
-
-echo "🚪 Starting port-forward to postgres-svc..."
-k0s kubectl port-forward -n ip812 svc/postgres-svc 5432:5432 >/tmp/portforward.log 2>&1 &
-pf_pid=$!
-trap 'kill $pf_pid || true' EXIT
-
-for i in {1..10}; do
-  if nc -z 127.0.0.1 5432; then
-    echo "✅ Port-forward established."
-    break
-  fi
-  echo "🔁 Waiting for port 5432 to be ready... ($i)"
-  sleep 5
-done
-
-if ! nc -z 127.0.0.1 5432; then
-  echo "❌ Port-forward failed. Port is not open after waiting."
-  cat /tmp/portforward.log
-  exit 1
-fi
-
-# Run the psql command
-echo "📦 Running database creation SQL..."
-PGPASSWORD="${var.pg_password}" psql -U "${var.pg_username}" -h 127.0.0.1 -p 5432 -d postgres -c "CREATE DATABASE ${var.go_template_db_name};"
 EOF
   )
 
