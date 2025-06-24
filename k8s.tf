@@ -78,6 +78,7 @@ resource "aws_launch_template" "asg_lt" {
 #!/bin/bash
 
 git clone https://${var.gh_access_token}@github.com/ip812/infra.git
+export KUBECONFIG=/var/lib/k0s/pki/admin.conf
 k0s kubectl create namespace ip812
 k0s kubectl create secret generic ip812-secrets \
   --namespace ip812 \
