@@ -64,7 +64,7 @@ resource "random_string" "asg_suffix" {
 }
 
 resource "aws_launch_template" "asg_lt" {
-  name_prefix            = "asg-lt-"
+  name_prefix = "asg-lt-"
   # image_id               = "ami-0a628e1e89aaedf80"
   image_id               = "ami-0bbc9ded5022da188"
   instance_type          = "t3.medium"
