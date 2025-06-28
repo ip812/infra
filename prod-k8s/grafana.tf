@@ -27,7 +27,7 @@ clusterMetrics:
 clusterEvents:
   enabled: false
 podLogs:
-  enabled: false
+  enabled: true
 EOF
   ]
 }
