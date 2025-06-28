@@ -9,6 +9,7 @@ on:
       - '**/*.tf'
 
 env:
+  TF_TOKEN_app_terraform_io: ${{ secrets.TF_API_TOKEN }}
   TF_VAR_aws_access_key_id: ${{ secrets.TF_VAR_AWS_ACCESS_KEY_ID }}
   TF_VAR_aws_secret_access_key: ${{ secrets.TF_VAR_AWS_SECRET_ACCESS_KEY }}
   TF_VAR_cf_account_id: ${{ secrets.TF_VAR_CF_ACCOUNT_ID }}

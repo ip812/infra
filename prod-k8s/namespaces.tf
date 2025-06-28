@@ -3,3 +3,9 @@ resource "kubernetes_namespace" "ip812_ns" {
     name = var.org
   }
 }
+
+resource "kubernetes_namespace" "foo" {
+  metadata {
+    name = "foo"
+  }
+}
