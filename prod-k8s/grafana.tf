@@ -16,4 +16,18 @@ resource "helm_release" "grafana_k8s_monitoring" {
   chart      = "k8s-monitoring"
   version    = "2.1.4"
   namespace  = kubernetes_namespace.monitoring.metadata[0].name
+  values = [
+    <<EOF
+cluster:
+  name: ${var.org}
+global:
+  scrapeInterval: "600s"
+clusterMetrics:
+  enabled: false
+clusterEvents:
+  enabled: false
+podLogs:
+  enabled: false
+EOF
+  ]
 }
