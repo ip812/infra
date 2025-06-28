@@ -43,14 +43,26 @@ jobs:
         with:
           terraform_version: "1.9.6"
 
-      - name: Terraform Init
+      - name: Terraform Init prod
         run: terraform init
         working-directory: ./prod
 
-      - name: Terraform Plan
+      - name: Terraform Plan prod
         run: terraform plan -out=tfplan
         working-directory: ./prod
 
-      - name: Terraform Apply
+      - name: Terraform Apply prod
         run: terraform apply -auto-approve tfplan
         working-directory: ./prod
+
+      - name: Terraform Init prod-k8s
+        run: terraform init
+        working-directory: ./prod-k8s
+
+      - name: Terraform Plan prod-k8s
+        run: terraform plan -out=tfplan
+        working-directory: ./prod-k8s
+
+      - name: Terraform Apply prod-k8s
+        run: terraform apply -auto-approve tfplan
+        working-directory: ./prod-k8s
