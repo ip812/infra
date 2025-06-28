@@ -4,6 +4,7 @@ terraform {
     workspaces {
       name = "prod"
     }
+    execution_mode = "local"
   }
 
   required_providers {
@@ -23,13 +24,17 @@ terraform {
       source  = "integrations/github"
       version = "6.4.0"
     }
-    time = {
-      source  = "hashicorp/time"
-      version = "0.13.1-alpha1"
-    }
-    grafana = {
-      source  = "grafana/grafana"
-      version = "3.22.3"
+    # time = {
+    #   source  = "hashicorp/time"
+    #   version = "0.13.1-alpha1"
+    # }
+    # grafana = {
+    #   source  = "grafana/grafana"
+    #   version = "3.22.3"
+    # }
+    kubernetes = {
+      source  = "hashicorp/kubernetes"
+      version = "2.37.1"
     }
   }
 }
@@ -55,7 +60,20 @@ provider "github" {
   owner = var.org
 }
 
-provider "grafana" {
-  alias                     = "cloud"
-  cloud_access_policy_token = var.gf_cloud_access_policy_token
+# provider "grafana" {
+#   alias                     = "cloud"
+#   cloud_access_policy_token = var.gf_cloud_access_policy_token
+# }
+ 
+provider "kubernetes" {
+  host                   = var.k8s_host
+  client_certificate     = base64decode(var.k8s_client_certificate)
+  client_key             = base64decode(var.k8s_client_key)
+  cluster_ca_certificate = base64decode(var.k8s_cluster_ca_certificate)
+}
+
+resource "kubernetes_namespace" "example" {
+  metadata {
+    name = "foo"
+  }
 }

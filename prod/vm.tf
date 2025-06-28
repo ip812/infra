@@ -65,7 +65,8 @@ resource "random_string" "asg_suffix" {
 
 resource "aws_launch_template" "asg_lt" {
   name_prefix            = "asg-lt-"
-  image_id               = "ami-0e0528194efe67adf"
+  # image_id               = "ami-0a628e1e89aaedf80"
+  image_id               = "ami-0bbc9ded5022da188"
   instance_type          = "t3.medium"
   vpc_security_group_ids = [aws_security_group.asg_sg.id]
   iam_instance_profile {
@@ -76,14 +77,16 @@ resource "aws_launch_template" "asg_lt" {
   }
   user_data = base64encode(<<-EOF
 #!/bin/bash
-set -euxo pipefail
 
-snap enable microk8s
-microk8s start
-microk8s status --wait-ready
-
-git clone https://${var.gh_access_token}@github.com/ip812/infra.git
-microk8s kubectl create namespace ip812
+# apt-get update -y
+# apt-get install -y curl wget unzip make git vim tmux
+# 
+# curl -fsSL https://tailscale.com/install.sh | sh
+# tailscale up --authkey ${var.ts_auth_key} --hostname "${var.org}-${var.env}" --ssh
+# 
+# curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--tls-san ip812-prod --https-listen-port 16443" sh -
+# echo "alias kubectl='k3s kubectl'" >> /root/.bashrc
+# echo "alias k='k3s kubectl'" >> /root/.bashrc
 EOF
   )
 
