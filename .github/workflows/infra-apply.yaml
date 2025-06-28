@@ -34,6 +34,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Tailscale 
+        uses: tailscale/github-action@v3
+        with:
+          authkey: ${{ secrets.TF_VAR_TS_AUTH_KEY }}
+
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v1
         with:
