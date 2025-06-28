@@ -48,6 +48,10 @@ variable "aws_region" {
   type = string
 }
 
+output "aws_region" {
+  value = var.aws_region
+}
+
 variable "cf_api_token" {
   type      = string
   sensitive = true

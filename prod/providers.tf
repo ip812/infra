@@ -23,14 +23,10 @@ terraform {
       source  = "integrations/github"
       version = "6.4.0"
     }
-    # time = {
-    #   source  = "hashicorp/time"
-    #   version = "0.13.1-alpha1"
-    # }
-    # grafana = {
-    #   source  = "grafana/grafana"
-    #   version = "3.22.3"
-    # }
+    grafana = {
+      source  = "grafana/grafana"
+      version = "3.22.3"
+    }
   }
 }
 
@@ -55,7 +51,6 @@ provider "github" {
   owner = var.org
 }
 
-# provider "grafana" {
-#   alias                     = "cloud"
-#   cloud_access_policy_token = var.gf_cloud_access_policy_token
-# }
+provider "grafana" {
+  cloud_access_policy_token = var.gf_cloud_access_policy_token
+}
