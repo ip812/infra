@@ -4,7 +4,6 @@ terraform {
     workspaces {
       name = "prod"
     }
-    execution_mode = "local"
   }
 
   required_providers {

@@ -2,9 +2,8 @@ terraform {
   backend "remote" {
     organization = "ip812"
     workspaces {
-      name = "prodi-k8s"
+      name = "prod-k8s"
     }
-    execution_mode = "local"
   }
 
   required_providers {
