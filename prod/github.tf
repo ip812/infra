@@ -40,6 +40,12 @@ resource "github_actions_secret" "infra_cf_tunnel_token" {
   plaintext_value = cloudflare_zero_trust_tunnel_cloudflared.cf_tunnel.tunnel_token
 }
 
+resource "github_actions_secret" "infra_ts_auth_key" {
+  repository      = "infra"
+  secret_name     = "TS_AUTH_KEY"
+  plaintext_value = var.ts_auth_key
+}
+
 resource "github_actions_secret" "lambdas_aws_access_key_id" {
   repository      = "lambdas"
   secret_name     = "AWS_ACCESS_KEY_ID"
