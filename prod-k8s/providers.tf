@@ -21,6 +21,10 @@ terraform {
       source  = "hashicorp/kubernetes"
       version = "2.37.1"
     }
+    helm = {
+      source = "hashicorp/helm"
+      version = "3.0.2"
+    }
     grafana = {
       source  = "grafana/grafana"
       version = "3.22.3"
@@ -35,11 +39,13 @@ provider "kubernetes" {
   cluster_ca_certificate = base64decode(var.k8s_cluster_ca_certificate)
 }
 
-
-provider "aws" {
-  region     = data.terraform_remote_state.prod.outputs.aws_region
-  access_key = data.terraform_remote_state.prod.outputs.aws_access_key
-  secret_key = data.terraform_remote_state.prod.outputs.aws_secret_key
+provider "helm" {
+  kubernetes {
+    host                   = var.k8s_host
+    client_certificate     = base64decode(var.k8s_client_certificate)
+    client_key             = base64decode(var.k8s_client_key)
+    cluster_ca_certificate = base64decode(var.k8s_cluster_ca_certificate)
+  }
 }
 
 provider "grafana" {
