@@ -34,7 +34,8 @@ resource "grafana_cloud_access_policy_token" "access_policy_token" {
 }
 
 output "gf_cloud_provider_access_token" {
-  value = grafana_cloud_access_policy_token.access_policy_token.token
+  value     = grafana_cloud_access_policy_token.access_policy_token.token
+  sensitive = true
 }
 
 data "aws_iam_policy_document" "trust_grafana" {
