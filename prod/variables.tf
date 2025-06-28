@@ -122,6 +122,10 @@ variable "gf_region_slug" {
   type = string
 }
 
+output "gf_region_slug" {
+  value = var.gf_region_slug
+}
+
 variable "gf_aws_account_id" {
   type = string
 }
