@@ -55,34 +55,7 @@ alloy-metrics:
             name: alloy-metrics-remote-cfg-grafana-k8s-monitoring
             key: password
       - name: CLUSTER_NAME
-        value: alloy-metrics:Add commentMore actions
-  enabled: true
-  alloy:
-    extraEnv:
-      - name: GCLOUD_RW_API_KEY
-        valueFrom:
-          secretKeyRef:
-            name: alloy-metrics-remote-cfg-grafana-k8s-monitoring
-            key: password
-      - name: CLUSTER_NAME
-        value:${var.org}-${var.env} 
-      - name: NAMESPACE
-        valueFrom:
-          fieldRef:
-            fieldPath: metadata.namespace
-      - name: POD_NAME
-        valueFrom:
-          fieldRef:
-            fieldPath: metadata.name
-      - name: GCLOUD_FM_COLLECTOR_ID
-        value: grafana-k8s-monitoring-\$(CLUSTER_NAME)-\$(NAMESPACE)-\$(POD_NAME)
-  remoteConfig:
-    enabled: true
-    url: ${data.terraform_remote_state.prod.outputs.gf_cloud_stack.fleet_management_url} 
-    auth:
-      type: basic
-      username: "1243836"
-      password: ${data.terraform_remote_state.prod.outputs.gf_cloud_provider_access_token}
+        value: ${var.org}-${var.env}
       - name: NAMESPACE
         valueFrom:
           fieldRef:
