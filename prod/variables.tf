@@ -118,6 +118,11 @@ variable "ts_auth_key" {
   sensitive = true
 }
 
+variable "ts_auth_key_ci_cd" {
+  type      = string
+  sensitive = true
+}
+
 variable "gf_region_slug" {
   type = string
 }

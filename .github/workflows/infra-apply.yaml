@@ -25,6 +25,7 @@ env:
   TF_VAR_pg_username: ${{ secrets.TF_VAR_PG_USERNAME }}
   TF_VAR_slk_github_bot_token: ${{ secrets.TF_VAR_SLK_GITHUB_BOT_TOKEN }}
   TF_VAR_ts_auth_key: ${{ secrets.TF_VAR_TS_AUTH_KEY }}
+  TF_VAR_ts_auth_key_ci_cd: ${{ secrets.TF_VAR_TS_AUTH_KEY_CI_CD }}
 
 jobs:
   infra-apply:
@@ -37,7 +38,7 @@ jobs:
       - name: Set up Tailscale
         uses: tailscale/github-action@v3
         with:
-          authkey: ${{ secrets.TS_AUTH_KEY }}
+          authkey: ${{ secrets.TS_AUTH_KEY_CI_CD }}
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
@@ -67,3 +68,6 @@ jobs:
       - name: Terraform Apply prod-k8s
         run: terraform apply -auto-approve tfplan
         working-directory: ./prod-k8s
+
+      - name: Tailscale logout (force cleanup)
+        run: sudo tailscale logout || true

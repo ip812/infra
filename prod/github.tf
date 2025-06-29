@@ -46,6 +46,12 @@ resource "github_actions_secret" "infra_ts_auth_key" {
   plaintext_value = var.ts_auth_key
 }
 
+resource "github_actions_secret" "infra_ts_auth_key_ci_cd" {  
+  repository      = "infra"
+  secret_name     = "TS_AUTH_KEY_CI_CD"
+  plaintext_value = var.ts_auth_key_ci_cd
+}
+
 resource "github_actions_secret" "lambdas_aws_access_key_id" {
   repository      = "lambdas"
   secret_name     = "AWS_ACCESS_KEY_ID"
