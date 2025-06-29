@@ -4,8 +4,8 @@ resource "grafana_cloud_stack" "stack" {
   region_slug = var.gf_region_slug
 }
 
-output "gf_cloud_stack_id" {
-  value = grafana_cloud_stack.stack.id
+output "gf_cloud_stack" {
+  value = grafana_cloud_stack.stack
 }
 
 resource "grafana_cloud_access_policy" "access_policy" {
