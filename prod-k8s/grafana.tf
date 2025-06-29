@@ -19,7 +19,7 @@ resource "helm_release" "grafana_k8s_monitoring" {
   values = [
     <<EOF
 cluster:
-  name: ${var.org}
+  name: ${var.org}-${var.env}
 global:
   scrapeInterval: "600s"
 destinations:
@@ -46,13 +46,96 @@ podLogs:
 applicationObservability:
   enabled: false
 alloy-metrics:
-  enabled: false
+  enabled: true
+  alloy:
+    extraEnv:
+      - name: GCLOUD_RW_API_KEY
+        valueFrom:
+          secretKeyRef:
+            name: alloy-metrics-remote-cfg-grafana-k8s-monitoring
+            key: password
+      - name: CLUSTER_NAME
+        value: alloy-metrics:Add commentMore actions
+  enabled: true
+  alloy:
+    extraEnv:
+      - name: GCLOUD_RW_API_KEY
+        valueFrom:
+          secretKeyRef:
+            name: alloy-metrics-remote-cfg-grafana-k8s-monitoring
+            key: password
+      - name: CLUSTER_NAME
+        value:${var.org}-${var.env} 
+      - name: NAMESPACE
+        valueFrom:
+          fieldRef:
+            fieldPath: metadata.namespace
+      - name: POD_NAME
+        valueFrom:
+          fieldRef:
+            fieldPath: metadata.name
+      - name: GCLOUD_FM_COLLECTOR_ID
+        value: grafana-k8s-monitoring-\$(CLUSTER_NAME)-\$(NAMESPACE)-\$(POD_NAME)
+  remoteConfig:
+    enabled: true
+    url: ${data.terraform_remote_state.prod.outputs.gf_cloud_stack.fleet_management_url} 
+    auth:
+      type: basic
+      username: "1243836"
+      password: ${data.terraform_remote_state.prod.outputs.gf_cloud_provider_access_token}
+      - name: NAMESPACE
+        valueFrom:
+          fieldRef:
+            fieldPath: metadata.namespace
+      - name: POD_NAME
+        valueFrom:
+          fieldRef:
+            fieldPath: metadata.name
+      - name: GCLOUD_FM_COLLECTOR_ID
+        value: grafana-k8s-monitoring-\$(CLUSTER_NAME)-\$(NAMESPACE)-\$(POD_NAME)
+  remoteConfig:
+    enabled: true
+    url: ${data.terraform_remote_state.prod.outputs.gf_cloud_stack.fleet_management_url} 
+    auth:
+      type: basic
+      username: "1243836"
+      password: ${data.terraform_remote_state.prod.outputs.gf_cloud_provider_access_token}
 alloy-singleton:
   enabled: false
 alloy-logs:
-  enabled: false
-alloy-receiver:
   enabled: true
+  alloy:
+    extraEnv:
+      - name: GCLOUD_RW_API_KEY
+        valueFrom:
+          secretKeyRef:
+            name: alloy-logs-remote-cfg-grafana-k8s-monitoring
+            key: password
+      - name: CLUSTER_NAME
+        value: ${var.org}-${var.env} 
+      - name: NAMESPACE
+        valueFrom:
+          fieldRef:
+            fieldPath: metadata.namespace
+      - name: POD_NAME
+        valueFrom:
+          fieldRef:
+            fieldPath: metadata.name
+      - name: NODE_NAME
+        valueFrom:
+          fieldRef:
+            fieldPath: spec.nodeName
+      - name: GCLOUD_FM_COLLECTOR_ID
+        value: grafana-k8s-monitoring-\$(CLUSTER_NAME)-\$(NAMESPACE)-alloy-logs-\$(NODE_NAME)
+  remoteConfig:
+    enabled: true
+    url: ${data.terraform_remote_state.prod.outputs.gf_cloud_stack.fleet_management_url} 
+    auth:
+      type: basic
+      username: "1243836"
+      password: ${data.terraform_remote_state.prod.outputs.gf_cloud_provider_access_token}
+alloy-receiver:
+  enabled: false
 EOF
   ]
 }
