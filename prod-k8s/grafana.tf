@@ -45,6 +45,14 @@ podLogs:
   enabled: true
 applicationObservability:
   enabled: false
+alloy-metrics:
+  enabled: false
+alloy-singleton:
+  enabled: false
+alloy-logs:
+  enabled: false
+alloy-receiver:
+  enabled: true
 EOF
   ]
 }
