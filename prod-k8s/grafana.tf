@@ -11,6 +11,8 @@ resource "helm_release" "grafana_k8s_monitoring" {
   version          = "2.1.4"
   namespace        = "monitoring"
   create_namespace = true
+  wait             = false
+  timeout          = 600
   values = [
     <<EOF
 cluster:
