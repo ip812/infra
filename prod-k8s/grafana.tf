@@ -73,8 +73,6 @@ alloy-metrics:
       type: basic
       username: "1243836"
       password: ${data.terraform_remote_state.prod.outputs.gf_cloud_provider_access_token}
-alloy-singleton:
-  enabled: false
 alloy-logs:
   enabled: true
   alloy:
@@ -107,6 +105,8 @@ alloy-logs:
       type: basic
       username: "1243836"
       password: ${data.terraform_remote_state.prod.outputs.gf_cloud_provider_access_token}
+alloy-singleton:
+  enabled: false
 alloy-receiver:
   enabled: false
 EOF
