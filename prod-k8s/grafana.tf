@@ -10,24 +10,24 @@ resource "kubernetes_namespace" "monitoring" {
   }
 }
 
-resource "helm_release" "grafana_k8s_monitoring" {
-  name       = "grafana-k8s-monitoring"
-  repository = "https://grafana.github.io/helm-charts"
-  chart      = "k8s-monitoring"
-  version    = "2.1.4"
-  namespace  = kubernetes_namespace.monitoring.metadata[0].name
-  values = [
-    <<EOF
-cluster:
-  name: ${var.org}
-global:
-  scrapeInterval: "600s"
-clusterMetrics:
-  enabled: false
-clusterEvents:
-  enabled: false
-podLogs:
-  enabled: true
-EOF
-  ]
-}
+# resource "helm_release" "grafana_k8s_monitoring" {
+#   name       = "grafana-k8s-monitoring"
+#   repository = "https://grafana.github.io/helm-charts"
+#   chart      = "k8s-monitoring"
+#   version    = "2.1.4"
+#   namespace  = kubernetes_namespace.monitoring.metadata[0].name
+#   values = [
+#     <<EOF
+# cluster:
+#   name: ${var.org}
+# global:
+#   scrapeInterval: "600s"
+# clusterMetrics:
+#   enabled: false
+# clusterEvents:
+#   enabled: false
+# podLogs:
+#   enabled: true
+# EOF
+#   ]
+# }
