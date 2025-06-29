@@ -24,3 +24,8 @@ variable "k8s_client_key" {
   type      = string
   sensitive = true
 }
+
+variable "gf_cloud_access_policy_token" {
+  type      = string
+  sensitive = true
+}

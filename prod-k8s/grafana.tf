@@ -29,14 +29,14 @@ destinations:
     auth:
       type: basic
       username: "${data.terraform_remote_state.prod.outputs.gf_cloud_stack.prometheus_user_id}"
-      password: ${data.terraform_remote_state.prod.outputs.gf_cloud_provider_access_token}
+      password: ${var.gf_cloud_access_policy_token}
   - name: grafana-cloud-logs
     type: loki
     url: ${data.terraform_remote_state.prod.outputs.gf_cloud_stack.logs_url}/loki/api/v1/push
     auth:
       type: basic
       username: "${data.terraform_remote_state.prod.outputs.gf_cloud_stack.logs_user_id}"
-      password: ${data.terraform_remote_state.prod.outputs.gf_cloud_provider_access_token}
+      password: ${var.gf_cloud_access_policy_token}
 clusterMetrics:
   enabled: true
 clusterEvents:
@@ -72,7 +72,7 @@ alloy-metrics:
     auth:
       type: basic
       username: "1243836"
-      password: ${data.terraform_remote_state.prod.outputs.gf_cloud_provider_access_token}
+      password: ${var.gf_cloud_access_policy_token}
 alloy-logs:
   enabled: true
   alloy:
@@ -104,7 +104,7 @@ alloy-logs:
     auth:
       type: basic
       username: "1243836"
-      password: ${data.terraform_remote_state.prod.outputs.gf_cloud_provider_access_token}
+      password: ${var.gf_cloud_access_policy_token}
 alloy-singleton:
   enabled: false
 alloy-receiver:
