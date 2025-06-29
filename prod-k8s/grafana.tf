@@ -103,7 +103,7 @@ alloy-logs:
     url: ${data.terraform_remote_state.prod.outputs.gf_cloud_stack.fleet_management_url} 
     auth:
       type: basic
-      username: ${data.terraform_remote_state.prod.outputs.gf_cloud_stack.profiles_user_id} 
+      username: "${data.terraform_remote_state.prod.outputs.gf_cloud_stack.profiles_user_id}"
       password: ${var.gf_cloud_access_policy_token}
 alloy-singleton:
   enabled: false
