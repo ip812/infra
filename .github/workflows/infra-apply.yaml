@@ -72,4 +72,5 @@ jobs:
         working-directory: ./prod-k8s
 
       - name: Tailscale logout (force cleanup)
+        if: always()
         run: sudo tailscale logout || true
