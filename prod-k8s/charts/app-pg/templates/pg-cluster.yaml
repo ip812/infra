@@ -1,0 +1,14 @@
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: cluster-sample
+  namespace: ip812
+spec:
+  imageName: quay.io/enterprisedb/postgresql:16.1
+  instances: 1
+  enablePDB: false
+  monitoring:
+    enablePodMonitor: true
+  storage:
+    size: 1Gi
