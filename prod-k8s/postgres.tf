@@ -1,10 +1,9 @@
-# resource "helm_release" "grafana_k8s_monitoring" {
-#   name             = "grafana-k8s-monitoring"
-#   repository       = "https://grafana.github.io/helm-charts"
-#   chart            = "k8s-monitoring"
-#   version          = "2.1.4"
-#   namespace        = ""
-#   create_namespace = true
-#   wait             = false
-#   timeout          = 600
-# }
+resource "helm_release" "cnpg_cloudnative_pg" {
+  name             = "cnpg/cloudnative-pg"
+  repository       = "https://cloudnative-pg.github.io/charts"
+  chart            = "cloudnative-pg"
+  namespace        = "databases"
+  create_namespace = true
+  wait             = false
+  timeout          = 600
+}
