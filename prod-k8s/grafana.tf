@@ -18,7 +18,7 @@ resource "helm_release" "grafana_k8s_monitoring" {
 cluster:
   name: ${var.org}-${var.env}
 global:
-  scrapeInterval: "600s"
+  scrapeInterval: "60s"
 destinations:
   - name: grafana-cloud-metrics
     type: prometheus
