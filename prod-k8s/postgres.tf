@@ -1,5 +1,5 @@
 resource "helm_release" "cnpg_cloudnative_pg" {
-  name             = "cnpg_cloudnative-pg"
+  name             = "cnpg-cloudnative-pg"
   repository       = "https://cloudnative-pg.github.io/charts"
   chart            = "cloudnative-pg"
   namespace        = "databases"
