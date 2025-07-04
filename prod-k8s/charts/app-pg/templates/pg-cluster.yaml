@@ -29,8 +29,3 @@ spec:
           - "--min-chunk-size=5MB"
           - "--read-timeout=60"
           - "-vv"
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: test
