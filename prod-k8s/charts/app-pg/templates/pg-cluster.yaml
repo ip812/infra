@@ -18,7 +18,7 @@ spec:
     barmanObjectStore:
       destinationPath: s3://pg-backups-202507041132/
       s3Credentials:
-        inheritFromAwsRole: true
+        inheritFromIAMRole: true
       wal:
         compression: gzip
       data:
