@@ -90,7 +90,6 @@ resource "aws_launch_template" "asg_lt" {
 
 # remove all NotReady nodes
 kubectl get nodes --no-headers | awk '$2 == "NotReady" {print $1}' | xargs -r kubectl delete node
-kubectl get nodes
 EOF
   )
 
