@@ -19,6 +19,9 @@ spec:
       destinationPath: s3://pg-backups-202507041132/
       s3Credentials:
         inheritFromIAMRole: true
+      retentionPolicy:
+        keepLast: 7
+        keepInterval: 14d
       wal:
         compression: gzip
       data:
