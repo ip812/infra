@@ -10,4 +10,7 @@ resource "helm_release" "app_pg" {
   chart      = "${path.module}/charts/app-pg"
   repository = ""
   version = "0.1.0"
+  force_update = true
+  wait             = false
+  timeout          = 600
 }

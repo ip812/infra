@@ -12,7 +12,7 @@ spec:
   monitoring:
     enablePodMonitor: true
   storage:
-    storageClass: csi-hostpath-sc
+    storageClass: local-path
     size: 1Gi
   backup:
     barmanObjectStore:
