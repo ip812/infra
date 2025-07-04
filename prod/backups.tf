@@ -3,8 +3,8 @@ resource "aws_vpc_endpoint" "s3" {
   service_name      = "com.amazonaws.${var.aws_region}.s3"
   vpc_endpoint_type = "Gateway"
   route_table_ids   = [
-    aws_route_table.aws_route_table.rt_a.id, 
-    aws_route_table.aws_route_table.rt_b.id
+    aws_route_table.public_subnet_a_rt.id, 
+    aws_route_table.public_subnet_b_rt.id
   ]
 }
 
