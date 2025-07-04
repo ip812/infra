@@ -13,7 +13,7 @@ spec:
     enablePodMonitor: true
   storage:
     storageClass: local-path
-    size: 1Gi
+    size: 500Mi
   backup:
     barmanObjectStore:
       destinationPath: s3://pg-backups-202507041132/
