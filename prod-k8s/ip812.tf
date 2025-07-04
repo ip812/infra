@@ -5,6 +5,9 @@ resource "kubernetes_namespace" "ip812" {
 }
 
 resource "helm_release" "app_pg" {
+  depends_on = [
+    kubernetes_namespace.ip812
+  ]
   name       = "app-pg"
   namespace  = kubernetes_namespace.ip812.metadata[0].name
   chart      = "${path.module}/charts/app-pg"
