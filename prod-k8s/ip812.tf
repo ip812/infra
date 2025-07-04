@@ -23,12 +23,14 @@ resource "helm_release" "app_pg" {
   chart      = "${path.module}/charts/app-pg"
   repository = ""
   version    = "0.1.0"
+  force_update = true
   wait          = false
   timeout       = 600
 
-  # dummy value to trigger update on chart changes
-  set {
-    name  = "chartContentHash"
-    value = trimspace(data.external.chart_hash.result["hash"])
-  }
+  values = [
+    yamlencode({
+      # dummy values to ensure the chart is always updated
+      chartContentHash = trimspace(data.external.chart_hash.result["hash"])
+    })
+  ]
 }
