@@ -7,8 +7,22 @@ metadata:
 spec:
   imageName: quay.io/enterprisedb/postgresql:16.1
   instances: 1
+  primaryUpdateStrategy: unsupervised
   enablePDB: false
   monitoring:
     enablePodMonitor: true
   storage:
+    storageClass: csi-hostpath-sc
     size: 1Gi
+  backup:
+    barmanObjectStore:
+      destinationPath: s3://pg-backups-202507041132/
+      s3Credentials:
+        inheritFromAwsRole: true
+      wal:
+        compression: gzip
+      data:
+        additionalCommandArgs:
+          - "--min-chunk-size=5MB"
+          - "--read-timeout=60"
+          - "-vv"
