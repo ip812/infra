@@ -89,7 +89,7 @@ resource "aws_launch_template" "asg_lt" {
 # echo "alias k='k3s kubectl'" >> /root/.bashrc
 
 # remove all NotReady nodes
-kubectl get nodes --no-headers | awk '$2 == "NotReady" {print $1}' | xargs -r kubectl delete node
+k3s kubectl get nodes --no-headers | awk '$2 == "NotReady" {print $1}' | xargs -r kubectl delete node
 EOF
   )
 
