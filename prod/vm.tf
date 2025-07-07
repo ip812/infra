@@ -90,7 +90,6 @@ resource "aws_launch_template" "asg_lt" {
 
 # remove all NotReady nodes
 k3s kubectl get nodes --no-headers | awk '$2 == "NotReady" {print $1}' | xargs -r kubectl delete node
-echo "k3s is installed and configured."
 EOF
   )
 

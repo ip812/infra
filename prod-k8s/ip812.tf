@@ -27,7 +27,7 @@ resource "helm_release" "app_pg" {
   repository = ""
   version    = "0.1.0"
   force_update = true
-  wait          = false
+  wait          = true
   timeout       = 600
 
   values = [

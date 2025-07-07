@@ -4,6 +4,6 @@ resource "helm_release" "cnpg_cloudnative_pg" {
   chart            = "cloudnative-pg"
   namespace        = "databases"
   create_namespace = true
-  wait             = false
+  wait             = true
   timeout          = 600
 }
