@@ -16,7 +16,10 @@ data "external" "chart_hash" {
 }
 
 resource "helm_release" "app_pg" {
-  depends_on = [kubernetes_namespace.ip812]
+  depends_on = [
+    kubernetes_namespace.ip812,
+    helm_release.cnpg_cloudnative_pg
+  ]
 
   name       = "app-pg"
   namespace  = kubernetes_namespace.ip812.metadata[0].name
