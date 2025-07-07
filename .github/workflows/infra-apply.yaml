@@ -69,13 +69,16 @@ jobs:
       - name: Wait for changes in prod to propagate
         run: | 
           sleep 30
-          while [ ${instance_cnt} -ne 1 ]; do
+          while :; do
             instance_cnt=$(aws ec2 describe-instances \
               --filters "Name=tag:Environment,Values=prod" \
               --filters "Name=tag:Organization,Values=ip812" \
               --filters "Name=instance-state-name,Values=running" \
               --query "Reservations[*].Instances[*].InstanceId" \
               --output text | wc -w)
+              if [[ ${instance_cnt} -eq 1 ]]; then
+                break
+              fi
               sleep 10
           done
 
