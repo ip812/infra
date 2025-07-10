@@ -25,5 +25,4 @@ spec:
       destinationPath: s3://pg-backups-202507041132/
       s3Credentials:
         inheritFromIAMRole: true
-    retentionPolicy:
-      keepLast: 7d
+    retentionPolicy: 7d
