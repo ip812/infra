@@ -4,8 +4,6 @@ kind: Cluster
 metadata:
   name: cluster-sample
   namespace: ip812
-  annotations:
-    cnpg.io/skipWalArchiving: "enabled"
 spec:
   imageName: quay.io/enterprisedb/postgresql:16.1
   instances: 1
@@ -16,13 +14,18 @@ spec:
   storage:
     storageClass: local-path
     size: 1Gi
-  postgresql:
-    parameters:
-      wal_level: minimal
-      max_wal_senders: "0"
   backup:
     barmanObjectStore:
       destinationPath: s3://pg-backups-202507041132/
       s3Credentials:
         inheritFromIAMRole: true
-    retentionPolicy: 7d
+      retentionPolicy:
+        keepLast: 7
+        keepInterval: 7d
+      wal:
+        compression: gzip
+      data:
+        additionalCommandArgs:
+          - "--min-chunk-size=5MB"
+          - "--read-timeout=60"
+          - "-vv"
