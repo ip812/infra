@@ -16,7 +16,7 @@ spec:
     size: 1Gi
   bootstrap:
     recovery:
-      source: origin
+      backup: source
   backup:
     barmanObjectStore:
       destinationPath: s3://pg-backups-202507041132/
