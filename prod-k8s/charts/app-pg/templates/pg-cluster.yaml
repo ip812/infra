@@ -2,7 +2,7 @@
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
-  name: pg
+  name: pg-source-cluster
   namespace: ip812
 spec:
   imageName: quay.io/enterprisedb/postgresql:16.1
@@ -14,16 +14,12 @@ spec:
   storage:
     storageClass: local-path
     size: 1Gi
-  externalClusters:
-    - name: pg-backup-source
-      barmanObjectStore:
-        destinationPath: s3://pg-backups-202507041132/
-        s3Credentials:
-          inheritFromIAMRole: true
   bootstrap:
-    recovery:
-      source: pg-backup-source
-
+    initdb:
+      database: postgres
+      postInitApplicationSQL:
+        - CREATE DATABASE template;
+        - CREATE DATABASE blog;
   backup:
     barmanObjectStore:
       destinationPath: s3://pg-backups-202507041132/
