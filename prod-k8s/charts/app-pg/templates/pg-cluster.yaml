@@ -14,9 +14,6 @@ spec:
   storage:
     storageClass: local-path
     size: 1Gi
-  bootstrap:
-    recovery:
-      backup: source
   backup:
     barmanObjectStore:
       destinationPath: s3://pg-backups-202507041132/
