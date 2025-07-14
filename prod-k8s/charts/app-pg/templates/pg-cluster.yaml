@@ -15,14 +15,15 @@ spec:
     storageClass: local-path
     size: 1Gi
   externalClusters:
-    - name: pg
+    - name: pg-backup-source
       barmanObjectStore:
         destinationPath: s3://pg-backups-202507041132/
         s3Credentials:
           inheritFromIAMRole: true
   bootstrap:
     recovery:
-      source: pg
+      source: pg-backup-source
+
   backup:
     barmanObjectStore:
       destinationPath: s3://pg-backups-202507041132/
