@@ -15,11 +15,8 @@ spec:
     storageClass: local-path
     size: 1Gi
   bootstrap:
-    initdb:
-      database: mydb
-      postInitApplicationSQL:
-        - CREATE DATABASE template;
-        - CREATE DATABASE blog;
+    recovery:
+      source: pg
   backup:
     barmanObjectStore:
       destinationPath: s3://pg-backups-202507041132/
