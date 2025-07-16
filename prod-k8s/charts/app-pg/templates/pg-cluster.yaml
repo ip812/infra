@@ -1,8 +1,17 @@
 ---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: template-pg-creds
+type: Opaque
+stringData:
+  username: user
+  password: pass
+---
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
-  name: pg-cluster
+  name: template-pg
   namespace: ip812
 spec:
   imageName: quay.io/enterprisedb/postgresql:16.1
@@ -14,38 +23,38 @@ spec:
   storage:
     storageClass: local-path
     size: 1Gi
-  externalClusters:
-    - name: pg-cluster
-      barmanObjectStore:
-        destinationPath: s3://pg-backups-202507041132/
-        s3Credentials:
-          inheritFromIAMRole: true
   bootstrap:
     recovery:
-      source: pg-cluster
+      source: template-pg-backup
+      database: template
+      owner: template
+      secret:
+        name: template-pg-creds
+  externalClusters:
+    - name: template-pg-backup
+      barmanObjectStore:
+        destinationPath: s3://pg-backups-202507041132/template
+        s3Credentials:
+          inheritFromIAMRole: true
   backup:
     barmanObjectStore:
-      destinationPath: s3://pg-backups-202507041132/
+      destinationPath: s3://pg-backups-202507041132/template
+      retentionPolicy: 7d
       s3Credentials:
         inheritFromIAMRole: true
-      retentionPolicy:
-        keepLast: 7
-        keepInterval: 7d
       wal:
         compression: gzip
       data:
-        additionalCommandArgs:
-          - "--min-chunk-size=5MB"
-          - "--read-timeout=60"
-          - "-vv"
+        compression: gzip
 ---
 apiVersion: postgresql.cnpg.io/v1
 kind: ScheduledBackup
 metadata:
-  name: daily-backup
+  name: template-daily-backup
   namespace: ip812
 spec:
+  immediate: true
   schedule: "0 0 0 * * *"
-  backupOwnerReference: self
+  backupOwnerReference: cluster
   cluster:
-    name: pg-cluster
+    name: template-pg
