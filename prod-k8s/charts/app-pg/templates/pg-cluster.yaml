@@ -24,8 +24,13 @@ spec:
     storageClass: local-path
     size: 1Gi
   bootstrap:
-    recovery:
-      source: template-pg-backup
+    # recovery:
+    #   source: template-pg-backup
+    #   database: template
+    #   owner: template
+    #   secret:
+    #     name: template-pg-creds
+    initdb:
       database: template
       owner: template
       secret:
