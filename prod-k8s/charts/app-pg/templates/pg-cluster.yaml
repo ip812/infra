@@ -24,17 +24,17 @@ spec:
     storageClass: local-path
     size: 1Gi
   bootstrap:
-    # initdb:
-    #   database: template
-    #   owner: template
-    #   secret:
-    #     name: template-pg-creds
-    recovery:
-      source: template-pg
+    initdb:
       database: template
       owner: template
       secret:
         name: template-pg-creds
+    # recovery:
+    #   source: template-pg
+    #   database: template
+    #   owner: template
+    #   secret:
+    #     name: template-pg-creds
   backup:
     barmanObjectStore:
       destinationPath: s3://pg-backups-202507041132/template
