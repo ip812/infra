@@ -5,15 +5,15 @@ metadata:
   name: "{{ .Values.database }}-pg-creds"
 type: Opaque
 stringData:
-  username: {{ .Values.username }}
-  password: {{ .Values.password }}
+  username: "{{ .Values.username }}"
+  password: "{{ .Values.password }}"
 ---
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
   name: "{{ .Values.database }}-pg"
 spec:
-  imageName: quay.io/enterprisedb/postgresql:16.1
+  imageName: "{{ .Values.image }}"
   instances: 1
   primaryUpdateStrategy: unsupervised
   enablePDB: false
@@ -21,29 +21,32 @@ spec:
     enablePodMonitor: true
   storage:
     storageClass: local-path
-    size: 1Gi
+    size: "{{ .Values.storageSize }}"
   bootstrap:
-    # initdb:
-    #   database: {{ .Values.database }} 
-    #   owner: {{ .Values.database }} 
-    #   secret:
-    #     name: "{{ .Values.database }}-pg-creds"
-    recovery:
-      source: "{{ .Values.database }}-pg-backup"
-      database: {{ .Values.database }} 
-      owner: {{ .Values.database }} 
+    {{- if .Values.isInit }}
+    initdb:
+      database: "{{ .Values.database }}"
+      owner: "{{ .Values.database }}"
       secret:
         name: "{{ .Values.database }}-pg-creds"
+    {{- else }}
+    recovery:
+      source: "{{ .Values.database }}-pg-backup"
+      database: "{{ .Values.database }}"
+      owner: "{{ .Values.database }}" 
+      secret:
+        name: "{{ .Values.database }}-pg-creds"
+    {{- end }}
   externalClusters:
     - name: "{{ .Values.database }}-pg-backup"
       barmanObjectStore:
-        destinationPath: "s3://pg-backups-202507041132/{{ .Values.database }}-pg"
+        destinationPath: "s3://{{ .Values.backupsBucket }}/{{ .Values.database }}-pg"
         s3Credentials:
           inheritFromIAMRole: true
   backup:
     barmanObjectStore:
-      destinationPath: s3://pg-backups-202507041132
-      retentionPolicy: 7d
+      destinationPath: "s3://{{ .Values.backupsBucket }}"
+      retentionPolicy: "{{ .Values.retentionPolicy }}"
       s3Credentials:
         inheritFromIAMRole: true
       wal:
@@ -57,7 +60,7 @@ metadata:
   name: "{{ .Values.database }}-daily-backup"
 spec:
   immediate: true
-  schedule: "0 0 0 * * *"
+  schedule: "{{ .Values.backupSchedule }}"
   backupOwnerReference: cluster
   cluster:
     name: "{{ .Values.database }}-pg"

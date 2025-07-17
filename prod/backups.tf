@@ -12,6 +12,10 @@ resource "aws_s3_bucket" "pg_backups" {
   bucket = "pg-backups-202507041132"
 }
 
+output "backups_bucket_name" {
+  value = aws_s3_bucket.pg_backups.bucket
+}
+
 resource "aws_s3_bucket_versioning" "pg_backups_versioning" {
   bucket = aws_s3_bucket.pg_backups.id
   versioning_configuration {

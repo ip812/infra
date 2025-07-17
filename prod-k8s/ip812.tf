@@ -35,9 +35,15 @@ resource "helm_release" "app_pg" {
       # dummy values to ensure the chart is always updated
       chartContentHash = trimspace(data.external.chart_hash.result["hash"])
 
+      isInit = false
       database = "template"
       username = data.terraform_remote_state.prod.outputs.pg_username
       password = data.terraform_remote_state.prod.outputs.pg_password
+      image = "quay.io/enterprisedb/postgresql:16.1"
+      storageSize = "1Gi"
+      retentionPolicy = "7d"
+      backupsBucket = data.terraform_remote_state.prod.outputs.backups_bucket_name
+      backupSchedule = "0 0 0 * * *"
     })
   ]
 }
