@@ -35,6 +35,12 @@ spec:
       owner: template
       secret:
         name: template-pg-creds
+  externalClusters:
+    - name: template-pg
+      barmanObjectStore:
+        destinationPath: s3://pg-backups-202507041132
+        s3Credentials:
+          inheritFromIAMRole: true
   backup:
     barmanObjectStore:
       destinationPath: s3://pg-backups-202507041132
