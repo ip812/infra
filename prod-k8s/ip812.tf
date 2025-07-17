@@ -36,6 +36,8 @@ resource "helm_release" "app_pg" {
       chartContentHash = trimspace(data.external.chart_hash.result["hash"])
 
       database = "template"
+      username = data.terraform_remote_state.prod.outputs.pg_username
+      password = data.terraform_remote_state.prod.outputs.pg_password
     })
   ]
 }

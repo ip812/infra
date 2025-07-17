@@ -145,8 +145,17 @@ variable "pg_username" {
   sensitive = true
 }
 
+output "pg_username" {
+  value = var.pg_username
+}
+
 variable "pg_password" {
   type      = string
+  sensitive = true
+}
+
+output "pg_password" {
+  value     = var.pg_password
   sensitive = true
 }
 

@@ -5,8 +5,8 @@ metadata:
   name: "{{ .Values.database }}-pg-creds"
 type: Opaque
 stringData:
-  username: user
-  password: pass
+  username: {{ .Values.username }}
+  password: {{ .Values.password }}
 ---
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
