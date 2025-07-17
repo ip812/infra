@@ -3,6 +3,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: template-pg-creds
+  namespace: ip812
 type: Opaque
 stringData:
   username: user
@@ -30,15 +31,15 @@ spec:
     #   secret:
     #     name: template-pg-creds
     recovery:
-      source: template-pg
+      source: template-pg-backup
       database: template
       owner: template
       secret:
         name: template-pg-creds
   externalClusters:
-    - name: template-pg
+    - name: template-pg-backup
       barmanObjectStore:
-        destinationPath: s3://pg-backups-202507041132
+        destinationPath: s3://pg-backups-202507041132/template-pg
         s3Credentials:
           inheritFromIAMRole: true
   backup:

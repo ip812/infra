@@ -22,7 +22,6 @@ resource "helm_release" "app_pg" {
   ]
 
   name       = "app-pg"
-  namespace  = kubernetes_namespace.ip812.metadata[0].name
   chart      = "${path.module}/charts/app-pg"
   repository = ""
   version    = "0.1.0"
@@ -34,6 +33,8 @@ resource "helm_release" "app_pg" {
     yamlencode({
       # dummy values to ensure the chart is always updated
       chartContentHash = trimspace(data.external.chart_hash.result["hash"])
+
+      namespace = kubernetes_namespace.ip812.metadata[0].name
     })
   ]
 }
