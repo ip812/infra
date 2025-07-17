@@ -87,6 +87,7 @@ resource "aws_launch_template" "asg_lt" {
 # curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--tls-san ip812-prod --https-listen-port 16443" sh -
 # echo "alias kubectl='k3s kubectl'" >> /root/.bashrc
 # echo "alias k='k3s kubectl'" >> /root/.bashrc
+# recreate
 EOF
   )
 

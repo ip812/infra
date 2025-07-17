@@ -2,8 +2,7 @@
 apiVersion: v1
 kind: Secret
 metadata:
-  name: template-pg-creds
-  namespace: ip812
+  name: "{{ .Values.database }}-pg-creds"
 type: Opaque
 stringData:
   username: user
@@ -12,8 +11,7 @@ stringData:
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
-  name: template-pg
-  namespace: ip812
+  name: "{{ .Values.database }}-pg"
 spec:
   imageName: quay.io/enterprisedb/postgresql:16.1
   instances: 1
@@ -26,20 +24,20 @@ spec:
     size: 1Gi
   bootstrap:
     # initdb:
-    #   database: template
-    #   owner: template
+    #   database: {{ .Values.database }} 
+    #   owner: {{ .Values.database }} 
     #   secret:
-    #     name: template-pg-creds
+    #     name: "{{ .Values.database }}-pg-creds"
     recovery:
-      source: template-pg-backup
-      database: template
-      owner: template
+      source: "{{ .Values.database }}-pg-backup"
+      database: {{ .Values.database }} 
+      owner: {{ .Values.database }} 
       secret:
-        name: template-pg-creds
+        name: "{{ .Values.database }}-pg-creds"
   externalClusters:
-    - name: template-pg-backup
+    - name: "{{ .Values.database }}-pg-backup"
       barmanObjectStore:
-        destinationPath: s3://pg-backups-202507041132/template-pg
+        destinationPath: "s3://pg-backups-202507041132/{{ .Values.database }}-pg"
         s3Credentials:
           inheritFromIAMRole: true
   backup:
@@ -56,11 +54,10 @@ spec:
 apiVersion: postgresql.cnpg.io/v1
 kind: ScheduledBackup
 metadata:
-  name: template-daily-backup
-  namespace: ip812
+  name: "{{ .Values.database }}-daily-backup"
 spec:
   immediate: true
   schedule: "0 0 0 * * *"
   backupOwnerReference: cluster
   cluster:
-    name: template-pg
+    name: "{{ .Values.database }}-pg"
