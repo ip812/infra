@@ -45,7 +45,7 @@ spec:
           inheritFromIAMRole: true
   backup:
     barmanObjectStore:
-      destinationPath: "s3://{{ .Values.backupsBucket }}"
+      destinationPath: "s3://{{ .Values.backupsBucket }}/{{ .Values.database }}-pg"
       retentionPolicy: "{{ .Values.retentionPolicy }}"
       s3Credentials:
         inheritFromIAMRole: true
