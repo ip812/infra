@@ -91,7 +91,7 @@ EOF
   )
 
   block_device_mappings {
-    device_name = "/dev/xvda"
+    device_name = "/dev/sda1"
 
     ebs {
       volume_size           = 8
