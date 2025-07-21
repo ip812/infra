@@ -146,7 +146,7 @@ variable "pg_username" {
 }
 
 output "pg_username" {
-  value = var.pg_username
+  value     = var.pg_username
   sensitive = true
 }
 

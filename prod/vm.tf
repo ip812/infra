@@ -84,11 +84,22 @@ resource "aws_launch_template" "asg_lt" {
 # curl -fsSL https://tailscale.com/install.sh | sh
 # tailscale up --authkey ${var.ts_auth_key} --hostname "${var.org}-${var.env}" --ssh
 # 
-# curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--tls-san ip812-prod --https-listen-port 16443" sh -
+# curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--tls-san ${var.org}-${var.env} --https-listen-port 16443" sh -
 # echo "alias kubectl='k3s kubectl'" >> /root/.bashrc
 # echo "alias k='k3s kubectl'" >> /root/.bashrc
 EOF
   )
+
+  block_device_mappings {
+    device_name = "/dev/xvda"
+
+    ebs {
+      volume_size           = 8
+      volume_type           = "gp3"
+      delete_on_termination = true
+      encrypted             = false
+    }
+  }
 
   dynamic "tag_specifications" {
     for_each = toset(["instance"])

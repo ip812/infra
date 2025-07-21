@@ -2,8 +2,8 @@ resource "aws_vpc_endpoint" "s3" {
   vpc_id            = aws_vpc.vpc.id
   service_name      = "com.amazonaws.${var.aws_region}.s3"
   vpc_endpoint_type = "Gateway"
-  route_table_ids   = [
-    aws_route_table.public_subnet_a_rt.id, 
+  route_table_ids = [
+    aws_route_table.public_subnet_a_rt.id,
     aws_route_table.public_subnet_b_rt.id
   ]
 }
@@ -24,7 +24,7 @@ resource "aws_s3_bucket_versioning" "pg_backups_versioning" {
 }
 
 resource "aws_s3_bucket_public_access_block" "pg_backups_public_access_block" {
-  bucket = aws_s3_bucket.pg_backups.id
+  bucket                  = aws_s3_bucket.pg_backups.id
   block_public_acls       = true
   block_public_policy     = true
   ignore_public_acls      = true
