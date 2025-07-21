@@ -21,29 +21,29 @@ resource "helm_release" "app_pg" {
     helm_release.cnpg_cloudnative_pg
   ]
 
-  name       = "app-pg"
-  namespace  = kubernetes_namespace.ip812.metadata[0].name
-  chart      = "${path.module}/charts/app-pg"
-  repository = ""
-  version    = "0.1.0"
+  name         = "app-pg"
+  namespace    = kubernetes_namespace.ip812.metadata[0].name
+  chart        = "${path.module}/charts/app-pg"
+  repository   = ""
+  version      = "0.1.0"
   force_update = true
-  wait          = true
-  timeout       = 600
+  wait         = true
+  timeout      = 600
 
   values = [
     yamlencode({
       # dummy values to ensure the chart is always updated
       chartContentHash = trimspace(data.external.chart_hash.result["hash"])
 
-      isInit = true
-      database = "template"
-      username = data.terraform_remote_state.prod.outputs.pg_username
-      password = data.terraform_remote_state.prod.outputs.pg_password
-      image = "quay.io/enterprisedb/postgresql:16.1"
-      storageSize = "1Gi"
+      isInit          = false
+      database        = "template"
+      username        = data.terraform_remote_state.prod.outputs.pg_username
+      password        = data.terraform_remote_state.prod.outputs.pg_password
+      image           = "quay.io/enterprisedb/postgresql:16.1"
+      storageSize     = "1Gi"
       retentionPolicy = "7d"
-      backupsBucket = data.terraform_remote_state.prod.outputs.backups_bucket_name
-      backupSchedule = "0 0 0 * * *"
+      backupsBucket   = data.terraform_remote_state.prod.outputs.backups_bucket_name
+      backupSchedule  = "0 0 0 * * *"
     })
   ]
 }
