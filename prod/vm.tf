@@ -94,7 +94,7 @@ EOF
     device_name = "/dev/sda1"
 
     ebs {
-      volume_size           = 8
+      volume_size           = 9
       volume_type           = "gp3"
       delete_on_termination = true
       encrypted             = false
