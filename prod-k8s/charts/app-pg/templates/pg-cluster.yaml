@@ -12,6 +12,8 @@ apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
   name: "{{ .Values.database }}-pg"
+  annotations:
+    cnpg.io/skipEmptyWalArchiveCheck: "enabled"
 spec:
   imageName: "{{ .Values.image }}"
   instances: 1
