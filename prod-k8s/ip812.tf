@@ -39,7 +39,7 @@ resource "helm_release" "app_pg" {
       database        = "template"
       username        = data.terraform_remote_state.prod.outputs.pg_username
       password        = data.terraform_remote_state.prod.outputs.pg_password
-      image           = "quay.io/enterprisedb/postgresql:16.1"
+      image           = "ghcr.io/cloudnative-pg/postgresql:16.1"
       storageSize     = "1Gi"
       retentionPolicy = "7d"
       backupsBucket   = data.terraform_remote_state.prod.outputs.backups_bucket_name
