@@ -35,7 +35,7 @@ resource "helm_release" "app_pg" {
       # dummy values to ensure the chart is always updated
       chartContentHash = trimspace(data.external.chart_hash.result["hash"])
 
-      isInit          = false
+      isInit          = true
       database        = "template"
       username        = data.terraform_remote_state.prod.outputs.pg_username
       password        = data.terraform_remote_state.prod.outputs.pg_password
