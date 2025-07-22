@@ -33,13 +33,14 @@ spec:
     recovery:
       source: "{{ .Values.database }}-pg-backup"
       database: "{{ .Values.database }}"
-      owner: "{{ .Values.database }}" 
+      owner: "{{ .Values.database }}"
       secret:
         name: "{{ .Values.database }}-pg-creds"
     {{- end }}
   externalClusters:
     - name: "{{ .Values.database }}-pg-backup"
       barmanObjectStore:
+        serverName: "{{ .Values.database }}-pg"
         destinationPath: "s3://{{ .Values.backupsBucket }}/{{ .Values.database }}-pg"
         s3Credentials:
           inheritFromIAMRole: true
