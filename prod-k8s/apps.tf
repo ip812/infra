@@ -36,7 +36,7 @@ resource "helm_release" "app_pg" {
       chartContentHash = trimspace(data.external.chart_hash.result["hash"])
 
       isInit          = false
-      database        = "template"
+      database        = data.terraform_remote_state.prod.outputs.go_template_db_name
       username        = data.terraform_remote_state.prod.outputs.pg_username
       password        = data.terraform_remote_state.prod.outputs.pg_password
       image           = "ghcr.io/cloudnative-pg/postgresql:16.1"
@@ -46,4 +46,10 @@ resource "helm_release" "app_pg" {
       backupSchedule  = "0 0 0 * * *"
     })
   ]
+}
+
+resource "cloudflare_r2_bucket" "app_s3" {
+  account_id = data.terraform_remote_state.prod.outputs.cf_account_id
+  name       = "${var.org}-${data.terraform_remote_state.prod.outputs.go_template_db_name}-bucket"
+  location   = "eeur"
 }
