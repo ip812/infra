@@ -42,7 +42,7 @@ spec:
   externalClusters:
     - name: "{{ .Values.database }}-pg-backup"
       barmanObjectStore:
-        serverName: "{{ .Values.database }}-pg"
+        serverName: "{{ .Values.database }}-pg-backup"
         destinationPath: "s3://{{ .Values.backupsBucket }}"
         s3Credentials:
           inheritFromIAMRole: true
