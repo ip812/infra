@@ -34,11 +34,11 @@ resource "github_actions_secret" "infra_aws_region" {
   plaintext_value = var.aws_region
 }
 
-# resource "github_actions_secret" "infra_cf_tunnel_token" {
-#   repository      = "infra"
-#   secret_name     = "CF_TUNNEL_TOKEN"
-#   plaintext_value = cloudflare_zero_trust_tunnel_cloudflared.cf_tunnel.tunnel_token
-# }
+resource "github_actions_secret" "infra_cf_tunnel_token" {
+  repository      = "infra"
+  secret_name     = "CF_TUNNEL_TOKEN"
+  plaintext_value = cloudflare_zero_trust_tunnel_cloudflared.cf_tunnel.tunnel_token
+}
 
 resource "github_actions_secret" "infra_ts_auth_key" {
   repository      = "infra"
