@@ -4,31 +4,8 @@ resource "cloudflare_zero_trust_tunnel_cloudflared" "cf_tunnel" {
   secret     = var.cf_tunnel_secret
 }
 
-resource "cloudflare_zero_trust_tunnel_cloudflared_config" "cf_tunnel_cfg" {
-  account_id = var.cf_account_id
-  tunnel_id  = cloudflare_zero_trust_tunnel_cloudflared.cf_tunnel.id
-  config {
-    ingress_rule {
-      hostname = cloudflare_record.pgadmin_dns_record.hostname
-      service  = "http://pgadmin-svc.ip812.svc.cluster.local:8080"
-    }
-    ingress_rule {
-      hostname = cloudflare_record.go_template_dns_record.hostname
-      service  = "http://go-template-svc.ip812.svc.cluster.local:8080"
-    }
-    ingress_rule {
-      service = "http_status:404"
-    }
-  }
-}
-
-resource "cloudflare_record" "go_template_dns_record" {
-  zone_id = var.cf_ip812_zone_id
-  name    = var.go_template_domain
-  content = cloudflare_zero_trust_tunnel_cloudflared.cf_tunnel.cname
-  type    = "CNAME"
-  ttl     = 1
-  proxied = true
+output "cf_tunnel_id" {
+  value = cloudflare_zero_trust_tunnel_cloudflared.cf_tunnel.id
 }
 
 resource "cloudflare_record" "pgadmin_dns_record" {
@@ -38,6 +15,10 @@ resource "cloudflare_record" "pgadmin_dns_record" {
   type    = "CNAME"
   ttl     = 1
   proxied = true
+}
+
+output "pgadmin_hostname" {
+  value = cloudflare_record.pgadmin_dns_record.hostname
 }
 
 resource "cloudflare_zero_trust_access_application" "pgadmin_zt_app" {
@@ -58,4 +39,30 @@ resource "cloudflare_zero_trust_access_policy" "pgadmin_ap" {
   include {
     email = var.whitelist_email_addresses
   }
+}
+
+resource "cloudflare_record" "blog_dns_record" {
+  zone_id = var.cf_ip812_zone_id
+  name    = var.blog_domain
+  content = cloudflare_zero_trust_tunnel_cloudflared.cf_tunnel.cname
+  type    = "CNAME"
+  ttl     = 1
+  proxied = true
+}
+
+output "blog_hostname" {
+  value = cloudflare_record.blog_dns_record.hostname
+}
+
+resource "cloudflare_record" "go_template_dns_record" {
+  zone_id = var.cf_ip812_zone_id
+  name    = var.go_template_domain
+  content = cloudflare_zero_trust_tunnel_cloudflared.cf_tunnel.cname
+  type    = "CNAME"
+  ttl     = 1
+  proxied = true
+}
+
+output "go_template_hostname" {
+  value = cloudflare_record.go_template_dns_record.hostname
 }

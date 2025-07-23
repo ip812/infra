@@ -25,6 +25,10 @@ terraform {
       source  = "hashicorp/helm"
       version = "3.0.2"
     }
+    cloudflare = {
+      source  = "cloudflare/cloudflare"
+      version = "4.49.1"
+    }
     grafana = {
       source  = "grafana/grafana"
       version = "3.22.3"
@@ -46,6 +50,10 @@ provider "helm" {
     client_key             = base64decode(var.k8s_client_key)
     cluster_ca_certificate = base64decode(var.k8s_cluster_ca_certificate)
   }
+}
+
+provider "cloudflare" {
+  api_token = data.terraform_remote_state.prod.outputs.cf_api_token
 }
 
 provider "grafana" {

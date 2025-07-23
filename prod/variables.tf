@@ -57,8 +57,18 @@ variable "cf_api_token" {
   sensitive = true
 }
 
+output "cf_api_token" {
+  value     = var.cf_api_token
+  sensitive = true
+}
+
 variable "cf_account_id" {
   type      = string
+  sensitive = true
+}
+
+output "cf_account_id" {
+  value     = var.cf_account_id
   sensitive = true
 }
 
@@ -166,5 +176,20 @@ variable "go_template_domain" {
 
 variable "go_template_db_name" {
   type      = string
-  sensitive = true
+}
+
+output "go_template_db_name" {
+  value = var.go_template_db_name
+}
+
+variable "blog_domain" {
+  type      = string
+}
+
+variable "blog_db_name" {
+  type = string
+}
+
+output "blog_db_name" {
+  value = var.blog_db_name
 }
