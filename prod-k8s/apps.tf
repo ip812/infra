@@ -1,6 +1,6 @@
-resource "kubernetes_namespace" "ip812" {
+resource "kubernetes_namespace" "template" {
   metadata {
-    name = var.org
+    name = "template"
   }
 }
 
@@ -17,12 +17,12 @@ data "external" "chart_hash" {
 
 resource "helm_release" "app_pg" {
   depends_on = [
-    kubernetes_namespace.ip812,
+    kubernetes_namespace.template,
     helm_release.cnpg_cloudnative_pg
   ]
 
   name         = "app-pg"
-  namespace    = kubernetes_namespace.ip812.metadata[0].name
+  namespace    = kubernetes_namespace.template.metadata[0].name
   chart        = "${path.module}/charts/app-pg"
   repository   = ""
   version      = "0.1.0"
