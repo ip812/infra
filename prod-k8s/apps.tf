@@ -47,9 +47,3 @@ resource "helm_release" "app_pg" {
     })
   ]
 }
-
-resource "cloudflare_r2_bucket" "app_s3" {
-  account_id = data.terraform_remote_state.prod.outputs.cf_account_id
-  name       = "${var.org}-${data.terraform_remote_state.prod.outputs.go_template_db_name}-bucket"
-  location   = "eeur"
-}
