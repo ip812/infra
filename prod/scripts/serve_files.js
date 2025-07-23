@@ -1,21 +1,22 @@
-export default {
-    async fetch(request, env) {
-        const url = new URL(request.url);
-        const key = url.pathname.slice(1);
+addEventListener("fetch", event => {
+    event.respondWith(handleRequest(event));
+});
 
-        if (request.method !== "GET") {
-            return new Response("Method Not Allowed", { status: 405 });
-        }
+async function handleRequest(event) {
+    const request = event.request;
+    const url = new URL(request.url);
+    const key = url.pathname.slice(1);
 
-        const object = await env.FILES_BUCKET.get(key);
-        if (!object) return new Response("Not found", { status: 404 });
+    if (request.method !== "GET") {
+        return new Response("Method Not Allowed", { status: 405 });
+    }
 
-        const headers = new Headers();
-        object.writeHttpMetadata(headers);
-        headers.set("etag", object.httpEtag);
+    const object = await event.env.FILES_BUCKET.get(key);
+    if (!object) return new Response("Not found", { status: 404 });
 
-        return new Response(object.body, {
-            headers, 
-        });
-    },
-};
+    const headers = new Headers();
+    object.writeHttpMetadata(headers);
+    headers.set("etag", object.httpEtag);
+
+    return new Response(object.body, { headers });
+}
