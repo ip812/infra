@@ -128,6 +128,11 @@ variable "ts_auth_key" {
   sensitive = true
 }
 
+output "ts_auth_key" {
+  value     = var.ts_auth_key
+  sensitive = true
+}
+
 variable "ts_auth_key_ci_cd" {
   type      = string
   sensitive = true
