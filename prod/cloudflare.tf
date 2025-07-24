@@ -1,6 +1,7 @@
 resource "cloudflare_zero_trust_tunnel_cloudflared" "cf_tunnel" {
   account_id    = var.cf_account_id
   name          = var.cf_tunnel_name
+  config_src    = "cloudflare"
   tunnel_secret = var.cf_tunnel_secret
 }
 
@@ -18,7 +19,7 @@ resource "cloudflare_dns_record" "blog_dns_record" {
 }
 
 output "blog_hostname" {
-  value = cloudflare_record.blog_dns_record.hostname
+  value = cloudflare_dns_record.blog_dns_record.hostname
 }
 
 resource "cloudflare_dns_record" "go_template_dns_record" {
@@ -31,5 +32,5 @@ resource "cloudflare_dns_record" "go_template_dns_record" {
 }
 
 output "go_template_hostname" {
-  value = cloudflare_record.go_template_dns_record.hostname
+  value = cloudflare_dns_record.go_template_dns_record.hostname
 }
