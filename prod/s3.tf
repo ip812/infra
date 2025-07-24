@@ -12,7 +12,7 @@ output "go_template_bucket_endpoint" {
 resource "cloudflare_r2_custom_domain" "go_template_bucket_custom_domain" {
   account_id  = var.cf_account_id
   bucket_name = cloudflare_r2_bucket.go_template_bucket.name
-  domain      = "static.${var.go_template_domain}"
+  domain      = "static"
   enabled     = true
   zone_id     = var.cf_ip812_zone_id
   min_tls     = "1.0"
