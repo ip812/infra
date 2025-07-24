@@ -13,3 +13,37 @@ resource "helm_release" "cnpg_cloudnative_pg" {
   wait       = true
   timeout    = 600
 }
+
+data "external" "chart_hash" {
+  program = ["bash", "-c", <<-EOT
+    find "${path.module}/charts/app-pg" -type f -print0 \
+    | sort -z \
+    | xargs -0 sha256sum \
+    | sha256sum \
+    | jq -Rn '{"hash": input}'
+  EOT
+  ]
+}
+
+resource "helm_release" "pgadmin" {
+  depends_on = [
+    kubernetes_namespace.databases,
+    helm_release.cnpg_cloudnative_pg
+  ]
+
+  name         = "pgadmin"
+  namespace    = kubernetes_namespace.databases.metadata[0].name
+  chart        = "${path.module}/charts/pgadmin"
+  repository   = ""
+  version      = "0.1.0"
+  force_update = true
+  wait         = true
+  timeout      = 600
+
+  values = [
+    yamlencode({
+      # dummy values to ensure the chart is always updated
+      chartContentHash = trimspace(data.external.chart_hash.result["hash"])
+    })
+  ]
+}

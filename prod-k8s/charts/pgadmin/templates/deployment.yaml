@@ -3,7 +3,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: pgadmin-deploy
-  namespace: ip812
   labels:
     app: pgadmin
 spec:
@@ -16,8 +15,6 @@ spec:
       labels:
         app: pgadmin 
     spec:
-      imagePullSecrets:
-        - name: github-cr-secret
       containers:
         - name: pgadmin
           image: dpage/pgadmin4:9.1.0
@@ -28,7 +25,4 @@ spec:
             - name: PGADMIN_DEFAULT_EMAIL
               value: "ilia.yavorov.petrov@gmail.com"
             - name: PGADMIN_DEFAULT_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: ip812-secrets
-                  key: pg_password
+              value: "foo"
