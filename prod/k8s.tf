@@ -87,6 +87,7 @@ resource "aws_launch_template" "asg_lt" {
 # curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--tls-san ${var.org}-${var.env} --https-listen-port 16443" sh -
 # echo "alias kubectl='k3s kubectl'" >> /root/.bashrc
 # echo "alias k='k3s kubectl'" >> /root/.bashrc
+# foo
 EOF
   )
 
@@ -94,7 +95,7 @@ EOF
     device_name = "/dev/sda1"
 
     ebs {
-      volume_size           = 8
+      volume_size           = 12
       volume_type           = "gp3"
       delete_on_termination = true
       encrypted             = false
