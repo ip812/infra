@@ -55,7 +55,7 @@ jobs:
           terraform_version: "1.9.6"
 
       - name: Terraform Init prod
-        run: terraform init
+        run: terraform init -upgrade  
         working-directory: ./prod
 
       - name: Terraform Plan prod
@@ -86,7 +86,7 @@ jobs:
           done
 
       - name: Terraform Init prod-k8s
-        run: terraform init
+        run: terraform init -upgrade  
         working-directory: ./prod-k8s
 
       - name: Terraform Plan prod-k8s
