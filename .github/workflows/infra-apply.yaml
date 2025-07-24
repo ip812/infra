@@ -28,6 +28,8 @@ env:
   TF_VAR_slk_github_bot_token: ${{ secrets.TF_VAR_SLK_GITHUB_BOT_TOKEN }}
   TF_VAR_ts_auth_key: ${{ secrets.TF_VAR_TS_AUTH_KEY }}
   TF_VAR_ts_auth_key_ci_cd: ${{ secrets.TF_VAR_TS_AUTH_KEY_CI_CD }}
+  TF_VAR_ts_client_id: ${{ secrets.TF_VAR_TS_CLIENT_ID }}
+  TF_VAR_ts_client_secret: ${{ secrets.TF_VAR_TS_CLIENT_SECRET }}
 
 jobs:
   infra-apply:
