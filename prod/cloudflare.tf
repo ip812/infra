@@ -12,7 +12,7 @@ output "cf_tunnel_id" {
 resource "cloudflare_dns_record" "blog_dns_record" {
   zone_id = var.cf_ip812_zone_id
   name    = var.blog_domain
-  content = cloudflare_zero_trust_tunnel_cloudflared.cf_tunnel.cname
+  content = cloudflare_zero_trust_tunnel_cloudflared.cf_tunnel.cname_target
   type    = "CNAME"
   ttl     = 1
   proxied = true
@@ -25,7 +25,7 @@ output "blog_hostname" {
 resource "cloudflare_dns_record" "go_template_dns_record" {
   zone_id = var.cf_ip812_zone_id
   name    = var.go_template_domain
-  content = cloudflare_zero_trust_tunnel_cloudflared.cf_tunnel.cname
+  content = cloudflare_zero_trust_tunnel_cloudflared.cf_tunnel.cname_target
   type    = "CNAME"
   ttl     = 1
   proxied = true
