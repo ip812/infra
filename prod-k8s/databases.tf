@@ -14,7 +14,7 @@ resource "helm_release" "cnpg_cloudnative_pg" {
   timeout    = 600
 }
 
-data "external" "chart_hash" {
+data "external" "chart_hash_2" {
   program = ["bash", "-c", <<-EOT
     find "${path.module}/charts/app-pg" -type f -print0 \
     | sort -z \
@@ -43,7 +43,7 @@ resource "helm_release" "pgadmin" {
   values = [
     yamlencode({
       # dummy values to ensure the chart is always updated
-      chartContentHash = trimspace(data.external.chart_hash.result["hash"])
+      chartContentHash = trimspace(data.external.chart_hash_2.result["hash"])
     })
   ]
 }
