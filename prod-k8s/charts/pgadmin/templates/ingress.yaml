@@ -10,3 +10,6 @@ spec:
       port:
         name: https
   ingressClassName: tailscale
+  tls:
+  - hosts:
+      - pgadmin.taile31a9d.ts.net
