@@ -175,7 +175,7 @@ variable "go_template_domain" {
 }
 
 variable "go_template_db_name" {
-  type      = string
+  type = string
 }
 
 output "go_template_db_name" {
@@ -183,7 +183,7 @@ output "go_template_db_name" {
 }
 
 variable "blog_domain" {
-  type      = string
+  type = string
 }
 
 variable "blog_db_name" {
