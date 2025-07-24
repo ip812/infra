@@ -13,13 +13,14 @@ resource "helm_release" "tailscale_operator" {
   wait       = true
   timeout    = 600
 
-  set {
-    name  = "oauth.clientId"
-    value = var.ts_client_id
-  }
-
-  set {
-    name  = "oauth.clientSecret"
-    value = var.ts_client_secret
-  }
+  set = [
+    {
+      name  = "oauth.clientId"
+      value = var.ts_client_id
+    },
+    {
+      name  = "oauth.clientSecret"
+      value = var.ts_client_secret
+    }
+  ]
 }
