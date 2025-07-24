@@ -6,7 +6,7 @@ resource "cloudflare_zero_trust_tunnel_cloudflared" "cf_tunnel" {
 }
 
 output "cf_tunnel_id" {
-  value = cloudflare_zero_trust_tunnel_cloudflared.cf_tunnel.id
+  value = cloudflare_zero_trust_tunnel_cloudflared.cf_tunnel.meta
 }
 
 resource "cloudflare_dns_record" "blog_dns_record" {
