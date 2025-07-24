@@ -11,7 +11,7 @@ output "cf_tunnel_id" {
 
 resource "cloudflare_dns_record" "blog_dns_record" {
   zone_id = var.cf_ip812_zone_id
-  name    = var.blog_domain
+  name    = "${var.blog_domain}.${var.org}.com"
   content = cloudflare_zero_trust_tunnel_cloudflared.cf_tunnel.name
   type    = "CNAME"
   ttl     = 1
@@ -19,12 +19,12 @@ resource "cloudflare_dns_record" "blog_dns_record" {
 }
 
 output "blog_hostname" {
-  value = "${cloudflare_dns_record.blog_dns_record.name}.${var.org}.com"
+  value = cloudflare_dns_record.blog_dns_record.name
 }
 
 resource "cloudflare_dns_record" "go_template_dns_record" {
   zone_id = var.cf_ip812_zone_id
-  name    = var.go_template_domain
+  name    = "${var.go_template_domain}.${var.org}.com"
   content = cloudflare_zero_trust_tunnel_cloudflared.cf_tunnel.name
   type    = "CNAME"
   ttl     = 1
@@ -32,5 +32,5 @@ resource "cloudflare_dns_record" "go_template_dns_record" {
 }
 
 output "go_template_hostname" {
-  value = "${cloudflare_dns_record.go_template_dns_record.name}.${var.org}.com"
+  value = cloudflare_dns_record.go_template_dns_record.name
 }
