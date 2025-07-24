@@ -19,7 +19,7 @@ resource "cloudflare_dns_record" "blog_dns_record" {
 }
 
 output "blog_hostname" {
-  value = cloudflare_dns_record.blog_dns_record.meta
+  value = "${cloudflare_dns_record.blog_dns_record.name}.${var.org}.com"
 }
 
 resource "cloudflare_dns_record" "go_template_dns_record" {
@@ -32,5 +32,5 @@ resource "cloudflare_dns_record" "go_template_dns_record" {
 }
 
 output "go_template_hostname" {
-  value = cloudflare_dns_record.go_template_dns_record.id
+  value = "${cloudflare_dns_record.go_template_dns_record.name}.${var.org}.com"
 }
