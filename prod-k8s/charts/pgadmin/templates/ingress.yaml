@@ -4,14 +4,13 @@ kind: Ingress
 metadata:
   name: pgadmin-ingress
   namespace: databases
-  annotations:
-    tailscale.com/hostname: pgadmin
 spec:
-  ingressClassName: tailscale
   defaultBackend:
     service:
       name: pgadmin-svc
       port:
         number: 8080
-  rules:
-    - host: pgadmin.ip812.taile31a9d.ts.net
+  ingressClassName: tailscale
+  tls:
+    - hosts:
+        - pgadmin.ip812.taile31a9d.ts.net
