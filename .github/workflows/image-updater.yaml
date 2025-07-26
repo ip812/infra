@@ -36,7 +36,7 @@ jobs:
     steps:
       - name: Trigger K8s Deploy
         run: |
-          curl -X POST https://api.github.com/repos/avalonpharma/infra/actions/workflows/k8s-deploy.yaml/dispatches \
+          curl -X POST https://api.github.com/repos/ip812/infra/actions/workflows/infra-apply.yaml/dispatches \
           -H "Authorization: token ${{ secrets.GH_ACCESS_TOKEN }}" \
           -H "Accept: application/vnd.github+json" \
           -d '{
