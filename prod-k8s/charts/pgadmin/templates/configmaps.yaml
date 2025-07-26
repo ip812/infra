@@ -7,16 +7,18 @@ data:
   servers.json: |
     {
       "Servers": {
-        {{- range $i, $srv := .Values.pgadmin.servers }}
+        {{- with .Values.servers }}
+        {{- range $i, $srv := . }}
         "{{ add $i 1 }}": {
           "Name": "{{ $srv.name }}",
           "Group": "Servers",
           "Host": "{{ $srv.host }}",
-          "Port": 5432,
-          "Username": "postgres",
-          "MaintenanceDB": "postgres",
-          "SSLMode": "prefer"
-        }{{ if not (eq (add $i 1) (len .Values.pgadmin.servers)) }},{{ end }}
+          "Port": {{ $srv.port | default 5432 }},
+          "Username": "{{ $srv.username | default "postgres" }}",
+          "MaintenanceDB": "{{ $srv.maintenanceDB | default "postgres" }}",
+          "SSLMode": "{{ $srv.sslmode | default "prefer" }}"
+        }{{ if not (eq (add $i 1) (len .)) }},{{ end }}
+        {{- end }}
         {{- end }}
       }
     }
