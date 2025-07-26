@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: remove-stale-devices
-          image: python:3.13-slim
+          image: badouralix/curl-jq
           command: ["/bin/bash", "-c"]
           args:
             - |
