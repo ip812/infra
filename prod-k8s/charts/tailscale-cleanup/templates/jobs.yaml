@@ -21,11 +21,12 @@ spec:
     spec:
       containers:
         - name: remove-stale-devices
-          image: curlimages/curl:latest
+          image: alpine:latest
           command: ["/bin/sh", "-c"]
           args:
+            - apk add --no-cache curl jq
+            - NOW="$(date -u -d "+1 second" +"%Y-%m-%dT%H:%M:%SZ")"
             - |
-              NOW="$(date -u -d "+1 second" +"%Y-%m-%dT%H:%M:%SZ")"
               while read -r DEVICE; do
                   DEVICE_ID=$(echo $DEVICE | cut -d ' ' -f 1 | tr -d '"')
                   LAST_SEEN=$(echo $DEVICE | cut -d ' ' -f 2 | tr -d '"')
