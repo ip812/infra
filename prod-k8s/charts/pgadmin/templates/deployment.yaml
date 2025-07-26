@@ -32,3 +32,13 @@ spec:
                 secretKeyRef:
                   name: pgadmin-creds
                   key: password
+            - name: PGADMIN_CONFIG_SERVER_MODE
+              value: "False"
+          volumeMounts:
+            - name: pgadmin-servers
+              mountPath: /pgadmin4/servers.json
+              subPath: servers.json
+      volumes:
+        - name: pgadmin-servers
+          configMap:
+            name: pgadmin-servers

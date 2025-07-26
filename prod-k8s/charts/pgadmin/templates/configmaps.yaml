@@ -1,0 +1,22 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pgadmin-servers
+data:
+  servers.json: |
+    {
+      "Servers": {
+        {{- range $i, $srv := .Values.pgadmin.servers }}
+        "{{ add $i 1 }}": {
+          "Name": "{{ $srv.name }}",
+          "Group": "Servers",
+          "Host": "{{ $srv.host }}",
+          "Port": 5432,
+          "Username": "postgres",
+          "MaintenanceDB": "postgres",
+          "SSLMode": "prefer"
+        }{{ if not (eq (add $i 1) (len .Values.pgadmin.servers)) }},{{ end }}
+        {{- end }}
+      }
+    }

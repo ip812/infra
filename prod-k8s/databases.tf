@@ -47,6 +47,14 @@ resource "helm_release" "pgadmin" {
 
       pgadminEmail = data.terraform_remote_state.prod.outputs.pgadmin_email
       pgadminPassword = data.terraform_remote_state.prod.outputs.pgadmin_password
+      pgadmin = {
+        servers = [
+          {
+            name = "go-template"
+            host = "${data.terraform_remote_state.prod.outputs.go_template_db_name}-pg-rw.${kubernetes_namespace.template.metadata[0].name}.svc.cluster.local"
+          }
+        ]
+      }
     })
   ]
 }
