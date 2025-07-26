@@ -24,21 +24,26 @@ spec:
           image: badouralix/curl-jq
           command: ["/bin/sh", "-c"]
           args:
-            - |
-              echo "Using Tailscale API key: $TAILSCALE_API_KEY"
-              echo "Using tailnet: $TAILNET"
-              curl -s -H "Authorization: Bearer $TAILSCALE_API_KEY" "https://api.tailscale.com/api/v2/tailnet/$TAILNET/devices"
-              NOW=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-              echo "Current time in UTC: $NOW"
-              curl -s -H "Authorization: Bearer $TAILSCALE_API_KEY" "https://api.tailscale.com/api/v2/tailnet/$TAILNET/devices" \
-              | jq -r '.devices[] | "\(.id) \(.lastSeen)"' \
-              | while read DEVICE_ID LAST_SEEN; do
-                  echo "Checking device $DEVICE_ID, last seen at $LAST_SEEN"
-                  if [ "$LAST_SEEN" \< "$NOW" ]; then
-                      echo "Device $DEVICE_ID has not been seen since $LAST_SEEN, removing..."
-                      curl -s -X DELETE -H "Authorization: Bearer $TAILSCALE_API_KEY" "https://api.tailscale.com/api/v2/device/$DEVICE_ID"
-                  fi
-                done
+            args:
+          - |
+            echo "Using Tailscale API key: $TAILSCALE_API_KEY"
+            echo "Using tailnet: $TAILNET"
+            NOW=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+            echo "Current time in UTC: $NOW"
+            DEVICES=$(curl -s -H "Authorization: Bearer $TAILSCALE_API_KEY" "https://api.tailscale.com/api/v2/tailnet/$TAILNET/devices")
+            echo "API response: $DEVICES"
+            echo "$DEVICES" | jq -r '.devices[] | "\(.id) \(.lastSeen)"' > /tmp/devices.txt
+            echo "JQ output written to /tmp/devices.txt"
+            cat /tmp/devices.txt
+            while read DEVICE_ID LAST_SEEN; do
+                echo "Processing device $DEVICE_ID, last seen at $LAST_SEEN"
+                if [ -n "$LAST_SEEN" ] && [ "$LAST_SEEN" \< "$NOW" ]; then
+                    echo "Device $DEVICE_ID has not been seen since $LAST_SEEN, removing..."
+                    curl -s -X DELETE -H "Authorization: Bearer $TAILSCALE_API_KEY" "https://api.tailscale.com/api/v2/device/$DEVICE_ID"
+                else
+                    echo "Device $DEVICE_ID is either recent or has no lastSeen, skipping..."
+                fi
+            done < /tmp/devices.txt
           env:
             - name: TAILSCALE_API_KEY
               valueFrom:
