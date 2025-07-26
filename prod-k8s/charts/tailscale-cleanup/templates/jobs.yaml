@@ -25,7 +25,7 @@ spec:
           command: ["/bin/sh", "-c"]
           args:
             - |
-              NOW=$(date -u -d "+1 second" +"%Y-%m-%dT%H:%M:%SZ")
+              NOW=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
               echo "Current time in UTC: $NOW"
               curl -s -H "Authorization: Bearer $TAILSCALE_API_KEY" "https://api.tailscale.com/api/v2/tailnet/$TAILNET/devices" \
               | jq -r '.devices[] | "\(.id) \(.lastSeen)"' \
