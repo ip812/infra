@@ -42,6 +42,7 @@ spec:
                       curl -s -X DELETE -H "Authorization: Bearer $TAILSCALE_API_KEY" "https://api.tailscale.com/api/v2/device/$DEVICE_ID"
                   fi
                 done
+              sleep 3600
           env:
             - name: TAILSCALE_API_KEY
               valueFrom:
