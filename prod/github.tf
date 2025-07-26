@@ -76,24 +76,6 @@ resource "github_actions_secret" "lambdas_github_access_token" {
   plaintext_value = var.gh_access_token
 }
 
-resource "github_actions_secret" "go_template_aws_access_key_id" {
-  repository      = "go-template"
-  secret_name     = "AWS_ACCESS_KEY_ID"
-  plaintext_value = var.aws_access_key_id
-}
-
-resource "github_actions_secret" "go_template_aws_secret_access_key" {
-  repository      = "go-template"
-  secret_name     = "AWS_SECRET_ACCESS_KEY"
-  plaintext_value = var.aws_secret_access_key
-}
-
-resource "github_actions_secret" "go_template_aws_region" {
-  repository      = "go-template"
-  secret_name     = "AWS_REGION"
-  plaintext_value = var.aws_region
-}
-
 resource "github_actions_secret" "go_template_github_access_token" {
   repository      = "go-template"
   secret_name     = "GH_ACCESS_TOKEN"
