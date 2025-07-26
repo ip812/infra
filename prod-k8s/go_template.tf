@@ -35,6 +35,7 @@ resource "helm_release" "template_app_pg" {
       # dummy value to ensure the chart is always updated
       chartContentHash = trimspace(data.external.chart_hash_template.result["hash"])
 
+      image             = "ghcr.io/iypetrov/go-template:1.6.0"
       isInit            = false
       pgDatabaseName    = data.terraform_remote_state.prod.outputs.go_template_db_name
       pgUsername        = data.terraform_remote_state.prod.outputs.pg_username
