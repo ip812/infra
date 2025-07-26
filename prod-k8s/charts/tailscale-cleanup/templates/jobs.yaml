@@ -25,6 +25,7 @@ spec:
           command: ["/bin/sh", "-c"]
           args:
             - |
+              set -e
               NOW=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
               echo "Current time in UTC: $NOW"
               DEVICES=$(curl -s -H "Authorization: Bearer $TAILSCALE_API_KEY" "https://api.tailscale.com/api/v2/tailnet/$TAILNET/devices")
