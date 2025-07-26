@@ -35,15 +35,15 @@ resource "helm_release" "template_app_pg" {
       # dummy value to ensure the chart is always updated
       chartContentHash = trimspace(data.external.chart_hash_template.result["hash"])
 
-      isInit          = false
-      database        = data.terraform_remote_state.prod.outputs.go_template_db_name
-      username        = data.terraform_remote_state.prod.outputs.pg_username
-      password        = data.terraform_remote_state.prod.outputs.pg_password
-      image           = "ghcr.io/cloudnative-pg/postgresql:16.1"
-      storageSize     = "1Gi"
-      retentionPolicy = "7d"
-      backupsBucket   = data.terraform_remote_state.prod.outputs.backups_bucket_name
-      backupSchedule  = "0 0 0 * * *"
+      isInit            = false
+      pgDatabaseName    = data.terraform_remote_state.prod.outputs.go_template_db_name
+      pgUsername        = data.terraform_remote_state.prod.outputs.pg_username
+      pgPassword        = data.terraform_remote_state.prod.outputs.pg_password
+      pgImage           = "ghcr.io/cloudnative-pg/postgresql:16.1"
+      pgStorageSize     = "1Gi"
+      pgRetentionPolicy = "7d"
+      pgBackupsBucket   = data.terraform_remote_state.prod.outputs.backups_bucket_name
+      pgBackupSchedule  = "0 0 0 * * *"
     })
   ]
 }

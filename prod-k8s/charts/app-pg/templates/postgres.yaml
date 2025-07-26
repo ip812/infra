@@ -2,11 +2,11 @@
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
-  name: "{{ .Values.database }}-pg"
+  name: "{{ .Values.pgDatabaseName }}-pg"
   annotations:
     cnpg.io/skipEmptyWalArchiveCheck: "enabled"
 spec:
-  imageName: "{{ .Values.image }}"
+  imageName: "{{ .Values.pgImage }}"
   instances: 1
   primaryUpdateStrategy: unsupervised
   enablePDB: false
@@ -14,33 +14,33 @@ spec:
     enablePodMonitor: true
   storage:
     storageClass: local-path
-    size: "{{ .Values.storageSize }}"
+    size: "{{ .Values.pgStorageSize }}"
   bootstrap:
     {{- if .Values.isInit }}
     initdb:
-      database: "{{ .Values.database }}"
-      owner: "{{ .Values.username }}"
+      database: "{{ .Values.pgDatabaseName }}"
+      owner: "{{ .Values.pgUsername }}"
       secret:
-        name: "{{ .Values.database }}-pg-creds"
+        name: "{{ .Values.pfDatabaseName }}-pg-creds"
     {{- else }}
     recovery:
-      source: "{{ .Values.database }}-pg-backup"
-      database: "{{ .Values.database }}"
-      owner: "{{ .Values.username }}"
+      source: "{{ .Values.pgDatabaseName }}-pg-backup"
+      database: "{{ .Values.pgDatabaseName }}"
+      owner: "{{ .Values.pgUsername }}"
       secret:
-        name: "{{ .Values.database }}-pg-creds"
+        name: "{{ .Values.pgDatabaseName }}-pg-creds"
     {{- end }}
   externalClusters:
-    - name: "{{ .Values.database }}-pg-backup"
+    - name: "{{ .Values.pgDatabaseName }}-pg-backup"
       barmanObjectStore:
-        serverName: "{{ .Values.database }}-pg"
-        destinationPath: "s3://{{ .Values.backupsBucket }}"
+        serverName: "{{ .Values.pgDatabaseName }}-pg"
+        destinationPath: "s3://{{ .Values.pgBackupsBucket }}"
         s3Credentials:
           inheritFromIAMRole: true
   backup:
     barmanObjectStore:
-      destinationPath: "s3://{{ .Values.backupsBucket }}"
-      retentionPolicy: "{{ .Values.retentionPolicy }}"
+      destinationPath: "s3://{{ .Values.pgBackupsBucket }}"
+      retentionPolicy: "{{ .Values.pgRetentionPolicy }}"
       s3Credentials:
         inheritFromIAMRole: true
       wal:
@@ -51,10 +51,10 @@ spec:
 apiVersion: postgresql.cnpg.io/v1
 kind: ScheduledBackup
 metadata:
-  name: "{{ .Values.database }}-daily-backup"
+  name: "{{ .Values.pgDatabaseName }}-daily-backup"
 spec:
   immediate: true
-  schedule: "{{ .Values.backupSchedule }}"
+  schedule: "{{ .Values.pgBackupSchedule }}"
   backupOwnerReference: cluster
   cluster:
-    name: "{{ .Values.database }}-pg"
+    name: "{{ .Values.pgDatabaseName }}-pg"
