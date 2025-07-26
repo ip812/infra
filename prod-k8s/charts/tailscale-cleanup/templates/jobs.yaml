@@ -24,9 +24,9 @@ spec:
           image: python:3.13-slim
           command: ["/bin/sh", "-c"]
           args:
-            - NOW="$(date -u -d "+1 second" +"%Y-%m-%dT%H:%M:%SZ")"
-            - echo "Current time in UTC: $NOW"
             - |
+              NOW="$(date -u -d "+1 second" +"%Y-%m-%dT%H:%M:%SZ")"
+              echo "Current time in UTC: $NOW"
               while read -r DEVICE; do
                   DEVICE_ID=$(echo $DEVICE | cut -d ' ' -f 1 | tr -d '"')
                   LAST_SEEN=$(echo $DEVICE | cut -d ' ' -f 2 | tr -d '"')
