@@ -1,0 +1,48 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: "tailscale-cleanup-creds"
+type: Opaque
+stringData:
+  ts-api-key: "{{ .Values.tsApiKey }}"
+  tailnet: "{{ .Values.tailnet }}"
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: remove-stale-devices
+spec:
+  parallelism: 1
+  completions: 1
+  activeDeadlineSeconds: 100
+  backoffLimit: 1
+  template:
+    spec:
+      containers:
+        - name: remove-stale-devices
+          image: curlimages/curl:latest
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              NOW="$(date -u -d "+1 second" +"%Y-%m-%dT%H:%M:%SZ")"
+              while read -r DEVICE; do
+                  DEVICE_ID=$(echo $DEVICE | cut -d ' ' -f 1 | tr -d '"')
+                  LAST_SEEN=$(echo $DEVICE | cut -d ' ' -f 2 | tr -d '"')
+                  if [[ "$LAST_SEEN" < "$NOW" ]]; then
+                      echo "Device $DEVICE_ID has not been seen since $LAST_SEEN, removing..."
+                      curl -s -X DELETE -H "Authorization: Bearer $TAILSCALE_API_KEY" "https://api.tailscale.com/api/v2/device/$DEVICE_ID"
+                  fi
+              done < <(curl -s -H "Authorization: Bearer $TAILSCALE_API_KEY" "https://api.tailscale.com/api/v2/tailnet/$TAILNET/devices" | jq '.devices[] | "\(.id) \(.lastSeen)"')
+          env:
+            - name: TAILSCALE_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: tailscale-cleanup-creds
+                  key: ts-api-key
+            - name: TAILNET
+              valueFrom:
+                secretKeyRef:
+                  name: tailscale-cleanup-creds
+                  key: tailnet
+      restartPolicy: Never

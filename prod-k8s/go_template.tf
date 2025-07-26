@@ -4,7 +4,7 @@ resource "kubernetes_namespace" "template" {
   }
 }
 
-data "external" "chart_hash" {
+data "external" "chart_hash_template" {
   program = ["bash", "-c", <<-EOT
     find "${path.module}/charts/app-pg" -type f -print0 \
     | sort -z \
@@ -15,13 +15,13 @@ data "external" "chart_hash" {
   ]
 }
 
-resource "helm_release" "app_pg" {
+resource "helm_release" "template_app_pg" {
   depends_on = [
     kubernetes_namespace.template,
     helm_release.cnpg_cloudnative_pg
   ]
 
-  name         = "app-pg"
+  name         = "go-template"
   namespace    = kubernetes_namespace.template.metadata[0].name
   chart        = "${path.module}/charts/app-pg"
   repository   = ""
@@ -33,7 +33,7 @@ resource "helm_release" "app_pg" {
   values = [
     yamlencode({
       # dummy values to ensure the chart is always updated
-      chartContentHash = trimspace(data.external.chart_hash.result["hash"])
+      chartContentHash = trimspace(data.external.chart_hash_template.result["hash"])
 
       isInit          = false
       database        = data.terraform_remote_state.prod.outputs.go_template_db_name
