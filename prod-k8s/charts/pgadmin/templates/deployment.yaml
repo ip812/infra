@@ -17,12 +17,18 @@ spec:
     spec:
       containers:
         - name: pgadmin
-          image: dpage/pgadmin4:9.1.0
+          image: dpage/pgadmin4:9.6.0
           ports:
             - containerPort: 80
               protocol: TCP
           env:
             - name: PGADMIN_DEFAULT_EMAIL
-              value: "ilia.yavorov.petrov@gmail.com"
+              valueFrom:
+                secretKeyRef:
+                  name: pgadmin-creds
+                  key: email
             - name: PGADMIN_DEFAULT_PASSWORD
-              value: "foo"
+              valueFrom:
+                secretKeyRef:
+                  name: pgadmin-creds
+                  key: password

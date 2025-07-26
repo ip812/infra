@@ -44,6 +44,9 @@ resource "helm_release" "pgadmin" {
     yamlencode({
       # dummy values to ensure the chart is always updated
       chartContentHash = trimspace(data.external.chart_hash_pgadmin.result["hash"])
+
+      pgadminEmail = data.terraform_remote_state.prod.outputs.pgadmin_email
+      pgadminPassword = data.terraform_remote_state.prod.outputs.pgadmin_password
     })
   ]
 }

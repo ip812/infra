@@ -23,6 +23,8 @@ env:
   TF_VAR_k8s_client_certificate: ${{ secrets.TF_VAR_K8S_CLIENT_CERTIFICATE }}
   TF_VAR_k8s_client_key: ${{ secrets.TF_VAR_K8S_CLIENT_KEY }}
   TF_VAR_k8s_cluster_ca_certificate: ${{ secrets.TF_VAR_K8S_CLUSTER_CA_CERTIFICATE }}
+  TF_VAR_pgadmin_password: ${{ secrets.TF_VAR_PGADMIN_PASSWORD }}
+  TF_VAR_pgadmin_email: ${{ secrets.TF_VAR_PGADMIN_EMAIL }}
   TF_VAR_pg_password: ${{ secrets.TF_VAR_PG_PASSWORD }}
   TF_VAR_pg_username: ${{ secrets.TF_VAR_PG_USERNAME }}
   TF_VAR_slk_github_bot_token: ${{ secrets.TF_VAR_SLK_GITHUB_BOT_TOKEN }}

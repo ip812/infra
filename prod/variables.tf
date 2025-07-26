@@ -150,6 +150,26 @@ variable "pgadmin_domain" {
   sensitive = true
 }
 
+variable "pgadmin_email" {
+  type      = string
+  sensitive = true
+}
+
+output "pgadmin_email" {
+  value     = var.pgadmin_email
+  sensitive = true
+}
+
+variable "pgadmin_password" {
+  type      = string
+  sensitive = true
+}
+
+output "pgadmin_password" {
+  value     = var.pgadmin_password
+  sensitive = true
+}
+
 variable "pg_username" {
   type      = string
   sensitive = true
