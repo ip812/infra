@@ -13,9 +13,7 @@ kind: Job
 metadata:
   name: remove-stale-devices
 spec:
-  parallelism: 1
-  completions: 1
-  backoffLimit: 5
+  backoffLimit: 1
   template:
     spec:
       containers:
@@ -32,7 +30,7 @@ spec:
                   break
                 fi
                 echo "Retrying: Failed to fetch devices from Tailscale API..."
-                sleep 5
+                sleep 15
               done
               echo "$DEVICES" | jq -r '.devices[] | "\(.id) \(.lastSeen)"' > /tmp/devices.txt
               if [ ! -s /tmp/devices.txt ]; then
