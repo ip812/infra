@@ -26,12 +26,14 @@ spec:
           args:
             - |
               echo "Using tailnet: $TAILNET"
+              ENCODED_TAILNET=$(printf "%s" "$TAILNET" | jq -sRr @uri)
+              echo "Encoded tailnet: $ENCODED_TAILNET"
               echo "Using API key: $TAILSCALE_API_KEY"
               echo "Details:"
-              curl -s -H "Authorization: Bearer $TAILSCALE_API_KEY" "https://api.tailscale.com/api/v2/tailnet/$TAILNET/devices"
+              curl -s -H "Authorization: Bearer $TAILSCALE_API_KEY" "https://api.tailscale.com/api/v2/tailnet/$ENCODED_TAILNET/devices"
               NOW=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
               echo "Current time in UTC: $NOW"
-              curl -s -H "Authorization: Bearer $TAILSCALE_API_KEY" "https://api.tailscale.com/api/v2/tailnet/$TAILNET/devices" \
+              curl -s -H "Authorization: Bearer $TAILSCALE_API_KEY" "https://api.tailscale.com/api/v2/tailnet/$ENCODED_TAILNET/devices" \
               | jq -r '.devices[] | "\(.id) \(.lastSeen)"' \
               | while read DEVICE_ID LAST_SEEN; do
                   echo "Checking device $DEVICE_ID, last seen at $LAST_SEEN"
