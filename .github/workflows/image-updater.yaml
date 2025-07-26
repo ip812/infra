@@ -24,8 +24,8 @@ jobs:
       - name: Update K8s manifests
         run: |
           git config --global user.name "Image Updater"
-          git config --global user.email "bot.imageupdater@avalonpharma.com"
-          find k8s/manifests -type f \( -name "*.yml" -o -name "*.yaml" \) -exec sed -i "s|${{ env.IMAGE_NAME }}:.*|${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}|" {} +
+          git config --global user.email "bot.imageupdater@ip812.com"
+          find prod-k8s -type f -name "*.tf" -exec sed -i "s|${{ env.IMAGE_NAME }}:.*|${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}|" {} +
           git add .
           git commit -m "cicd: Update image ${{ env.IMAGE_NAME }} to version ${{ env.IMAGE_TAG }}"
           git push origin main
