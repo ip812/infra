@@ -22,7 +22,7 @@ spec:
       containers:
         - name: remove-stale-devices
           image: python:3.13-slim
-          command: ["/bin/sh", "-c"]
+          command: ["/bin/bash", "-c"]
           args:
             - |
               NOW="$(date -u -d "+1 second" +"%Y-%m-%dT%H:%M:%SZ")"
