@@ -25,6 +25,10 @@ spec:
           command: ["/bin/sh", "-c"]
           args:
             - |
+              echo "Using tailnet: $TAILNET"
+              echo "Using API key: ${TAILSCALE_API_KEY:0:4}****"
+              echo "Details:"
+              curl -s -H "Authorization: Bearer $TAILSCALE_API_KEY" "https://api.tailscale.com/api/v2/tailnet/$TAILNET/devices"
               NOW=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
               echo "Current time in UTC: $NOW"
               curl -s -H "Authorization: Bearer $TAILSCALE_API_KEY" "https://api.tailscale.com/api/v2/tailnet/$TAILNET/devices" \
