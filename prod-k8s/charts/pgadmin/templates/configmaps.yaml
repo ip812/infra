@@ -13,7 +13,7 @@ data:
           "Group": "Servers",
           "Host": "{{ $srv.host }}",
           "Port": 5432,
-          "Username": "postgres",
+          "Username": "{{ $srv.username }}",
           "MaintenanceDB": "postgres",
           "SSLMode": "prefer"
         }{{ if not (eq (add $i 1) (len $.Values.servers)) }},{{ end }}

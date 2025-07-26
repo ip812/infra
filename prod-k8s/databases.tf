@@ -51,6 +51,7 @@ resource "helm_release" "pgadmin" {
         {
           name = "go-template"
           host = "${data.terraform_remote_state.prod.outputs.go_template_db_name}-pg-rw.${kubernetes_namespace.template.metadata[0].name}.svc.cluster.local"
+          username = data.terraform_remote_state.prod.outputs.pg_username
         }
       ]
     })
