@@ -24,14 +24,16 @@ spec:
           command: ["/bin/sh", "-c"]
           args:
             - |
-              sleep 15
               NOW=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
               echo "Current time in UTC: $NOW"
-              DEVICES=$(curl -s -H "Authorization: Bearer $TAILSCALE_API_KEY" "https://api.tailscale.com/api/v2/tailnet/$TAILNET/devices")
-              if [ -z "$DEVICES" ]; then
-                echo "Error: Failed to fetch devices from Tailscale API"
-                exit 1
-              fi
+              while true; do
+                DEVICES=$(curl -s -H "Authorization: Bearer $TAILSCALE_API_KEY" "https://api.tailscale.com/api/v2/tailnet/$TAILNET/devices")
+                if [ -n "$DEVICES" ]; then
+                  break
+                fi
+                echo "Retrying: Failed to fetch devices from Tailscale API..."
+                sleep 5
+              done
               echo "$DEVICES" | jq -r '.devices[] | "\(.id) \(.lastSeen)"' > /tmp/devices.txt
               if [ ! -s /tmp/devices.txt ]; then
                 echo "Error: No devices found in API response or JQ processing failed"
