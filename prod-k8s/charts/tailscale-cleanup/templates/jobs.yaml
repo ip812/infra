@@ -21,10 +21,9 @@ spec:
     spec:
       containers:
         - name: remove-stale-devices
-          image: alpine:latest
+          image: python:3.13-slim
           command: ["/bin/sh", "-c"]
           args:
-            - apk add --no-cache curl jq
             - NOW="$(date -u -d "+1 second" +"%Y-%m-%dT%H:%M:%SZ")"
             - |
               while read -r DEVICE; do
