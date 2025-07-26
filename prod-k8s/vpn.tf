@@ -31,7 +31,7 @@ resource "helm_release" "tailscale_cleanup" {
 
   values = [
     yamlencode({
-      # dummy values to ensure the chart is always updated
+      # dummy value to ensure the chart is always updated
       chartContentHash = trimspace(data.external.chart_hash_template.result["hash"])
 
       tsApiKey = var.ts_api_key

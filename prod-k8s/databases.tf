@@ -42,15 +42,16 @@ resource "helm_release" "pgadmin" {
 
   values = [
     yamlencode({
-      # dummy values to ensure the chart is always updated
+      # dummy value to ensure the chart is always updated
       chartContentHash = trimspace(data.external.chart_hash_pgadmin.result["hash"])
 
-      pgadminEmail = data.terraform_remote_state.prod.outputs.pgadmin_email
+      pgadminEmail    = data.terraform_remote_state.prod.outputs.pgadmin_email
       pgadminPassword = data.terraform_remote_state.prod.outputs.pgadmin_password
       servers = [
         {
-          name = data.terraform_remote_state.prod.outputs.go_template_db_name
-          host = "${data.terraform_remote_state.prod.outputs.go_template_db_name}-pg-rw.${kubernetes_namespace.template.metadata[0].name}.svc.cluster.local"
+          name     = "go-template"
+          database = data.terraform_remote_state.prod.outputs.go_template_db_name
+          host     = "${data.terraform_remote_state.prod.outputs.go_template_db_name}-pg-rw.${kubernetes_namespace.template.metadata[0].name}.svc.cluster.local"
           username = data.terraform_remote_state.prod.outputs.pg_username
         }
       ]

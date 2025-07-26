@@ -32,7 +32,7 @@ resource "helm_release" "template_app_pg" {
 
   values = [
     yamlencode({
-      # dummy values to ensure the chart is always updated
+      # dummy value to ensure the chart is always updated
       chartContentHash = trimspace(data.external.chart_hash_template.result["hash"])
 
       isInit          = false

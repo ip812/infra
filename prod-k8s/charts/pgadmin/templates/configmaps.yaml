@@ -14,7 +14,7 @@ data:
           "Host": "{{ $srv.host }}",
           "Port": 5432,
           "Username": "{{ $srv.username }}",
-          "MaintenanceDB": "postgres",
+          "MaintenanceDB": "{{ $srv.database }}",
           "SSLMode": "prefer"
         }{{ if not (eq (add $i 1) (len $.Values.servers)) }},{{ end }}
         {{- end }}
