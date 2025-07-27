@@ -18,7 +18,8 @@ data "external" "chart_hash_template" {
 resource "helm_release" "template_app_pg" {
   depends_on = [
     kubernetes_namespace.template,
-    helm_release.cnpg_cloudnative_pg
+    helm_release.cnpg_cloudnative_pg,
+    kubernetes_secret.ghcr_docker_config
   ]
 
   name         = "go-template"

@@ -82,8 +82,18 @@ variable "gh_username" {
   sensitive = true
 }
 
+output "gh_username" {
+  value     = var.gh_username
+  sensitive = true
+}
+
 variable "gh_access_token" {
   type      = string
+  sensitive = true
+}
+
+output "gh_access_token" {
+  value     = var.gh_access_token
   sensitive = true
 }
 
