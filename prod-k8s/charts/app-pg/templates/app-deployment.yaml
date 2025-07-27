@@ -1,0 +1,49 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-template-deploy
+  labels:
+    app: go-template
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: go-template
+  template:
+    metadata:
+      labels:
+        app: go-template
+    spec:
+      imagePullSecrets:
+        - name: ghcr-auth
+      containers:
+        - name: go-template
+          image: "{{ .Values.image }}" 
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          env:
+            - name: APP_ENV
+              value: prod
+            - name: APP_DOMAIN
+              value: template.ip812.com
+            - name: APP_PORT
+              value: "8080"
+            - name: DB_NAME
+              value: "{{ .Values.pgDatabaseName }}"
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Values.pgDatabaseName }}-pg-creds" 
+                  key: username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Values.pgDatabaseName }}-pg-creds" 
+                  key: password
+            - name: DB_ENDPOINT
+              value: "{{ .Values.pgHost }}"
+            - name: DB_SSL_MODE
+              # value: require
+              value: disable

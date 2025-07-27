@@ -36,9 +36,20 @@ resource "helm_release" "template_app_pg" {
       # dummy value to ensure the chart is always updated
       chartContentHash = trimspace(data.external.chart_hash_template.result["hash"])
 
+
+      dockerConfigJSON = base64encode(jsonencode({
+        auths = {
+          "ghcr.io" = {
+            username = data.terraform_remote_state.prod.outputs.gh_username
+            password = data.terraform_remote_state.prod.outputs.gh_access_token
+            auth     = base64encode("${data.terraform_remote_state.prod.outputs.gh_username}:${data.terraform_remote_state.prod.outputs.gh_access_token}")
+          }
+        }
+      }))
       image             = "ghcr.io/iypetrov/go-template:1.10.0"
       isInit            = false
       pgDatabaseName    = data.terraform_remote_state.prod.outputs.go_template_db_name
+      pgHost            = "${data.terraform_remote_state.prod.outputs.go_template_db_name}-pg-rw.${kubernetes_namespace.template.metadata[0].name}.svc.cluster.local"
       pgUsername        = data.terraform_remote_state.prod.outputs.pg_username
       pgPassword        = data.terraform_remote_state.prod.outputs.pg_password
       pgImage           = "ghcr.io/cloudnative-pg/postgresql:16.1"

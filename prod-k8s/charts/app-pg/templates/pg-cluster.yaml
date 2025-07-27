@@ -47,14 +47,3 @@ spec:
         compression: gzip
       data:
         compression: gzip
----
-apiVersion: postgresql.cnpg.io/v1
-kind: ScheduledBackup
-metadata:
-  name: "{{ .Values.pgDatabaseName }}-daily-backup"
-spec:
-  immediate: true
-  schedule: "{{ .Values.pgBackupSchedule }}"
-  backupOwnerReference: cluster
-  cluster:
-    name: "{{ .Values.pgDatabaseName }}-pg"
