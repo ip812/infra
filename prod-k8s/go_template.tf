@@ -36,15 +36,6 @@ resource "helm_release" "template_app_pg" {
       chartContentHash = trimspace(data.external.chart_hash_template.result["hash"])
 
 
-      dockerConfigJSON = base64encode(jsonencode({
-        auths = {
-          "ghcr.io" = {
-            username = data.terraform_remote_state.prod.outputs.gh_username
-            password = data.terraform_remote_state.prod.outputs.gh_access_token
-            auth     = base64encode("${data.terraform_remote_state.prod.outputs.gh_username}:${data.terraform_remote_state.prod.outputs.gh_access_token}")
-          }
-        }
-      }))
       image             = "ghcr.io/iypetrov/go-template:1.10.0"
       isInit            = false
       pgDatabaseName    = data.terraform_remote_state.prod.outputs.go_template_db_name
@@ -58,4 +49,17 @@ resource "helm_release" "template_app_pg" {
       pgBackupSchedule  = "0 0 0 * * *"
     })
   ]
+
+  set_sensitive {
+    name  = "dockerConfigJSON"
+    value = base64encode(jsonencode({
+      auths = {
+        "ghcr.io" = {
+          username = data.terraform_remote_state.prod.outputs.gh_username
+          password = data.terraform_remote_state.prod.outputs.gh_access_token
+          auth     = base64encode("${data.terraform_remote_state.prod.outputs.gh_username}:${data.terraform_remote_state.prod.outputs.gh_access_token}")
+        }
+      }
+    }))
+  }
 }
