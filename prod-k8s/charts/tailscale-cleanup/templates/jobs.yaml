@@ -13,8 +13,6 @@ spec:
           command: ["/bin/sh", "-c"]
           args:
             - |
-              NOW=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-              echo "Current time in UTC: $NOW"
               while true; do
                 DEVICES=$(curl -s -H "Authorization: Bearer $TAILSCALE_API_KEY" "https://api.tailscale.com/api/v2/tailnet/$TAILNET/devices")
                 if [ -n "$DEVICES" ]; then
@@ -23,6 +21,8 @@ spec:
                 echo "Retrying: Failed to fetch devices from Tailscale API..."
                 sleep 15
               done
+              NOW=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+              echo "Current time in UTC: $NOW"
               echo "$DEVICES" | jq -r '.devices[] | "\(.id) \(.lastSeen)"' > /tmp/devices.txt
               if [ ! -s /tmp/devices.txt ]; then
                 echo "Error: No devices found in API response or JQ processing failed"
@@ -35,8 +35,6 @@ spec:
                 if [ -n "$LAST_SEEN" ] && [ "$LAST_SEEN" \< "$NOW" ]; then
                   echo "Device $DEVICE_ID has not been seen since $LAST_SEEN, removing..."
                   curl -s -X DELETE -H "Authorization: Bearer $TAILSCALE_API_KEY" "https://api.tailscale.com/api/v2/device/$DEVICE_ID"
-                else
-                  echo "Device $DEVICE_ID is either recent or has no lastSeen, skipping..."
                 fi
               done < /tmp/devices.txt
           env:
