@@ -15,6 +15,32 @@ data "external" "chart_hash_template" {
   ]
 }
 
+locals {
+  docker_config_json_sensitive = sensitive(base64encode(jsonencode({
+    auths = {
+      "ghcr.io" = {
+        username = data.terraform_remote_state.prod.outputs.gh_username
+        password = data.terraform_remote_state.prod.outputs.gh_access_token
+        auth     = base64encode("${data.terraform_remote_state.prod.outputs.gh_username}:${data.terraform_remote_state.prod.outputs.gh_access_token}")
+      }
+    }
+  })))
+}
+
+locals {
+  values_yaml = templatefile("${path.module}/values.yaml.tmpl", {
+    # dummy value to ensure the chart is always updated
+    chart_hash = trimspace(data.external.chart_hash_template.result["hash"])
+
+    pg_db              = data.terraform_remote_state.prod.outputs.go_template_db_name
+    pg_host            = "${data.terraform_remote_state.prod.outputs.go_template_db_name}-pg-rw.${kubernetes_namespace.template.metadata[0].name}.svc.cluster.local"
+    pg_user            = data.terraform_remote_state.prod.outputs.pg_username
+    pg_pass            = data.terraform_remote_state.prod.outputs.pg_password
+    pg_bucket          = data.terraform_remote_state.prod.outputs.backups_bucket_name
+    docker_config_json = local.docker_config_json_sensitive
+  })
+}
+
 resource "helm_release" "template_app_pg" {
   depends_on = [
     kubernetes_namespace.template,
@@ -29,37 +55,5 @@ resource "helm_release" "template_app_pg" {
   force_update = true
   wait         = true
   timeout      = 600
-
-  values = [
-    yamlencode({
-      # dummy value to ensure the chart is always updated
-      chartContentHash = trimspace(data.external.chart_hash_template.result["hash"])
-
-
-      image             = "ghcr.io/iypetrov/go-template:1.10.0"
-      isInit            = false
-      pgDatabaseName    = data.terraform_remote_state.prod.outputs.go_template_db_name
-      pgHost            = "${data.terraform_remote_state.prod.outputs.go_template_db_name}-pg-rw.${kubernetes_namespace.template.metadata[0].name}.svc.cluster.local"
-      pgUsername        = data.terraform_remote_state.prod.outputs.pg_username
-      pgPassword        = data.terraform_remote_state.prod.outputs.pg_password
-      pgImage           = "ghcr.io/cloudnative-pg/postgresql:16.1"
-      pgStorageSize     = "1Gi"
-      pgRetentionPolicy = "7d"
-      pgBackupsBucket   = data.terraform_remote_state.prod.outputs.backups_bucket_name
-      pgBackupSchedule  = "0 0 0 * * *"
-    })
-  ]
-
-  set_sensitive {
-    name  = "dockerConfigJSON"
-    value = base64encode(jsonencode({
-      auths = {
-        "ghcr.io" = {
-          username = data.terraform_remote_state.prod.outputs.gh_username
-          password = data.terraform_remote_state.prod.outputs.gh_access_token
-          auth     = base64encode("${data.terraform_remote_state.prod.outputs.gh_username}:${data.terraform_remote_state.prod.outputs.gh_access_token}")
-        }
-      }
-    }))
-  }
+  values       = [local.values_yaml]
 }

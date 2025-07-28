@@ -25,7 +25,7 @@ jobs:
         run: |
           git config --global user.name "Image Updater"
           git config --global user.email "bot.imageupdater@ip812.com"
-          find prod-k8s -type f -name "*.tf" -exec sed -i 's|\(${{env.IMAGE_NAME }}:\)[^"]*|\1${{ env.IMAGE_TAG }}|' {} +
+          find prod-k8s -type f -name "*.yaml.tmpl" -exec sed -i 's|\(${{env.IMAGE_NAME }}:\)[^"]*|\1${{ env.IMAGE_TAG }}|' {} +
           git add .
           git commit -m "cicd: Update image ${{ env.IMAGE_NAME }} to version ${{ env.IMAGE_TAG }}"
           git push origin main

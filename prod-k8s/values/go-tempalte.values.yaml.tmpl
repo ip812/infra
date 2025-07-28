@@ -1,0 +1,13 @@
+chartContentHash: ${chart_hash}
+image: "ghcr.io/iypetrov/go-template:1.10.0"
+isInit: false
+pgDatabaseName: "${pg_db}"
+pgHost: "${pg_host}"
+pgUsername: "${pg_user}"
+pgPassword: "${pg_pass}"
+pgImage: "ghcr.io/cloudnative-pg/postgresql:16.1"
+pgStorageSize: "1Gi"
+pgRetentionPolicy: "7d"
+pgBackupsBucket: "${pg_bucket}"
+pgBackupSchedule: "0 0 0 * * *"
+dockerConfigJSON: "${docker_config_json}"
