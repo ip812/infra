@@ -1,7 +1,6 @@
 chartContentHash: "${chart_hash}"
-pgadmin:
-  email: "${pgadminEmail}"
-  password: "${pgadminPassword}"
+pgadminEmail: "${pgadminEmail}"
+pgadminPassword: "${pgadminPassword}"
 servers:
 %{ for server in servers ~}
   - name: "${server.name}"

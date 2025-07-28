@@ -43,10 +43,6 @@ locals {
   })
 }
 
-output "pgadmin_values_rendered" {
-  value = local.pgadmin_values_yaml
-}
-
 resource "helm_release" "pgadmin" {
   depends_on = [
     kubernetes_namespace.databases,
