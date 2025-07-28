@@ -1,0 +1,11 @@
+chartContentHash: "${chart_hash}"
+pgadmin:
+  email: "${pgadminEmail}"
+  password: "${pgadminPassword}"
+servers:
+%{ for server in servers ~}
+  - name: "${server.name}"
+    database: "${server.database}"
+    host: "${server.host}"
+    username: "${server.username}"
+%{ endfor ~}

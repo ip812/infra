@@ -25,6 +25,24 @@ data "external" "chart_hash_pgadmin" {
   ]
 }
 
+locals {
+  values_yaml = templatefile("${path.module}/values/pgadmin.values.yaml.tmpl", {
+    # dummy value to ensure the chart is always updated
+    chart_hash = trimspace(data.external.chart_hash_template.result["hash"])
+
+    pgadminEmail    = data.terraform_remote_state.prod.outputs.pgadmin_email
+    pgadminPassword = data.terraform_remote_state.prod.outputs.pgadmin_password
+    servers = [
+      {
+        name     = "go-template"
+        database = data.terraform_remote_state.prod.outputs.go_template_db_name
+        host     = "${data.terraform_remote_state.prod.outputs.go_template_db_name}-pg-rw.${kubernetes_namespace.template.metadata[0].name}.svc.cluster.local"
+        username = data.terraform_remote_state.prod.outputs.pg_username
+      }
+    ]
+  })
+}
+
 resource "helm_release" "pgadmin" {
   depends_on = [
     kubernetes_namespace.databases,
@@ -39,22 +57,5 @@ resource "helm_release" "pgadmin" {
   force_update = true
   wait         = true
   timeout      = 600
-
-  values = [
-    yamlencode({
-      # dummy value to ensure the chart is always updated
-      chartContentHash = trimspace(data.external.chart_hash_pgadmin.result["hash"])
-
-      pgadminEmail    = data.terraform_remote_state.prod.outputs.pgadmin_email
-      pgadminPassword = data.terraform_remote_state.prod.outputs.pgadmin_password
-      servers = [
-        {
-          name     = "go-template"
-          database = data.terraform_remote_state.prod.outputs.go_template_db_name
-          host     = "${data.terraform_remote_state.prod.outputs.go_template_db_name}-pg-rw.${kubernetes_namespace.template.metadata[0].name}.svc.cluster.local"
-          username = data.terraform_remote_state.prod.outputs.pg_username
-        }
-      ]
-    })
-  ]
+  values       = [local.values_yaml]
 }

@@ -28,16 +28,15 @@ resource "helm_release" "tailscale_cleanup" {
   force_update = true
   wait         = true
   timeout      = 600
+  values       = [local.values_yaml]
+}
 
-  values = [
-    yamlencode({
-      # dummy value to ensure the chart is always updated
-      chartContentHash = trimspace(data.external.chart_hash_template.result["hash"])
-
-      tsApiKey = var.ts_api_key
-      tailnet  = var.ts_tailnet
-    })
-  ]
+locals {
+  values_yaml = templatefile("${path.module}/values/tailscale-cleanup.values.yaml.tmpl", {
+    chart_hash = trimspace(data.external.chart_hash_template.result["hash"])
+    ts_api_key = var.ts_api_key
+    tailnet    = var.ts_tailnet
+  })
 }
 
 resource "helm_release" "tailscale_operator" {
