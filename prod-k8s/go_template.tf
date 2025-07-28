@@ -28,7 +28,7 @@ locals {
 }
 
 locals {
-  values_yaml = templatefile("${path.module}/values/go-template.values.yaml.tmpl", {
+  go_template_values_yaml = templatefile("${path.module}/values/go-template.values.yaml.tmpl", {
     # dummy value to ensure the chart is always updated
     chart_hash = trimspace(data.external.chart_hash_template.result["hash"])
 
@@ -55,5 +55,5 @@ resource "helm_release" "template_app_pg" {
   force_update = true
   wait         = true
   timeout      = 600
-  values       = [local.values_yaml]
+  values       = [local.go_template_values_yaml]
 }
