@@ -47,7 +47,7 @@ resource "cloudflare_zero_trust_tunnel_cloudflared_config" "cf_tunnel_cfg" {
     ingress = [
       {
         hostname = data.terraform_remote_state.prod.outputs.go_template_hostname
-        service  = "http://go-template-svc.${kubernetes_namespace.template}.svc.cluster.local:8080"
+        service  = "http://go-template-svc.${kubernetes_namespace.template.metadata[0].name}.svc.cluster.local:8080"
       },
       {
         service = "http_status:404"
