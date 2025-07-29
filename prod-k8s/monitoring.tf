@@ -5,7 +5,7 @@ resource "grafana_cloud_provider_aws_account" "aws_acc" {
 }
 
 locals {
-  monitoring_values_yaml = templatefile("${path.module}/values/monitoring.values.yaml.tmpl", {
+  monitoring_values_yaml = templatefile("${path.module}/values/grafana-k8s-monitoring.values.yaml.tmpl", {
     org                          = var.org
     env                          = var.env
     prometheus_remote_write_url  = data.terraform_remote_state.prod.outputs.gf_cloud_stack.prometheus_remote_write_endpoint
