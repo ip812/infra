@@ -28,7 +28,7 @@ data "external" "chart_hash_pgadmin" {
 locals {
   pgadmin_values_yaml = templatefile("${path.module}/values/pgadmin.values.yaml.tmpl", {
     # dummy value to ensure the chart is always updated
-    chart_hash = trimspace(data.external.chart_hash_template.result["hash"])
+    chart_hash = trimspace(data.external.chart_hash_pgadmin.result["hash"])
 
     pgadminEmail    = data.terraform_remote_state.prod.outputs.pgadmin_email
     pgadminPassword = data.terraform_remote_state.prod.outputs.pgadmin_password

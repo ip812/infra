@@ -9,6 +9,11 @@ output "cf_tunnel_id" {
   value = cloudflare_zero_trust_tunnel_cloudflared.cf_tunnel.id
 }
 
+output "cf_tunnel_token" {
+  value     = cloudflare_zero_trust_tunnel_cloudflared.cf_tunnel.tunnel_token
+  sensitive = true
+}
+
 resource "cloudflare_dns_record" "blog_dns_record" {
   zone_id = var.cf_ip812_zone_id
   name    = "${var.blog_domain}.${var.org}.com"

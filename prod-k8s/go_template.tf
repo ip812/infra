@@ -32,6 +32,7 @@ locals {
     # dummy value to ensure the chart is always updated
     chart_hash = trimspace(data.external.chart_hash_template.result["hash"])
 
+    hostname           = data.terraform_remote_state.prod.outputs.go_template_hostname
     pg_db              = data.terraform_remote_state.prod.outputs.go_template_db_name
     pg_host            = "${data.terraform_remote_state.prod.outputs.go_template_db_name}-pg-rw.${kubernetes_namespace.template.metadata[0].name}.svc.cluster.local"
     pg_user            = data.terraform_remote_state.prod.outputs.pg_username

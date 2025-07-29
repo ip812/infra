@@ -2,23 +2,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: go-template-deploy
+  name: "{{ .Values.name }}-deploy"
   labels:
-    app: go-template
+    app: "{{ .Values.name }}" 
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: go-template
+      app: "{{ .Values.name }}"  
   template:
     metadata:
       labels:
-        app: go-template
+        app: "{{ .Values.name }}"  
     spec:
       imagePullSecrets:
         - name: ghcr-auth
       containers:
-        - name: go-template
+        - name: "{{ .Values.name }}"  
           image: "{{ .Values.image }}" 
           ports:
             - containerPort: 8080
@@ -27,7 +27,7 @@ spec:
             - name: APP_ENV
               value: prod
             - name: APP_DOMAIN
-              value: template.ip812.com
+              value: "{{ .Values.hostname }}"
             - name: APP_PORT
               value: "8080"
             - name: DB_NAME
