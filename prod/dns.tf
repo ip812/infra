@@ -9,8 +9,13 @@ output "cf_tunnel_id" {
   value = cloudflare_zero_trust_tunnel_cloudflared.cf_tunnel.id
 }
 
+data "cloudflare_zero_trust_tunnel_cloudflared_token" "cf_tunnel_token" {
+  account_id = var.cf_account_id
+  tunnel_id = cloudflare_zero_trust_tunnel_cloudflared.cf_tunnel.id
+}
+
 output "cf_tunnel_token" {
-  value     = cloudflare_zero_trust_tunnel_cloudflared.cf_tunnel.tunnel_token
+  value     = data.cloudflare_zero_trust_tunnel_cloudflared_token.cf_tunnel_token
   sensitive = true
 }
 
