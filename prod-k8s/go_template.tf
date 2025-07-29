@@ -28,7 +28,7 @@ locals {
 }
 
 locals {
-  go_template_values_yaml = templatefile("${path.module}/values/go-template.values.yaml.tmpl", {
+  go_template_values_yaml = sensitive(templatefile("${path.module}/values/go-template.values.yaml.tmpl", {
     # dummy value to ensure the chart is always updated
     chart_hash = trimspace(data.external.chart_hash_template.result["hash"])
 
@@ -39,7 +39,7 @@ locals {
     pg_pass            = data.terraform_remote_state.prod.outputs.pg_password
     pg_bucket          = data.terraform_remote_state.prod.outputs.backups_bucket_name
     docker_config_json = local.docker_config_json_sensitive
-  })
+  }))
 }
 
 resource "helm_release" "template_app_pg" {

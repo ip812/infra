@@ -16,11 +16,11 @@ data "external" "chart_hash_vpn" {
 }
 
 locals {
-  tailscale_cleanup_values_yaml = templatefile("${path.module}/values/tailscale-cleanup.values.yaml.tmpl", {
+  tailscale_cleanup_values_yaml = sensitive(templatefile("${path.module}/values/tailscale-cleanup.values.yaml.tmpl", {
     chart_hash = trimspace(data.external.chart_hash_template.result["hash"])
     ts_api_key = var.ts_api_key
     tailnet    = var.ts_tailnet
-  })
+  }))
 }
 
 resource "helm_release" "tailscale_cleanup" {

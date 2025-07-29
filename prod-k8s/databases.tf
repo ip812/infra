@@ -26,7 +26,7 @@ data "external" "chart_hash_pgadmin" {
 }
 
 locals {
-  pgadmin_values_yaml = templatefile("${path.module}/values/pgadmin.values.yaml.tmpl", {
+  pgadmin_values_yaml = sensitive(templatefile("${path.module}/values/pgadmin.values.yaml.tmpl", {
     # dummy value to ensure the chart is always updated
     chart_hash = trimspace(data.external.chart_hash_pgadmin.result["hash"])
 
@@ -40,7 +40,7 @@ locals {
         username = data.terraform_remote_state.prod.outputs.pg_username
       }
     ]
-  })
+  }))
 }
 
 resource "helm_release" "pgadmin" {

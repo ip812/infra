@@ -16,12 +16,12 @@ data "external" "chart_hash_cf_tunnel" {
 }
 
 locals {
-  cf_tunnel_values_yaml = templatefile("${path.module}/values/cloudflare-tunnel.values.yaml.tmpl", {
+  cf_tunnel_values_yaml = sensitive(templatefile("${path.module}/values/cloudflare-tunnel.values.yaml.tmpl", {
     # dummy value to ensure the chart is always updated
     chart_hash = trimspace(data.external.chart_hash_cf_tunnel.result["hash"])
 
     tunnel_token = data.terraform_remote_state.prod.outputs.cf_tunnel_token
-  })
+  }))
 }
 
 resource "helm_release" "cloudflare_tunnel" {
