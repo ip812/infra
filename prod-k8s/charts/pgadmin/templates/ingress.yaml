@@ -13,4 +13,4 @@ spec:
   ingressClassName: tailscale
   tls:
     - hosts:
-        - pgadmin
+        - pgadmin.taile31a9d.ts.net
