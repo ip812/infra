@@ -16,7 +16,7 @@ data "external" "chart_hash_template" {
 }
 
 locals {
-  docker_config_json_sensitive = sensitive(base64encode(jsonencode({
+  docker_config_json = base64encode(jsonencode({
     auths = {
       "ghcr.io" = {
         username = data.terraform_remote_state.prod.outputs.gh_username
@@ -24,8 +24,22 @@ locals {
         auth     = base64encode("${data.terraform_remote_state.prod.outputs.gh_username}:${data.terraform_remote_state.prod.outputs.gh_access_token}")
       }
     }
-  })))
+  }))
 }
+
+resource "kubernetes_secret" "template_ghcr_auth" {
+  metadata {
+    name      = "ghcr-auth"
+    namespace = kubernetes_namespace.template.metadata[0].name
+  }
+
+  type = "kubernetes.io/dockerconfigjson"
+
+  data = {
+    ".dockerconfigjson" = local.docker_config_json
+  }
+}
+
 
 locals {
   go_template_values_yaml = sensitive(templatefile("${path.module}/values/go-template.values.yaml.tmpl", {
@@ -38,7 +52,6 @@ locals {
     pg_user            = data.terraform_remote_state.prod.outputs.pg_username
     pg_pass            = data.terraform_remote_state.prod.outputs.pg_password
     pg_bucket          = data.terraform_remote_state.prod.outputs.backups_bucket_name
-    docker_config_json = local.docker_config_json_sensitive
   }))
 }
 
