@@ -13,7 +13,7 @@ resource "kubernetes_secret" "template_ghcr_auth" {
   type = "kubernetes.io/dockerconfigjson"
 
   data = {
-    ".dockerconfigjson" = base64encode(jsonencode({
+    ".dockerconfigjson" = jsonencode({
       auths = {
         "ghcr.io" = {
           username = data.terraform_remote_state.prod.outputs.gh_username
@@ -21,7 +21,7 @@ resource "kubernetes_secret" "template_ghcr_auth" {
           auth     = base64encode("${data.terraform_remote_state.prod.outputs.gh_username}:${data.terraform_remote_state.prod.outputs.gh_access_token}")
         }
       }
-    }))
+    })
   }
 }
 
