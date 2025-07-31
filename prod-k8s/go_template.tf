@@ -4,6 +4,27 @@ resource "kubernetes_namespace" "template" {
   }
 }
 
+resource "kubernetes_secret" "template_ghcr_auth" {
+  metadata {
+    name      = "ghcr-auth"
+    namespace = kubernetes_namespace.template.metadata[0].name
+  }
+
+  type = "kubernetes.io/dockerconfigjson"
+
+  data = {
+    ".dockerconfigjson" = base64encode(jsonencode({
+      auths = {
+        "ghcr.io" = {
+          username = data.terraform_remote_state.prod.outputs.gh_username
+          password = data.terraform_remote_state.prod.outputs.gh_access_token
+          auth     = base64encode("${data.terraform_remote_state.prod.outputs.gh_username}:${data.terraform_remote_state.prod.outputs.gh_access_token}")
+        }
+      }
+    }))
+  }
+}
+
 data "external" "chart_hash_template" {
   program = ["bash", "-c", <<-EOT
     find "${path.module}/charts/app-pg" -type f -print0 \
@@ -14,32 +35,6 @@ data "external" "chart_hash_template" {
   EOT
   ]
 }
-
-locals {
-  docker_config_json = base64encode(jsonencode({
-    auths = {
-      "ghcr.io" = {
-        username = data.terraform_remote_state.prod.outputs.gh_username
-        password = data.terraform_remote_state.prod.outputs.gh_access_token
-        auth     = base64encode("${data.terraform_remote_state.prod.outputs.gh_username}:${data.terraform_remote_state.prod.outputs.gh_access_token}")
-      }
-    }
-  }))
-}
-
-resource "kubernetes_secret" "template_ghcr_auth" {
-  metadata {
-    name      = "ghcr-auth"
-    namespace = kubernetes_namespace.template.metadata[0].name
-  }
-
-  type = "kubernetes.io/dockerconfigjson"
-
-  data = {
-    ".dockerconfigjson" = local.docker_config_json
-  }
-}
-
 
 locals {
   go_template_values_yaml = sensitive(templatefile("${path.module}/values/go-template.values.yaml.tmpl", {
