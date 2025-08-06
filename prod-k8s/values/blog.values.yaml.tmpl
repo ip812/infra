@@ -1,0 +1,14 @@
+chartContentHash: ${chart_hash}
+name: "blog"
+image: "ghcr.io/iypetrov/go-template:1.15.0"
+hostname: "${hostname}"
+isInit: true
+pgDatabaseName: "${pg_db}"
+pgHost: "${pg_host}"
+pgUsername: "${pg_user}"
+pgPassword: "${pg_pass}"
+pgImage: "ghcr.io/cloudnative-pg/postgresql:16.1"
+pgStorageSize: "1Gi"
+pgRetentionPolicy: "7d"
+pgBackupsBucket: "${pg_bucket}"
+pgBackupSchedule: "0 0 0 * * *"
