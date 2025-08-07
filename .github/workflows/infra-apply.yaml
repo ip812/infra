@@ -9,6 +9,8 @@ on:
       - '**/*.tf'
       - '**/*.yml'
       - '**/*.yaml'
+      - '**/*.yml.tmpl'
+      - '**/*.yaml.tmpl'
   workflow_dispatch:
 
 env:
