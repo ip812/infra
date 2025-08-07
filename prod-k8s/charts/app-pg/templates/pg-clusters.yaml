@@ -21,7 +21,7 @@ spec:
       database: "{{ .Values.pgDatabaseName }}"
       owner: "{{ .Values.pgUsername }}"
       secret:
-        name: "{{ .Values.pfDatabaseName }}-pg-creds"
+        name: "{{ .Values.pgDatabaseName }}-pg-creds"
     {{- else }}
     recovery:
       source: "{{ .Values.pgDatabaseName }}-pg-backup"
