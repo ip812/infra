@@ -203,15 +203,3 @@ variable "go_template_db_name" {
 output "go_template_db_name" {
   value = var.go_template_db_name
 }
-
-variable "blog_domain" {
-  type = string
-}
-
-variable "blog_db_name" {
-  type = string
-}
-
-output "blog_db_name" {
-  value = var.blog_db_name
-}
