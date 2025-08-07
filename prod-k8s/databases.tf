@@ -38,6 +38,12 @@ locals {
         database = data.terraform_remote_state.prod.outputs.go_template_db_name
         host     = "${data.terraform_remote_state.prod.outputs.go_template_db_name}-pg-rw.${kubernetes_namespace.template.metadata[0].name}.svc.cluster.local"
         username = data.terraform_remote_state.prod.outputs.pg_username
+      },
+      {
+        name     = "blog"
+        database = data.terraform_remote_state.prod.outputs.blog_db_name
+        host     = "${data.terraform_remote_state.prod.outputs.blog_db_name}-pg-rw.${kubernetes_namespace.blog.metadata[0].name}.svc.cluster.local"
+        username = data.terraform_remote_state.prod.outputs.pg_username
       }
     ]
   }))
