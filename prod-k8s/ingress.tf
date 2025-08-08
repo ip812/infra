@@ -50,6 +50,10 @@ resource "cloudflare_zero_trust_tunnel_cloudflared_config" "cf_tunnel_cfg" {
         service  = "http://go-template-svc.${kubernetes_namespace.template.metadata[0].name}.svc.cluster.local:8080"
       },
       {
+        hostname = data.terraform_remote_state.prod.outputs.blog_hostname
+        service  = "http://blog-svc.${kubernetes_namespace.blog.metadata[0].name}.svc.cluster.local:8080"
+      },
+      {
         service = "http_status:404"
       }
     ]
