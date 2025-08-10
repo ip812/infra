@@ -75,3 +75,9 @@ resource "github_actions_secret" "go_template_github_access_token" {
   secret_name     = "GH_ACCESS_TOKEN"
   plaintext_value = var.gh_access_token
 }
+
+resource "github_actions_secret" "blog_github_access_token" {
+  repository      = "blog"
+  secret_name     = "GH_ACCESS_TOKEN"
+  plaintext_value = var.gh_access_token
+}
