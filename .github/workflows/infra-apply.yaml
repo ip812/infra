@@ -31,6 +31,7 @@ env:
   TF_VAR_pg_password: ${{ secrets.TF_VAR_PG_PASSWORD }}
   TF_VAR_pg_username: ${{ secrets.TF_VAR_PG_USERNAME }}
   TF_VAR_slk_github_bot_token: ${{ secrets.TF_VAR_SLK_GITHUB_BOT_TOKEN }}
+  TF_VAR_slk_blog_bot_token: ${{ secrets.TF_VAR_SLK_BLOG_BOT_TOKEN }}
   TF_VAR_ts_auth_key: ${{ secrets.TF_VAR_TS_AUTH_KEY }}
   TF_VAR_ts_auth_key_ci_cd: ${{ secrets.TF_VAR_TS_AUTH_KEY_CI_CD }}
   TF_VAR_ts_api_key: ${{ secrets.TF_VAR_TS_API_KEY }}
