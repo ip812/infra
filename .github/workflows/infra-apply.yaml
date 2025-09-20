@@ -52,7 +52,7 @@ jobs:
           authkey: ${{ secrets.TS_AUTH_KEY_CI_CD }}
 
       - name: Set up AWS
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
