@@ -47,6 +47,8 @@ locals {
     pg_user            = data.terraform_remote_state.prod.outputs.pg_username
     pg_pass            = data.terraform_remote_state.prod.outputs.pg_password
     pg_bucket          = data.terraform_remote_state.prod.outputs.backups_bucket_name
+    slk_general_channel_id = var.slk_general_channel_id
+    slk_blog_bot_token = var.slk_blog_bot_token
   }))
 }
 

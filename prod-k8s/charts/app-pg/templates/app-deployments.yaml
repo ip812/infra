@@ -47,3 +47,13 @@ spec:
             - name: DB_SSL_MODE
               # value: require
               value: disable
+            - name: SLK_GENERAL_CHANNEL_ID
+              valueFrom:
+                secretKeyRef:
+                  name: slk-creds
+                  key: generalChannelId
+            - name: SLK_BLOG_BOT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: slk-creds
+                  key: blogBotToken
