@@ -48,3 +48,12 @@ variable "ts_api_key" {
 variable "ts_tailnet" {
   type = string
 }
+
+variable "slk_blog_bot_token" {
+  type      = string
+  sensitive = true
+}
+
+variable "slk_general_channel_id" {
+  type      = string
+}
