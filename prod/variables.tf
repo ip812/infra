@@ -135,6 +135,16 @@ variable "ts_auth_key_ci_cd" {
   sensitive = true
 }
 
+variable "ts_oauth_client_id" {
+  type      = string
+  sensitive = true
+}
+
+variable "ts_oauth_secret" {
+  type      = string
+  sensitive = true
+}
+
 variable "gf_region_slug" {
   type = string
 }
