@@ -17,6 +17,7 @@ resource "aws_security_group" "asg_sg" {
   tags = local.default_tags
 }
 
+
 resource "aws_iam_role" "asg_role" {
   name = "${var.org}-${var.env}-ec2-role"
   assume_role_policy = jsonencode({
