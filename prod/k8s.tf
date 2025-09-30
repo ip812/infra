@@ -89,7 +89,7 @@ resource "aws_launch_template" "asg_lt" {
 # echo "alias k='k3s kubectl'" >> /root/.bashrc
 
 curl -s https://fluxcd.io/install.sh | sudo bash
-GITHUB_TOKEN=${var.gh_access_token} flux bootstrap github \
+KUBECONFIG=/etc/rancher/k3s/k3s.yaml GITHUB_TOKEN=${var.gh_access_token} flux bootstrap github \
 	    --token-auth=true \
 	    --owner=ip812 \
 	    --repository=apps \
