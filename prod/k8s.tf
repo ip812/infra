@@ -87,6 +87,16 @@ resource "aws_launch_template" "asg_lt" {
 # curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--tls-san ${var.org}-${var.env} --https-listen-port 16443" sh -
 # echo "alias kubectl='k3s kubectl'" >> /root/.bashrc
 # echo "alias k='k3s kubectl'" >> /root/.bashrc
+
+curl -s https://fluxcd.io/install.sh | sudo bash
+GITHUB_TOKEN=${var.gh_access_token} flux bootstrap github \
+	    --token-auth=true \
+	    --owner=ip812 \
+	    --repository=apps \
+	    --branch=main \
+	    --path=prod/fluxcd-intro \
+	    --read-write-key=true \
+	    --personal=false
 EOF
   )
 
