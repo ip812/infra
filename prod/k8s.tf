@@ -94,7 +94,7 @@ KUBECONFIG=/etc/rancher/k3s/k3s.yaml GITHUB_TOKEN=${var.gh_access_token} flux bo
 	    --owner=ip812 \
 	    --repository=apps \
 	    --branch=main \
-	    --path=prod/fluxcd-intro \
+	    --path=prod \
 	    --read-write-key=true \
 	    --personal=false
 EOF
