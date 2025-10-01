@@ -101,7 +101,7 @@ KUBECONFIG=/etc/rancher/k3s/k3s.yaml GITHUB_TOKEN=${var.gh_access_token} flux bo
 until [ $? -eq 0 ]; do
   echo "Waiting for flux to bootstrap..."
   sleep 10
-  KUBECONFIG=/etc/rancher/k3s/k3s.yaml k3s jubectl get nodes
+  KUBECONFIG=/etc/rancher/k3s/k3s.yaml k3s kubectl get nodes
 done
 KUBECONFIG=/etc/rancher/k3s/k3s.yaml k3s kubectl create namespace doppler-operator-system
 KUBECONFIG=/etc/rancher/k3s/k3s.yaml k3s kubectl create secret generic doppler-token-secret -n doppler-operator-system --from-literal=serviceToken=${var.dp_token}
