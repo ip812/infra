@@ -90,6 +90,10 @@ resource "aws_launch_template" "asg_lt" {
 # foo
 
 curl -s https://fluxcd.io/install.sh | sudo bash
+
+# This is need so CoreDNS to restart with the correct IP for the kube-dns service
+sleep 300
+
 KUBECONFIG=/etc/rancher/k3s/k3s.yaml GITHUB_TOKEN=${var.gh_access_token} flux bootstrap github \
 	    --token-auth=true \
 	    --owner=ip812 \
