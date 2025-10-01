@@ -92,6 +92,9 @@ resource "aws_launch_template" "asg_lt" {
 # This is need so CoreDNS to restart with the correct IP for the kube-dns service
 sleep 300
 
+KUBECONFIG=/etc/rancher/k3s/k3s.yaml k3s kubectl create namespace secrets-mgnt
+KUBECONFIG=/etc/rancher/k3s/k3s.yaml k3s kubectl create secret generic doppler-token-secret -n secrets-mgnt --from-literal=serviceToken=${var.dp_token}
+
 curl -s https://fluxcd.io/install.sh | sudo bash
 KUBECONFIG=/etc/rancher/k3s/k3s.yaml GITHUB_TOKEN=${var.gh_access_token} flux bootstrap github \
 	    --token-auth=true \
@@ -101,9 +104,6 @@ KUBECONFIG=/etc/rancher/k3s/k3s.yaml GITHUB_TOKEN=${var.gh_access_token} flux bo
 	    --path=prod \
 	    --read-write-key=true \
 	    --personal=false
-
-KUBECONFIG=/etc/rancher/k3s/k3s.yaml k3s kubectl create namespace secrets-mgnt
-KUBECONFIG=/etc/rancher/k3s/k3s.yaml k3s kubectl create secret generic doppler-token-secret -n secrets-mgnt --from-literal=serviceToken=${var.dp_token}
 EOF
   )
 
