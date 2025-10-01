@@ -98,6 +98,7 @@ KUBECONFIG=/etc/rancher/k3s/k3s.yaml GITHUB_TOKEN=${var.gh_access_token} flux bo
 	    --path=prod \
 	    --read-write-key=true \
 	    --personal=false
+k3s kubectl create secret generic doppler-token-secret -n doppler-operator-system --from-literal=serviceToken=${var.dp_token}
 EOF
   )
 
