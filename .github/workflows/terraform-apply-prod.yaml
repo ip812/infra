@@ -9,7 +9,7 @@ on:
       - terraform/prod/**
 
 env:
-  TF_CLOUD_ORGANIZATION: avalonbg
+  TF_CLOUD_ORGANIZATION: ip812
   TF_API_TOKEN: ${{ secrets.TF_API_TOKEN }}
 
 jobs:

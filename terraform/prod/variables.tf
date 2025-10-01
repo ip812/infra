@@ -219,3 +219,8 @@ variable "blog_db_name" {
 output "blog_db_name" {
   value = var.blog_db_name
 }
+
+variable "dp_token" {
+  type      = string
+  sensitive = true
+}

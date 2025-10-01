@@ -27,6 +27,10 @@ terraform {
       source  = "grafana/grafana"
       version = "3.22.3"
     }
+    doppler = {
+      source = "DopplerHQ/doppler"
+      version = "1.20.0"
+    }
   }
 }
 
@@ -53,4 +57,8 @@ provider "github" {
 
 provider "grafana" {
   cloud_access_policy_token = var.gf_cloud_access_policy_token
+}
+
+provider "doppler" {
+  doppler_token = var.dp_token
 }
