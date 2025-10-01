@@ -88,7 +88,7 @@ resource "aws_launch_template" "asg_lt" {
 # echo "alias kubectl='k3s kubectl'" >> /root/.bashrc
 # echo "alias k='k3s kubectl'" >> /root/.bashrc
 
-# This is need so CoreDNS to restart with the correct IP for the kube-dns service
+# CoreDNS self signed certs fix
 sleep 300
 
 KUBECONFIG=/etc/rancher/k3s/k3s.yaml k3s kubectl create namespace doppler-operator-system
