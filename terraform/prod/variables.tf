@@ -12,7 +12,7 @@ variable "slk_blog_bot_token" {
 }
 
 variable "slk_general_channel_id" {
-  type      = string
+  type = string
 }
 
 locals {
