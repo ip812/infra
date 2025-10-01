@@ -6,19 +6,13 @@ variable "env" {
   type = string
 }
 
-variable "slk_github_bot_token" {
+variable "slk_blog_bot_token" {
   type      = string
   sensitive = true
 }
 
-variable "slk_aws_channel_id" {
+variable "slk_general_channel_id" {
   type      = string
-  sensitive = true
-}
-
-variable "slk_k8s_channel_id" {
-  type      = string
-  sensitive = true
 }
 
 locals {

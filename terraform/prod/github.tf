@@ -10,12 +10,6 @@ resource "github_actions_secret" "infra_github_access_token" {
   plaintext_value = var.gh_access_token
 }
 
-resource "github_actions_secret" "infra_slk_github_bot_token" {
-  repository      = "infra"
-  secret_name     = "SLK_GITHUB_BOT_TOKEN"
-  plaintext_value = var.slk_github_bot_token
-}
-
 resource "github_actions_secret" "infra_aws_access_key_id" {
   repository      = "infra"
   secret_name     = "AWS_ACCESS_KEY_ID"
@@ -44,18 +38,6 @@ resource "github_actions_secret" "infra_ts_auth_key_ci_cd" {
   repository      = "infra"
   secret_name     = "TS_AUTH_KEY_CI_CD"
   plaintext_value = var.ts_auth_key_ci_cd
-}
-
-resource "github_actions_secret" "infra_ts_oauth_client_id" {
-  repository      = "infra"
-  secret_name     = "TS_OAUTH_CLIENT_ID"
-  plaintext_value = var.ts_oauth_client_id
-}
-
-resource "github_actions_secret" "infra_ts_oauth_secret" {
-  repository      = "infra"
-  secret_name     = "TS_OAUTH_SECRET"
-  plaintext_value = var.ts_oauth_secret
 }
 
 resource "github_actions_secret" "lambdas_aws_access_key_id" {
