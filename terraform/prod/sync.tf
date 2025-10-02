@@ -15,11 +15,7 @@ destinations:
     auth:
       type: basic
       username: "${grafana_cloud_stack.stack.prometheus_user_id}"
-      passwordKey: "GF_CLOUD_ACCESS_POLICY_TOKEN"
-    secret:
-      create: false
-      name: grafana-k8s-monitoring-secret
-      namespace: monitoring
+      passwordFrom: remote.kubernetes.secret.grafana_cloud_creds.data["GF_CLOUD_ACCESS_POLICY_TOKEN"]
 
   - name: grafana-cloud-logs
     type: loki
@@ -27,11 +23,7 @@ destinations:
     auth:
       type: basic
       username: "${grafana_cloud_stack.stack.logs_user_id}"
-      passwordKey: "GF_CLOUD_ACCESS_POLICY_TOKEN"
-    secret:
-      create: false
-      name: grafana-k8s-monitoring-secret
-      namespace: monitoring
+      passwordFrom: remote.kubernetes.secret.grafana_cloud_creds.data["GF_CLOUD_ACCESS_POLICY_TOKEN"]
 
 clusterMetrics:
   enabled: true
@@ -73,11 +65,7 @@ alloy-metrics:
     auth:
       type: basic
       username: "${grafana_cloud_stack.stack.profiles_user_id}"
-      passwordKey: "GF_CLOUD_ACCESS_POLICY_TOKEN"
-    secret:
-      create: false
-      name: grafana-k8s-monitoring-secret
-      namespace: monitoring
+      passwordFrom: remote.kubernetes.secret.grafana_cloud_creds.data["GF_CLOUD_ACCESS_POLICY_TOKEN"]
       
 alloy-logs:
   enabled: true
@@ -111,11 +99,7 @@ alloy-logs:
     auth:
       type: basic
       username: "${grafana_cloud_stack.stack.profiles_user_id}"
-      passwordKey: "GF_CLOUD_ACCESS_POLICY_TOKEN"
-    secret:
-      create: false
-      name: grafana-k8s-monitoring-secret
-      namespace: monitoring
+      passwordFrom: remote.kubernetes.secret.grafana_cloud_creds.data["GF_CLOUD_ACCESS_POLICY_TOKEN"]
 
 alloy-singleton:
   enabled: false
