@@ -31,6 +31,10 @@ terraform {
       source  = "DopplerHQ/doppler"
       version = "1.20.0"
     }
+    gitsync = {
+      source = "ip812/gitsync"
+      version = "1.0.0"
+    }
   }
 }
 
@@ -61,4 +65,9 @@ provider "grafana" {
 
 provider "doppler" {
   doppler_token = var.dp_token
+}
+
+provider "gitsync" {
+  url   = "https://github.com/ip812/apps.git"
+  token = var.gh_access_token
 }
