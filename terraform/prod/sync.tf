@@ -14,7 +14,7 @@ destinations:
     url: ${grafana_cloud_stack.stack.prometheus_remote_write_endpoint}
     auth:
       type: basic
-      username: "${grafana_cloud_stack.stack.prometheus_user_id}"
+      usernameKey: GF_CLOUD_PROMETHEUS_USER_ID
       passwordKey: GF_CLOUD_ACCESS_POLICY_TOKEN
     secret:
       create: false
@@ -26,7 +26,7 @@ destinations:
     url: ${grafana_cloud_stack.stack.logs_url}/loki/api/v1/push
     auth:
       type: basic
-      username: "${grafana_cloud_stack.stack.logs_user_id}"
+      usernameKey: GF_CLOUD_LOGS_USER_ID
       passwordKey: GF_CLOUD_ACCESS_POLICY_TOKEN
     secret:
       create: false
@@ -72,7 +72,7 @@ alloy-metrics:
     url: ${grafana_cloud_stack.stack.fleet_management_url}
     auth:
       type: basic
-      username: "${grafana_cloud_stack.stack.profiles_user_id}"
+      usernameKey: GF_CLOUD_PROFILES_USER_ID
       passwordKey: GF_CLOUD_ACCESS_POLICY_TOKEN
     secret:
       create: false
@@ -110,7 +110,7 @@ alloy-logs:
     url: ${grafana_cloud_stack.stack.fleet_management_url}
     auth:
       type: basic
-      username: "${grafana_cloud_stack.stack.profiles_user_id}"
+      usernameKey: GF_CLOUD_PROFILES_USER_ID
       passwordKey: GF_CLOUD_ACCESS_POLICY_TOKEN
     secret:
       create: false
