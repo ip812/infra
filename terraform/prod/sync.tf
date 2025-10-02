@@ -15,7 +15,11 @@ destinations:
     auth:
       type: basic
       username: "${grafana_cloud_stack.stack.prometheus_user_id}"
-      passwordFrom: remote_k8s_gf_token.data["GF_CLOUD_ACCESS_POLICY_TOKEN"]
+      passwordKey: GF_CLOUD_ACCESS_POLICY_TOKEN
+    secret:
+      create: false
+      name: grafana-k8s-monitoring-secret
+      namespace: monitoring
 
   - name: grafana-cloud-logs
     type: loki
@@ -23,7 +27,11 @@ destinations:
     auth:
       type: basic
       username: "${grafana_cloud_stack.stack.logs_user_id}"
-      passwordFrom: remote_k8s_gf_token.data["GF_CLOUD_ACCESS_POLICY_TOKEN"]
+      passwordKey: GF_CLOUD_ACCESS_POLICY_TOKEN
+    secret:
+      create: false
+      name: grafana-k8s-monitoring-secret
+      namespace: monitoring
 
 clusterMetrics:
   enabled: true
@@ -44,8 +52,8 @@ alloy-metrics:
       - name: GCLOUD_RW_API_KEY
         valueFrom:
           secretKeyRef:
-            name: grafana-k8s-monitoring-secret
-            key: GF_CLOUD_ACCESS_POLICY_TOKEN
+            name: alloy-metrics-remote-cfg-grafana-k8s-monitoring
+            key: password
       - name: CLUSTER_NAME
         value: ${var.org}-${var.env}
       - name: NAMESPACE
@@ -59,20 +67,18 @@ alloy-metrics:
       - name: GCLOUD_FM_COLLECTOR_ID
         value: grafana-k8s-monitoring-\$(CLUSTER_NAME)-\$(NAMESPACE)-\$(POD_NAME)
 
-    extraConfig: |-
-      remote.kubernetes.secret "remote_k8s_gf_token" {
-        namespace = "monitoring"
-        name      = "grafana-k8s-monitoring-secret"
-      }
-
-    remoteConfig:
-      enabled: true
-      url: ${grafana_cloud_stack.stack.fleet_management_url}
-      auth:
-        type: basic
-        username: "${grafana_cloud_stack.stack.profiles_user_id}"
-        passwordFrom: remote_k8s_gf_token.data["GF_CLOUD_ACCESS_POLICY_TOKEN"]
-
+  remoteConfig:
+    enabled: true
+    url: ${grafana_cloud_stack.stack.fleet_management_url}
+    auth:
+      type: basic
+      username: "${grafana_cloud_stack.stack.profiles_user_id}"
+      passwordKey: GF_CLOUD_ACCESS_POLICY_TOKEN
+    secret:
+      create: false
+      name: grafana-k8s-monitoring-secret
+      namespace: monitoring
+      
 alloy-logs:
   enabled: true
   alloy:
@@ -80,8 +86,8 @@ alloy-logs:
       - name: GCLOUD_RW_API_KEY
         valueFrom:
           secretKeyRef:
-            name: grafana-k8s-monitoring-secret
-            key: GF_CLOUD_ACCESS_POLICY_TOKEN
+            name: alloy-logs-remote-cfg-grafana-k8s-monitoring
+            key: password
       - name: CLUSTER_NAME
         value: ${var.org}-${var.env}
       - name: NAMESPACE
@@ -99,19 +105,17 @@ alloy-logs:
       - name: GCLOUD_FM_COLLECTOR_ID
         value: grafana-k8s-monitoring-\$(CLUSTER_NAME)-\$(NAMESPACE)-alloy-logs-\$(NODE_NAME)
 
-    extraConfig: |-
-      remote.kubernetes.secret "remote_k8s_gf_token" {
-        namespace = "monitoring"
-        name      = "grafana-k8s-monitoring-secret"
-      }
-
-    remoteConfig:
-      enabled: true
-      url: ${grafana_cloud_stack.stack.fleet_management_url}
-      auth:
-        type: basic
-        username: "${grafana_cloud_stack.stack.profiles_user_id}"
-        passwordFrom: remote_k8s_gf_token.data["GF_CLOUD_ACCESS_POLICY_TOKEN"]
+  remoteConfig:
+    enabled: true
+    url: ${grafana_cloud_stack.stack.fleet_management_url}
+    auth:
+      type: basic
+      username: "${grafana_cloud_stack.stack.profiles_user_id}"
+      passwordKey: GF_CLOUD_ACCESS_POLICY_TOKEN
+    secret:
+      create: false
+      name: grafana-k8s-monitoring-secret
+      namespace: monitoring
 
 alloy-singleton:
   enabled: false
