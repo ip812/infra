@@ -52,8 +52,8 @@ alloy-metrics:
       - name: GCLOUD_RW_API_KEY
         valueFrom:
           secretKeyRef:
-            name: alloy-metrics-remote-cfg-grafana-k8s-monitoring
-            key: password
+            name: grafana-k8s-monitoring-secret
+            key: GF_CLOUD_ACCESS_POLICY_TOKEN
       - name: CLUSTER_NAME
         value: ${var.org}-${var.env}
       - name: NAMESPACE
@@ -86,8 +86,8 @@ alloy-logs:
       - name: GCLOUD_RW_API_KEY
         valueFrom:
           secretKeyRef:
-            name: alloy-logs-remote-cfg-grafana-k8s-monitoring
-            key: password
+            name: grafana-k8s-monitoring-secret
+            key: GF_CLOUD_ACCESS_POLICY_TOKEN
       - name: CLUSTER_NAME
         value: ${var.org}-${var.env}
       - name: NAMESPACE
