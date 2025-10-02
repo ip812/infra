@@ -15,10 +15,10 @@ destinations:
     auth:
       type: basic
       username: "${grafana_cloud_stack.stack.prometheus_user_id}"
-      passwordKey: GF_CLOUD_ACCESS_POLICY_TOKEN
+      passwordKey: password
     secret:
       create: false
-      name: grafana-k8s-monitoring-secret
+      name: foo
       namespace: monitoring
 
   - name: grafana-cloud-logs
@@ -27,10 +27,10 @@ destinations:
     auth:
       type: basic
       username: "${grafana_cloud_stack.stack.logs_user_id}"
-      passwordKey: GF_CLOUD_ACCESS_POLICY_TOKEN
+      passwordKey: password
     secret:
       create: false
-      name: grafana-k8s-monitoring-secret
+      name: foo
       namespace: monitoring
 
 clusterMetrics:
@@ -73,10 +73,10 @@ alloy-metrics:
     auth:
       type: basic
       username: "${grafana_cloud_stack.stack.profiles_user_id}"
-      passwordKey: GF_CLOUD_ACCESS_POLICY_TOKEN
+      passwordKey: password
     secret:
       create: false
-      name: grafana-k8s-monitoring-secret
+      name: foo
       namespace: monitoring
       
 alloy-logs:
@@ -111,10 +111,10 @@ alloy-logs:
     auth:
       type: basic
       username: "${grafana_cloud_stack.stack.profiles_user_id}"
-      passwordKey: GF_CLOUD_ACCESS_POLICY_TOKEN
+      passwordKey: password
     secret:
       create: false
-      name: grafana-k8s-monitoring-secret
+      name: foo
       namespace: monitoring
 
 alloy-singleton:
