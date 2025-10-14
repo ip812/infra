@@ -54,6 +54,13 @@ resource "doppler_secret" "ts_tailnet" {
   value   = var.ts_tailnet
 }
 
+resource "doppler_secret" "pg_username" {
+  project = "prod"
+  config  = "prd"
+  name    = "PG_USERNAME"
+  value   = var.pg_username
+}
+
 resource "doppler_secret" "pg_password" {
   project = "prod"
   config  = "prd"
