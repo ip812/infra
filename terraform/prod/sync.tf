@@ -143,23 +143,23 @@ env:
   - name: APP_ENV
     value: "${var.env}"
   - name: APP_DOMAIN
-    value: "{{ .Values.hostname }}"
+    value: "${cloudflare_dns_record.go_template_dns_record.name}"
   - name: APP_PORT
     value: "8080"
   - name: DB_NAME
-    value: "{{ .Values.database.postgres.name }}"
+    value: "${var.go_template_db_name}"
   - name: DB_USERNAME
     valueFrom:
       secretKeyRef:
-        name: "{{ .Values.name }}-creds"
+        name: "go-template-creds"
         key: PG_USERNAME
   - name: DB_PASSWORD
     valueFrom:
       secretKeyRef:
-        name: "{{ .Values.name }}-creds"
+        name: "go-template-creds"
         key: PG_PASSWORD
   - name: DB_ENDPOINT
-    value: "{{ .Values.database.postgres.host }}"
+    value: "${var.go_template_db_name}-pg-rw.go-template.svc.cluster.local"
   - name: DB_SSL_MODE
     value: disable
 EOT
