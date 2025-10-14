@@ -139,6 +139,11 @@ variable "ts_client_secret" {
   sensitive = true
 }
 
+variable "ts_api_key" {
+  type = string
+  sensitive = true
+}
+
 variable "ts_tailnet" {
   type = string
 }

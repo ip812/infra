@@ -39,3 +39,17 @@ resource "doppler_secret" "ts_client_secret" {
   name    = "TS_CLIENT_SECRET"
   value   = var.ts_client_secret
 }
+
+resource "doppler_secret" "ts_api_key" {
+  project = "prod"
+  config  = "prd"
+  name    = "TS_API_KEY"
+  value   = var.ts_api_key
+}
+
+resource "doppler_secret" "ts_tailnet" {
+  project = "prod"
+  config  = "prd"
+  name    = "TS_TAILNET"
+  value   = var.ts_tailnet
+}
