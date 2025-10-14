@@ -102,3 +102,18 @@ resource "doppler_secret" "pgadmin_password" {
   name    = "PGADMIN_PASSWORD"
   value   = var.pgadmin_password
 }
+
+resource "doppler_secret" "ghcr_dockerconfigjson" {
+  project = "prod"
+  config  = "prd"
+  name    = "GHCR_DOCKERCONFIGJSON"
+  value   = jsonencode({
+    auths = {
+      "ghcr.io" = {
+        username = var.gh_username
+        password = var.gh_access_token
+        auth     = base64encode("${var.gh_username}:${var.gh_access_token}")
+      }
+    }
+  })
+}
