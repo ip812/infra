@@ -134,6 +134,7 @@ database:
     name: "${var.go_template_db_name}"
     host: "${var.go_template_db_name}-pg-rw.go-template.svc.cluster.local"
     image: "ghcr.io/cloudnative-pg/postgresql:16.1"
+    username: "${var.pg_username}"
     storageSize: "1Gi"
     retentionPolicy: "7d"
     backupsBucket: "${aws_s3_bucket.pg_backups.bucket}"
