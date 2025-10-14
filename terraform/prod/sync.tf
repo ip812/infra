@@ -127,7 +127,7 @@ resource "gitsync_values_yaml" "go-template" {
   content = <<EOT
 name: "go-template"
 image: "ghcr.io/iypetrov/go-template:1.15.0"
-hostname: "${hostname}"
+hostname: "${cloudflare_dns_record.go_template_dns_record.name}"
 database:
   postgres:
     name: "${var.go_template_db_name}"
