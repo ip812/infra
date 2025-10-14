@@ -1,3 +1,24 @@
+resource "doppler_secret" "aws_access_key_id" {
+  project = "prod"
+  config  = "prd"
+  name    = "AWS_ACCESS_KEY_ID"
+  value   = var.aws_access_key_id
+}
+
+resource "doppler_secret" "aws_secret_access_key" {
+  project = "prod"
+  config  = "prd"
+  name    = "AWS_SECRET_ACCESS_KEY"
+  value   = var.aws_secret_access_key
+} 
+
+resource "doppler_secret" "aws_region" {
+  project = "prod"
+  config  = "prd"
+  name    = "AWS_REGION"
+  value   = var.aws_region
+}
+
 resource "doppler_secret" "gf_cloud_access_policy_token" {
   project = "prod"
   config  = "prd"
