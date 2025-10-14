@@ -128,12 +128,18 @@ resource "gitsync_values_yaml" "go-template" {
 name: "go-template"
 image: "ghcr.io/iypetrov/go-template:1.15.0"
 hostname: "${cloudflare_dns_record.go_template_dns_record.name}"
+isInit: false
 database:
   postgres:
     name: "${var.go_template_db_name}"
     host: "${var.go_template_db_name}-pg-rw.go-template.svc.cluster.local"
+    image: "ghcr.io/cloudnative-pg/postgresql:16.1"
+    storageSize: "1Gi"
+    retentionPolicy: "7d"
+    backupsBucket: "${aws_s3_bucket.pg_backups.bucket}"
+    backupSchedule: "0 0 0 * * *"
 env:
   - name: APP_ENV
-    value: "prod"
+    value: "${var.env}"
 EOT
 }
