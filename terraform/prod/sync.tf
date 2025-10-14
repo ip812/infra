@@ -14,24 +14,22 @@ destinations:
     url: ${grafana_cloud_stack.stack.prometheus_remote_write_endpoint}
     auth:
       type: basic
-      username: "${grafana_cloud_stack.stack.prometheus_user_id}"
+      usernameKey: GF_CLOUD_PROMETHEUS_USER_ID
       passwordKey: GF_CLOUD_ACCESS_POLICY_TOKEN
     secret:
       create: false
       name: grafana-k8s-monitoring-secret
-      namespace: monitoring
 
   - name: grafana-cloud-logs
     type: loki
     url: ${grafana_cloud_stack.stack.logs_url}/loki/api/v1/push
     auth:
       type: basic
-      username: "${grafana_cloud_stack.stack.logs_user_id}"
+      usernameKey: GF_CLOUD_LOGS_USER_ID
       passwordKey: GF_CLOUD_ACCESS_POLICY_TOKEN
     secret:
       create: false
       name: grafana-k8s-monitoring-secret
-      namespace: monitoring
 
 clusterMetrics:
   enabled: true
@@ -52,8 +50,8 @@ alloy-metrics:
       - name: GCLOUD_RW_API_KEY
         valueFrom:
           secretKeyRef:
-            name: alloy-metrics-remote-cfg-grafana-k8s-monitoring
-            key: password
+            name: grafana-k8s-monitoring-secret
+            key: GF_CLOUD_ACCESS_POLICY_TOKEN
       - name: CLUSTER_NAME
         value: ${var.org}-${var.env}
       - name: NAMESPACE
@@ -72,12 +70,11 @@ alloy-metrics:
     url: ${grafana_cloud_stack.stack.fleet_management_url}
     auth:
       type: basic
-      username: "${grafana_cloud_stack.stack.profiles_user_id}"
+      usernameKey: GF_CLOUD_PROFILES_USER_ID
       passwordKey: GF_CLOUD_ACCESS_POLICY_TOKEN
     secret:
       create: false
       name: grafana-k8s-monitoring-secret
-      namespace: monitoring
       
 alloy-logs:
   enabled: true
@@ -86,8 +83,8 @@ alloy-logs:
       - name: GCLOUD_RW_API_KEY
         valueFrom:
           secretKeyRef:
-            name: alloy-logs-remote-cfg-grafana-k8s-monitoring
-            key: password
+            name: grafana-k8s-monitoring-secret
+            key: GF_CLOUD_ACCESS_POLICY_TOKEN
       - name: CLUSTER_NAME
         value: ${var.org}-${var.env}
       - name: NAMESPACE
@@ -110,12 +107,11 @@ alloy-logs:
     url: ${grafana_cloud_stack.stack.fleet_management_url}
     auth:
       type: basic
-      username: "${grafana_cloud_stack.stack.profiles_user_id}"
+      usernameKey: GF_CLOUD_PROFILES_USER_ID
       passwordKey: GF_CLOUD_ACCESS_POLICY_TOKEN
     secret:
       create: false
       name: grafana-k8s-monitoring-secret
-      namespace: monitoring
 
 alloy-singleton:
   enabled: false
