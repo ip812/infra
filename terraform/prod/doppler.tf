@@ -53,3 +53,17 @@ resource "doppler_secret" "ts_tailnet" {
   name    = "TS_TAILNET"
   value   = var.ts_tailnet
 }
+
+resource "doppler_secret" "pgadmin_email" {
+  project = "prod"
+  config  = "prd"
+  name    = "PGADMIN_EMAIL"
+  value   = var.pgadmin_email
+}
+
+resource "doppler_secret" "pgadmin_password" {
+  project = "prod"
+  config  = "prd"
+  name    = "PGADMIN_PASSWORD"
+  value   = var.pgadmin_password
+}
