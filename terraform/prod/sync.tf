@@ -142,5 +142,25 @@ database:
 env:
   - name: APP_ENV
     value: "${var.env}"
+  - name: APP_DOMAIN
+    value: "{{ .Values.hostname }}"
+  - name: APP_PORT
+    value: "8080"
+  - name: DB_NAME
+    value: "{{ .Values.database.postgres.name }}"
+  - name: DB_USERNAME
+    valueFrom:
+      secretKeyRef:
+        name: "{{ .Values.name }}-creds"
+        key: PG_USERNAME
+  - name: DB_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: "{{ .Values.name }}-creds"
+        key: PG_PASSWORD
+  - name: DB_ENDPOINT
+    value: "{{ .Values.database.postgres.host }}"
+  - name: DB_SSL_MODE
+    value: disable
 EOT
 }
