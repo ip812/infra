@@ -120,3 +120,20 @@ alloy-receiver:
   enabled: false
 EOT
 }
+
+resource "gitsync_values_yaml" "go-template" {
+  branch  = "main"
+  path    = "values/go-template.yaml"
+  content = <<EOT
+name: "go-template"
+image: "ghcr.io/iypetrov/go-template:1.15.0"
+hostname: "${hostname}"
+database:
+  postgres:
+    name: "${var.go_template_db_name}"
+    host: "${var.go_template_db_name}-pg-rw.go-template.svc.cluster.local"
+env:
+  - name: APP_ENV
+    value: "prod"
+EOT
+}
