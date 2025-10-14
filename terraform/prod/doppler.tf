@@ -25,3 +25,17 @@ resource "doppler_secret" "gf_cloud_profiles_user_id" {
   name    = "GF_CLOUD_PROFILES_USER_ID"
   value   = grafana_cloud_stack.stack.profiles_user_id
 }
+
+resource "doppler_secret" "ts_client_id" {
+  project = "prod"
+  config  = "prd"
+  name    = "TS_CLIENT_ID"
+  value   = var.ts_client_id
+}
+
+resource "doppler_secret" "ts_client_secret" {
+  project = "prod"
+  config  = "prd"
+  name    = "TS_CLIENT_SECRET"
+  value   = var.ts_client_secret
+}
