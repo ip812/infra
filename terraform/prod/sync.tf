@@ -125,10 +125,16 @@ resource "gitsync_values_yaml" "go-template" {
   branch  = "main"
   path    = "values/go-template.yaml"
   content = <<EOT
+isInit: false
 name: "go-template"
 image: "ghcr.io/iypetrov/go-template:1.15.0"
 hostname: "${cloudflare_dns_record.go_template_dns_record.name}"
-isInit: false
+healthCheckEndpoint: "/healthz"
+replicas: 1
+minMemory: "64Mi"
+maxMemory: "128Mi"
+minCPU: "50m"
+maxCPU: "100m"
 database:
   postgres:
     name: "${var.go_template_db_name}"
