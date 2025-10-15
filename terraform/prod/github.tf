@@ -1,7 +1,7 @@
 resource "github_actions_variable" "infra_org" {
   repository    = "infra"
   variable_name = "ORG"
-  value         = var.org
+  value         = local.org
 }
 
 resource "github_actions_secret" "infra_github_access_token" {
@@ -25,7 +25,7 @@ resource "github_actions_secret" "infra_aws_secret_access_key" {
 resource "github_actions_secret" "infra_aws_region" {
   repository      = "infra"
   secret_name     = "AWS_REGION"
-  plaintext_value = var.aws_region
+  plaintext_value = local.aws_region
 }
 
 resource "github_actions_secret" "infra_ts_auth_key" {
@@ -55,7 +55,7 @@ resource "github_actions_secret" "lambdas_aws_secret_access_key" {
 resource "github_actions_secret" "lambdas_aws_region" {
   repository      = "lambdas"
   secret_name     = "AWS_REGION"
-  plaintext_value = var.aws_region
+  plaintext_value = local.aws_region
 }
 
 resource "github_actions_secret" "lambdas_github_access_token" {

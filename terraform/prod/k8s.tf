@@ -18,7 +18,7 @@ resource "aws_security_group" "asg_sg" {
 }
 
 resource "aws_iam_role" "asg_role" {
-  name = "${var.org}-${var.env}-ec2-role"
+  name = "${local.org}-${local.env}-ec2-role"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -34,7 +34,7 @@ resource "aws_iam_role" "asg_role" {
 }
 
 resource "aws_iam_policy" "asg_policy" {
-  name = "${var.org}-${var.env}-asg-policy"
+  name = "${local.org}-${local.env}-asg-policy"
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -53,7 +53,7 @@ resource "aws_iam_role_policy_attachment" "asg_policy_attachment" {
 }
 
 resource "aws_iam_instance_profile" "ec2_instance_profile" {
-  name = "${var.org}-${var.env}-ec2-profile"
+  name = "${local.org}-${local.env}-ec2-profile"
   role = aws_iam_role.asg_role.name
 }
 
@@ -82,9 +82,9 @@ resource "aws_launch_template" "asg_lt" {
 # apt-get install -y curl wget unzip make git vim tmux
 # 
 # curl -fsSL https://tailscale.com/install.sh | sh
-# tailscale up --authkey ${var.ts_auth_key} --hostname "${var.org}-${var.env}" --ssh
+# tailscale up --authkey ${var.ts_auth_key} --hostname "${local.org}-${local.env}" --ssh
 # 
-# curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--tls-san ${var.org}-${var.env} --https-listen-port 16443" sh -
+# curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--tls-san ${local.org}-${local.env} --https-listen-port 16443" sh -
 # echo "alias kubectl='k3s kubectl'" >> /root/.bashrc
 # echo "alias k='k3s kubectl'" >> /root/.bashrc
 
@@ -135,7 +135,7 @@ resource "aws_autoscaling_group" "asg" {
     id      = aws_launch_template.asg_lt.id
     version = aws_launch_template.asg_lt.latest_version
   }
-  name                      = "${var.org}-${var.env}-asg"
+  name                      = "${local.org}-${local.env}-asg"
   desired_capacity          = 1
   max_size                  = 2
   min_size                  = 1
@@ -163,7 +163,7 @@ resource "aws_autoscaling_group" "asg" {
 }
 
 resource "aws_autoscaling_policy" "asg_scale_in_policy" {
-  name                   = "${var.org}-${var.env}-asg-scale-in-policy"
+  name                   = "${local.org}-${local.env}-asg-scale-in-policy"
   autoscaling_group_name = aws_autoscaling_group.asg.name
   adjustment_type        = "ChangeInCapacity"
   policy_type            = "SimpleScaling"
@@ -173,7 +173,7 @@ resource "aws_autoscaling_policy" "asg_scale_in_policy" {
 }
 
 resource "aws_autoscaling_policy" "asg_scale_out_policy" {
-  name                   = "${var.org}-${var.env}-asg-scale-out-policy"
+  name                   = "${local.org}-${local.env}-asg-scale-out-policy"
   autoscaling_group_name = aws_autoscaling_group.asg.name
   adjustment_type        = "ChangeInCapacity"
   policy_type            = "SimpleScaling"

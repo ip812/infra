@@ -1,10 +1,3 @@
-variable "org" {
-  type = string
-}
-
-variable "env" {
-  type = string
-}
 
 variable "slk_blog_bot_token" {
   type      = string
@@ -16,9 +9,32 @@ variable "slk_general_channel_id" {
 }
 
 locals {
+  org = "ip812"
+  env = "prod"
+  
+  aws_region   = "eu-central-1"
+  aws_az_a     = "eu-central-1a"
+  aws_az_b     = "eu-central-1b"
+  aws_vpc_cidr = "10.0.0.0/16"
+
+  cf_tunnel_name         = "ip812_tunnel"
+  gf_aws_account_id      = "008923505280"
+  gf_region_slug         = "prod-eu-west-2"
+  gh_username            = "iypetrov"
+  slk_general_channel_id = "C08KHNSSK5M"
+  ts_tailnet             = "ilia.yavorov.petrov@gmail.com"
+  
+  blog_app_name = "go-template"
+  blog_domain         = "blog"
+  blog_db_name        = "blog"
+  go_template_app_name = "go-template"
+  go_template_domain  = "template"
+  go_template_db_name = "template"
+  pgadmin_domain      = "pgadmin"
+  
   default_tags = {
-    Organization = var.org
-    Environment  = var.env
+    Organization = local.org
+    Environment  = local.env
   }
 }
 
@@ -38,12 +54,8 @@ variable "aws_secret_access_key" {
   sensitive = true
 }
 
-variable "aws_region" {
-  type = string
-}
-
 output "aws_region" {
-  value = var.aws_region
+  value = local.aws_region
 }
 
 variable "cf_api_token" {
@@ -71,13 +83,8 @@ variable "cf_ip812_zone_id" {
   sensitive = true
 }
 
-variable "gh_username" {
-  type      = string
-  sensitive = true
-}
-
 output "gh_username" {
-  value     = var.gh_username
+  value     = local.gh_username
   sensitive = true
 }
 
@@ -94,18 +101,6 @@ output "gh_access_token" {
 variable "gf_cloud_access_policy_token" {
   type      = string
   sensitive = true
-}
-
-variable "aws_az_a" {
-  type = string
-}
-
-variable "aws_az_b" {
-  type = string
-}
-
-variable "aws_vpc_cidr" {
-  type = string
 }
 
 variable "cf_tunnel_name" {
@@ -144,26 +139,10 @@ variable "ts_api_key" {
   sensitive = true
 }
 
-variable "ts_tailnet" {
-  type = string
-}
-
-variable "gf_region_slug" {
-  type = string
-}
-
 output "gf_region_slug" {
-  value = var.gf_region_slug
+  value = local.gf_region_slug
 }
 
-variable "gf_aws_account_id" {
-  type = string
-}
-
-variable "pgadmin_domain" {
-  type      = string
-  sensitive = true
-}
 
 variable "pgadmin_email" {
   type      = string
@@ -205,32 +184,12 @@ output "pg_password" {
   sensitive = true
 }
 
-variable "go_template_app_name" {
-  type = string
-}
-
-variable "go_template_domain" {
-  type = string
-}
-
-variable "go_template_db_name" {
-  type = string
-}
-
 output "go_template_db_name" {
-  value = var.go_template_db_name
-}
-
-variable "blog_domain" {
-  type = string
-}
-
-variable "blog_db_name" {
-  type = string
+  value = local.go_template_db_name
 }
 
 output "blog_db_name" {
-  value = var.blog_db_name
+  value = local.blog_db_name
 }
 
 variable "dp_token" {

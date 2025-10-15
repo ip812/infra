@@ -16,7 +16,7 @@ resource "doppler_secret" "aws_region" {
   project = "prod"
   config  = "prd"
   name    = "AWS_REGION"
-  value   = var.aws_region
+  value   = local.aws_region
 }
 
 resource "doppler_secret" "gf_cloud_access_policy_token" {
@@ -72,7 +72,7 @@ resource "doppler_secret" "ts_tailnet" {
   project = "prod"
   config  = "prd"
   name    = "TS_TAILNET"
-  value   = var.ts_tailnet
+  value   = local.ts_tailnet
 }
 
 resource "doppler_secret" "pg_username" {
@@ -110,9 +110,9 @@ resource "doppler_secret" "ghcr_dockerconfigjson" {
   value   = jsonencode({
     auths = {
       "ghcr.io" = {
-        username = var.gh_username
+        username = local.gh_username
         password = var.gh_access_token
-        auth     = base64encode("${var.gh_username}:${var.gh_access_token}")
+        auth     = base64encode("${local.gh_username}:${var.gh_access_token}")
       }
     }
   })

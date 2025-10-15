@@ -41,13 +41,13 @@ terraform {
 provider "aws" {
   access_key = var.aws_access_key_id
   secret_key = var.aws_secret_access_key
-  region     = var.aws_region
+  region     = local.aws_region
 }
 
 provider "awscc" {
   access_key = var.aws_access_key_id
   secret_key = var.aws_secret_access_key
-  region     = var.aws_region
+  region     = local.aws_region
 }
 
 provider "cloudflare" {
@@ -56,7 +56,7 @@ provider "cloudflare" {
 
 provider "github" {
   token = var.gh_access_token
-  owner = var.org
+  owner = local.org
 }
 
 provider "grafana" {

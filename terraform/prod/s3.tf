@@ -1,6 +1,6 @@
 resource "aws_vpc_endpoint" "s3" {
   vpc_id            = aws_vpc.vpc.id
-  service_name      = "com.amazonaws.${var.aws_region}.s3"
+  service_name      = "com.amazonaws.${local.aws_region}.s3"
   vpc_endpoint_type = "Gateway"
   route_table_ids = [
     aws_route_table.public_subnet_a_rt.id,
@@ -61,7 +61,7 @@ resource "aws_iam_role_policy_attachment" "attach_pg_backups_policy_to_asg_role"
 
 resource "cloudflare_r2_bucket" "go_template_bucket" {
   account_id    = var.cf_account_id
-  name          = "${var.org}-${var.go_template_db_name}-bucket"
+  name          = "${local.org}-${local.go_template_db_name}-bucket"
   location      = "EEUR"
   storage_class = "Standard"
 }
@@ -73,7 +73,7 @@ output "go_template_bucket_endpoint" {
 resource "cloudflare_r2_custom_domain" "go_template_bucket_custom_domain" {
   account_id  = var.cf_account_id
   bucket_name = cloudflare_r2_bucket.go_template_bucket.name
-  domain      = "static.${var.go_template_domain}.${var.org}.com"
+  domain      = "static.${local.go_template_domain}.${local.org}.com"
   enabled     = true
   zone_id     = var.cf_ip812_zone_id
   min_tls     = "1.0"
@@ -81,7 +81,7 @@ resource "cloudflare_r2_custom_domain" "go_template_bucket_custom_domain" {
 
 resource "cloudflare_r2_bucket" "blog_bucket" {
   account_id    = var.cf_account_id
-  name          = "${var.org}-${var.blog_db_name}-bucket"
+  name          = "${local.org}-${local.blog_db_name}-bucket"
   location      = "EEUR"
   storage_class = "Standard"
 }
@@ -93,7 +93,7 @@ output "blog_bucket_endpoint" {
 resource "cloudflare_r2_custom_domain" "blog_bucket_custom_domain" {
   account_id  = var.cf_account_id
   bucket_name = cloudflare_r2_bucket.blog_bucket.name
-  domain      = "static.${var.blog_domain}.${var.org}.com"
+  domain      = "static.${local.blog_domain}.${local.org}.com"
   enabled     = true
   zone_id     = var.cf_ip812_zone_id
   min_tls     = "1.0"

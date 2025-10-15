@@ -3,7 +3,7 @@ resource "gitsync_values_yaml" "monitoring" {
   path    = "values/grafana-k8s-monitoring.yaml"
   content = <<EOT
 cluster:
-  name: ${var.org}-${var.env}
+  name: ${local.org}-${local.env}
 global:
   scrapeInterval: "60s"
 destinations:
@@ -46,7 +46,7 @@ alloy-metrics:
             name: grafana-k8s-monitoring-secret
             key: GF_CLOUD_ACCESS_POLICY_TOKEN
       - name: CLUSTER_NAME
-        value: ${var.org}-${var.env}
+        value: ${local.org}-${local.env}
       - name: NAMESPACE
         valueFrom:
           fieldRef:
@@ -77,7 +77,7 @@ alloy-logs:
             name: grafana-k8s-monitoring-secret
             key: GF_CLOUD_ACCESS_POLICY_TOKEN
       - name: CLUSTER_NAME
-        value: ${var.org}-${var.env}
+        value: ${local.org}-${local.env}
       - name: NAMESPACE
         valueFrom:
           fieldRef:
@@ -111,10 +111,10 @@ EOT
 
 resource "gitsync_values_yaml" "go-template" {
   branch  = "main"
-  path    = "values/${var.go_template_app_name}.yaml"
+  path    = "values/${local.go_template_app_name}.yaml"
   content = <<EOT
 isInit: false
-name: "${var.go_template_app_name}"
+name: "${local.go_template_app_name}"
 image: "ghcr.io/iypetrov/go-template:1.15.0"
 hostname: "${cloudflare_dns_record.go_template_dns_record.name}"
 replicas: 1
@@ -125,31 +125,31 @@ maxCPU: "100m"
 healthCheckEndpoint: "/healthz"
 env:
   - name: APP_ENV
-    value: "${var.env}"
+    value: "${local.env}"
   - name: APP_DOMAIN
     value: "${cloudflare_dns_record.go_template_dns_record.name}"
   - name: APP_PORT
     value: "8080"
   - name: DB_NAME
-    value: "${var.go_template_db_name}"
+    value: "${local.go_template_db_name}"
   - name: DB_USERNAME
     valueFrom:
       secretKeyRef:
-        name: "${var.go_template_app_name}-creds"
+        name: "${local.go_template_app_name}-creds"
         key: PG_USERNAME
   - name: DB_PASSWORD
     valueFrom:
       secretKeyRef:
-        name: "${var.go_template_app_name}-creds"
+        name: "${local.go_template_app_name}-creds"
         key: PG_PASSWORD
   - name: DB_ENDPOINT
-    value: "${var.go_template_db_name}-pg-rw.${var.go_template_app_name}.svc.cluster.local"
+    value: "${local.go_template_db_name}-pg-rw.${local.go_template_app_name}.svc.cluster.local"
   - name: DB_SSL_MODE
     value: disable
 database:
   postgres:
-    name: "${var.go_template_db_name}"
-    host: "${var.go_template_db_name}-pg-rw.${var.go_template_app_name}.svc.cluster.local"
+    name: "${local.go_template_db_name}"
+    host: "${local.go_template_db_name}-pg-rw.${local.go_template_app_name}.svc.cluster.local"
     image: "ghcr.io/cloudnative-pg/postgresql:16.1"
     username: "${var.pg_username}"
     storageSize: "1Gi"
