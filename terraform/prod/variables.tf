@@ -1,9 +1,3 @@
-
-variable "slk_blog_bot_token" {
-  type      = string
-  sensitive = true
-}
-
 locals {
   org = "ip812"
   env = "prod"
@@ -184,6 +178,11 @@ output "blog_db_name" {
 }
 
 variable "dp_token" {
+  type      = string
+  sensitive = true
+}
+
+variable "slk_blog_bot_token" {
   type      = string
   sensitive = true
 }
