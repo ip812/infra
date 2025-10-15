@@ -4,10 +4,6 @@ resource "grafana_cloud_stack" "stack" {
   region_slug = local.gf_region_slug
 }
 
-output "gf_cloud_stack" {
-  value = grafana_cloud_stack.stack
-}
-
 resource "grafana_cloud_access_policy" "access_policy" {
   region       = local.gf_region_slug
   name         = "${local.org}-access-policy"
@@ -33,11 +29,6 @@ resource "grafana_cloud_access_policy_token" "access_policy_token" {
   ]
 }
 
-output "gf_cloud_provider_access_token" {
-  value     = grafana_cloud_access_policy_token.access_policy_token.token
-  sensitive = true
-}
-
 data "aws_iam_policy_document" "trust_grafana" {
   statement {
     effect = "Allow"
@@ -52,10 +43,6 @@ data "aws_iam_policy_document" "trust_grafana" {
 resource "aws_iam_role" "grafana_labs_cloudwatch_integration_role" {
   name               = "${local.org}-${local.env}-grafana-labs-cloudwatch-integration-role"
   assume_role_policy = data.aws_iam_policy_document.trust_grafana.json
-}
-
-output "gf_labs_cloudwatch_integration_role_arn" {
-  value = aws_iam_role.grafana_labs_cloudwatch_integration_role.arn
 }
 
 resource "aws_iam_role_policy" "grafana_labs_cloudwatch_integration_policy" {

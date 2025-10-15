@@ -12,10 +12,6 @@ resource "aws_s3_bucket" "pg_backups" {
   bucket = "pg-backups-202507041132"
 }
 
-output "backups_bucket_name" {
-  value = aws_s3_bucket.pg_backups.bucket
-}
-
 resource "aws_s3_bucket_versioning" "pg_backups_versioning" {
   bucket = aws_s3_bucket.pg_backups.id
   versioning_configuration {
@@ -66,10 +62,6 @@ resource "cloudflare_r2_bucket" "go_template_bucket" {
   storage_class = "Standard"
 }
 
-output "go_template_bucket_endpoint" {
-  value = cloudflare_r2_bucket.go_template_bucket.name
-}
-
 resource "cloudflare_r2_custom_domain" "go_template_bucket_custom_domain" {
   account_id  = var.cf_account_id
   bucket_name = cloudflare_r2_bucket.go_template_bucket.name
@@ -84,10 +76,6 @@ resource "cloudflare_r2_bucket" "blog_bucket" {
   name          = "${local.org}-${local.blog_db_name}-bucket"
   location      = "EEUR"
   storage_class = "Standard"
-}
-
-output "blog_bucket_endpoint" {
-  value = cloudflare_r2_bucket.blog_bucket.name
 }
 
 resource "cloudflare_r2_custom_domain" "blog_bucket_custom_domain" {

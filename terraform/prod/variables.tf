@@ -44,17 +44,8 @@ variable "aws_secret_access_key" {
   sensitive = true
 }
 
-output "aws_region" {
-  value = local.aws_region
-}
-
 variable "cf_api_token" {
   type      = string
-  sensitive = true
-}
-
-output "cf_api_token" {
-  value     = var.cf_api_token
   sensitive = true
 }
 
@@ -63,28 +54,13 @@ variable "cf_account_id" {
   sensitive = true
 }
 
-output "cf_account_id" {
-  value     = var.cf_account_id
-  sensitive = true
-}
-
 variable "cf_ip812_zone_id" {
   type      = string
   sensitive = true
 }
 
-output "gh_username" {
-  value     = local.gh_username
-  sensitive = true
-}
-
 variable "gh_access_token" {
   type      = string
-  sensitive = true
-}
-
-output "gh_access_token" {
-  value     = var.gh_access_token
   sensitive = true
 }
 
@@ -124,18 +100,8 @@ variable "ts_api_key" {
   sensitive = true
 }
 
-output "gf_region_slug" {
-  value = local.gf_region_slug
-}
-
-
 variable "pgadmin_email" {
   type      = string
-  sensitive = true
-}
-
-output "pgadmin_email" {
-  value     = var.pgadmin_email
   sensitive = true
 }
 
@@ -144,37 +110,14 @@ variable "pgadmin_password" {
   sensitive = true
 }
 
-output "pgadmin_password" {
-  value     = var.pgadmin_password
-  sensitive = true
-}
-
 variable "pg_username" {
   type      = string
-  sensitive = true
-}
-
-output "pg_username" {
-  value     = var.pg_username
   sensitive = true
 }
 
 variable "pg_password" {
   type      = string
   sensitive = true
-}
-
-output "pg_password" {
-  value     = var.pg_password
-  sensitive = true
-}
-
-output "go_template_db_name" {
-  value = local.go_template_db_name
-}
-
-output "blog_db_name" {
-  value = local.blog_db_name
 }
 
 variable "dp_token" {
