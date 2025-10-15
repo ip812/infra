@@ -117,3 +117,10 @@ resource "doppler_secret" "ghcr_dockerconfigjson" {
     }
   })
 }
+
+resource "doppler_secret" "cf_tunnel_token" {
+  project = "prod"
+  config  = "prd"
+  name    = "TUNNEL_TOKEN"
+  value   = data.cloudflare_zero_trust_tunnel_cloudflared_token.cf_tunnel_token.token
+}
