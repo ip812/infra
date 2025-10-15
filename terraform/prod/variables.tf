@@ -4,10 +4,6 @@ variable "slk_blog_bot_token" {
   sensitive = true
 }
 
-variable "slk_general_channel_id" {
-  type = string
-}
-
 locals {
   org = "ip812"
   env = "prod"
@@ -99,11 +95,6 @@ output "gh_access_token" {
 }
 
 variable "gf_cloud_access_policy_token" {
-  type      = string
-  sensitive = true
-}
-
-variable "cf_tunnel_name" {
   type      = string
   sensitive = true
 }
