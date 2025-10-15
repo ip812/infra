@@ -111,10 +111,10 @@ EOT
 
 resource "gitsync_values_yaml" "go-template" {
   branch  = "main"
-  path    = "values/go-template.yaml"
+  path    = "values/${var.go_template_app_name}.yaml"
   content = <<EOT
 isInit: false
-name: "go-template"
+name: "${var.go_template_app_name}"
 image: "ghcr.io/iypetrov/go-template:1.15.0"
 hostname: "${cloudflare_dns_record.go_template_dns_record.name}"
 replicas: 1
@@ -126,7 +126,7 @@ healthCheckEndpoint: "/healthz"
 database:
   postgres:
     name: "${var.go_template_db_name}"
-    host: "${var.go_template_db_name}-pg-rw.go-template.svc.cluster.local"
+    host: "${var.go_template_db_name}-pg-rw.${var.go_template_app_name}.svc.cluster.local"
     image: "ghcr.io/cloudnative-pg/postgresql:16.1"
     username: "${var.pg_username}"
     storageSize: "1Gi"
@@ -145,15 +145,15 @@ env:
   - name: DB_USERNAME
     valueFrom:
       secretKeyRef:
-        name: "go-template-creds"
+        name: "${var.go_template_app_name}-creds"
         key: PG_USERNAME
   - name: DB_PASSWORD
     valueFrom:
       secretKeyRef:
-        name: "go-template-creds"
+        name: "${var.go_template_app_name}-creds"
         key: PG_PASSWORD
   - name: DB_ENDPOINT
-    value: "${var.go_template_db_name}-pg-rw.go-template.svc.cluster.local"
+    value: "${var.go_template_db_name}-pg-rw.${var.go_template_app_name}.svc.cluster.local"
   - name: DB_SSL_MODE
     value: disable
 EOT

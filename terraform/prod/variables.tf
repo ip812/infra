@@ -205,6 +205,10 @@ output "pg_password" {
   sensitive = true
 }
 
+variable "go_template_app_name" {
+  type = string
+}
+
 variable "go_template_domain" {
   type = string
 }
