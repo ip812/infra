@@ -14,7 +14,7 @@ locals {
   slk_general_channel_id = "C08KHNSSK5M"
   ts_tailnet             = "ilia.yavorov.petrov@gmail.com"
 
-  blog_app_name        = "go-template"
+  blog_app_name        = "blog"
   blog_domain          = "blog"
   blog_db_name         = "blog"
   go_template_app_name = "go-template"
