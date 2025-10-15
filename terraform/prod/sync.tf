@@ -109,6 +109,18 @@ alloy-receiver:
 EOT
 }
 
+resource "gitsync_values_yaml" "pgadmin" {
+  branch  = "main"
+  path    = "values/pgadmin.yaml"
+  content = <<EOT
+servers:
+  - name: "${local.go_template_app_name}"
+    database: "${local.go_template_db_name}"
+    host: "${local.go_template_db_name}-pg-rw.${local.go_template_app_name}.svc.cluster.local"
+    username: "${var.pg_username}"
+EOT
+}
+
 resource "gitsync_values_yaml" "go-template" {
   branch  = "main"
   path    = "values/${local.go_template_app_name}.yaml"
