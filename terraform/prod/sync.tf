@@ -217,7 +217,7 @@ env:
   - name: SLACK_BLOG_BOT_TOKEN
     valueFrom:
       secretKeyRef:
-        name:"${local.blog_app_name}-creds" 
+        name: "${local.blog_app_name}-creds" 
         key: SLACK_BLOG_BOT_TOKEN
 database:
   postgres:
