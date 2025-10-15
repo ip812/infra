@@ -124,3 +124,10 @@ resource "doppler_secret" "cf_tunnel_token" {
   name    = "TUNNEL_TOKEN"
   value   = data.cloudflare_zero_trust_tunnel_cloudflared_token.cf_tunnel_token.token
 }
+
+resource "doppler_secret" "slk_blog_bot_token" {
+  project = "prod"
+  config  = "prd"
+  name    = "SLACK_BLOG_BOT_TOKEN"
+  value   = var.slk_blog_bot_token
+}
