@@ -1,7 +1,7 @@
 locals {
   org = "ip812"
   env = "prod"
-  
+
   aws_region   = "eu-central-1"
   aws_az_a     = "eu-central-1a"
   aws_az_b     = "eu-central-1b"
@@ -13,15 +13,15 @@ locals {
   gh_username            = "iypetrov"
   slk_general_channel_id = "C08KHNSSK5M"
   ts_tailnet             = "ilia.yavorov.petrov@gmail.com"
-  
-  blog_app_name = "go-template"
-  blog_domain         = "blog"
-  blog_db_name        = "blog"
+
+  blog_app_name        = "go-template"
+  blog_domain          = "blog"
+  blog_db_name         = "blog"
   go_template_app_name = "go-template"
-  go_template_domain  = "template"
-  go_template_db_name = "template"
-  pgadmin_domain      = "pgadmin"
-  
+  go_template_domain   = "template"
+  go_template_db_name  = "template"
+  pgadmin_domain       = "pgadmin"
+
   default_tags = {
     Organization = local.org
     Environment  = local.env
@@ -120,7 +120,7 @@ variable "ts_client_secret" {
 }
 
 variable "ts_api_key" {
-  type = string
+  type      = string
   sensitive = true
 }
 

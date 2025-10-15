@@ -32,7 +32,7 @@ terraform {
       version = "1.20.0"
     }
     gitsync = {
-      source = "ip812/gitsync"
+      source  = "ip812/gitsync"
       version = "1.0.0"
     }
   }

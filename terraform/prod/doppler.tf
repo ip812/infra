@@ -10,7 +10,7 @@ resource "doppler_secret" "aws_secret_access_key" {
   config  = "prd"
   name    = "AWS_SECRET_ACCESS_KEY"
   value   = var.aws_secret_access_key
-} 
+}
 
 resource "doppler_secret" "aws_region" {
   project = "prod"
@@ -107,7 +107,7 @@ resource "doppler_secret" "ghcr_dockerconfigjson" {
   project = "prod"
   config  = "prd"
   name    = "GHCR_DOCKERCONFIGJSON"
-  value   = jsonencode({
+  value = jsonencode({
     auths = {
       "ghcr.io" = {
         username = local.gh_username
