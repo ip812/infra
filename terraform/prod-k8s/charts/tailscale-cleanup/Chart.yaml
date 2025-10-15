@@ -1,6 +1,0 @@
-apiVersion: v2
-name: tailscale-cleanup 
-description: A Helm chart that removes all stale devices from a Tailscale tailnet.
-type: application
-version: 0.1.0
-appVersion: "1.16.0"
