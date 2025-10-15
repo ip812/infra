@@ -123,16 +123,6 @@ maxMemory: "128Mi"
 minCPU: "50m"
 maxCPU: "100m"
 healthCheckEndpoint: "/healthz"
-database:
-  postgres:
-    name: "${var.go_template_db_name}"
-    host: "${var.go_template_db_name}-pg-rw.${var.go_template_app_name}.svc.cluster.local"
-    image: "ghcr.io/cloudnative-pg/postgresql:16.1"
-    username: "${var.pg_username}"
-    storageSize: "1Gi"
-    retentionPolicy: "7d"
-    backupsBucket: "${aws_s3_bucket.pg_backups.bucket}"
-    backupSchedule: "0 0 0 * * *"
 env:
   - name: APP_ENV
     value: "${var.env}"
@@ -156,5 +146,15 @@ env:
     value: "${var.go_template_db_name}-pg-rw.${var.go_template_app_name}.svc.cluster.local"
   - name: DB_SSL_MODE
     value: disable
+database:
+  postgres:
+    name: "${var.go_template_db_name}"
+    host: "${var.go_template_db_name}-pg-rw.${var.go_template_app_name}.svc.cluster.local"
+    image: "ghcr.io/cloudnative-pg/postgresql:16.1"
+    username: "${var.pg_username}"
+    storageSize: "1Gi"
+    retentionPolicy: "7d"
+    backupsBucket: "${aws_s3_bucket.pg_backups.bucket}"
+    backupSchedule: "0 0 0 * * *"
 EOT
 }
