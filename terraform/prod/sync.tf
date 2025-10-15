@@ -4,10 +4,8 @@ resource "gitsync_values_yaml" "monitoring" {
   content = <<EOT
 cluster:
   name: ${var.org}-${var.env}
-
 global:
   scrapeInterval: "60s"
-
 destinations:
   - name: grafana-cloud-metrics
     type: prometheus
@@ -30,19 +28,14 @@ destinations:
     secret:
       create: false
       name: grafana-k8s-monitoring-secret
-
 clusterMetrics:
   enabled: true
-
 clusterEvents:
   enabled: false
-
 podLogs:
   enabled: true
-
 applicationObservability:
   enabled: false
-
 alloy-metrics:
   enabled: true
   alloy:
@@ -64,7 +57,6 @@ alloy-metrics:
             fieldPath: metadata.name
       - name: GCLOUD_FM_COLLECTOR_ID
         value: grafana-k8s-monitoring-\$(CLUSTER_NAME)-\$(NAMESPACE)-\$(POD_NAME)
-
   remoteConfig:
     enabled: true
     url: ${grafana_cloud_stack.stack.fleet_management_url}
@@ -75,7 +67,6 @@ alloy-metrics:
     secret:
       create: false
       name: grafana-k8s-monitoring-secret
-      
 alloy-logs:
   enabled: true
   alloy:
@@ -101,7 +92,6 @@ alloy-logs:
             fieldPath: spec.nodeName
       - name: GCLOUD_FM_COLLECTOR_ID
         value: grafana-k8s-monitoring-\$(CLUSTER_NAME)-\$(NAMESPACE)-alloy-logs-\$(NODE_NAME)
-
   remoteConfig:
     enabled: true
     url: ${grafana_cloud_stack.stack.fleet_management_url}
@@ -112,10 +102,8 @@ alloy-logs:
     secret:
       create: false
       name: grafana-k8s-monitoring-secret
-
 alloy-singleton:
   enabled: false
-
 alloy-receiver:
   enabled: false
 EOT
