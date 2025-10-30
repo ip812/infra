@@ -80,7 +80,6 @@ resource "aws_launch_template" "asg_lt" {
 
 # apt-get update -y
 # apt-get install -y curl wget unzip make git vim tmux
-# 
 # curl -fsSL https://tailscale.com/install.sh | sh
 # tailscale up --authkey ${var.ts_auth_key} --hostname "${local.org}-${local.env}" --ssh
 # 
