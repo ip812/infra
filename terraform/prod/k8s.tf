@@ -86,9 +86,9 @@ resource "aws_launch_template" "asg_lt" {
 # curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--tls-san ${local.org}-${local.env} --https-listen-port 16443" sh -
 # echo "alias kubectl='k3s kubectl'" >> /root/.bashrc
 # echo "alias k='k3s kubectl'" >> /root/.bashrc
-
+ 
 k3s kubectl cordon ip-10-0-2-54
-kubectl drain ip-10-0-2-54 --ignore-daemonsets --delete-emptydir-data --force
+k3s kubectl drain ip-10-0-2-54 --ignore-daemonsets --delete-emptydir-data --force
 k3s kubectl delete node ip-10-0-2-54
 
 KUBECONFIG=/etc/rancher/k3s/k3s.yaml k3s kubectl create namespace doppler-operator-system
