@@ -87,7 +87,9 @@ resource "aws_launch_template" "asg_lt" {
 # echo "alias kubectl='k3s kubectl'" >> /root/.bashrc
 # echo "alias k='k3s kubectl'" >> /root/.bashrc
 
-sleep 300
+k3s kubectl cordon ip-10-0-2-54
+kubectl drain ip-10-0-2-54 --ignore-daemonsets --delete-emptydir-data
+k3s kubectl delete node ip-10-0-2-54
 
 KUBECONFIG=/etc/rancher/k3s/k3s.yaml k3s kubectl create namespace doppler-operator-system
 KUBECONFIG=/etc/rancher/k3s/k3s.yaml k3s kubectl create secret generic doppler-token-secret -n doppler-operator-system --from-literal=serviceToken=${var.dp_token}
