@@ -39,6 +39,8 @@ applicationObservability:
 alloy-metrics:
   enabled: true
   alloy:
+    clustering:
+      enabled: false
     extraEnv:
       - name: GCLOUD_RW_API_KEY
         valueFrom:
@@ -70,6 +72,8 @@ alloy-metrics:
 alloy-logs:
   enabled: true
   alloy:
+    clustering:
+      enabled: false
     extraEnv:
       - name: GCLOUD_RW_API_KEY
         valueFrom:
