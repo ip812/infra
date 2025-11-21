@@ -88,7 +88,7 @@ resource "aws_launch_template" "asg_lt" {
 # echo "alias k='k3s kubectl'" >> /root/.bashrc
 
 k3s kubectl cordon ip-10-0-2-54
-kubectl drain ip-10-0-2-54 --ignore-daemonsets --delete-emptydir-data
+kubectl drain ip-10-0-2-54 --ignore-daemonsets --delete-emptydir-data --force
 k3s kubectl delete node ip-10-0-2-54
 
 KUBECONFIG=/etc/rancher/k3s/k3s.yaml k3s kubectl create namespace doppler-operator-system
