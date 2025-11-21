@@ -89,9 +89,9 @@ resource "aws_launch_template" "asg_lt" {
  
 k3s kubectl cordon ip-10-0-2-54
 while read LINE; do
-  NAMESPACE="$(echo "${LINE}" | awk '{ print $1 }')"
-  POD_NAME="$(echo "${LINE}" | awk '{ print $2 }')"
-  k3s kubectl delete pod "${POD_NAME}" -n "${NAMESPACE}" --grace-period=0 --force
+  NAMESPACE="$(echo $LINE | awk '{ print $1 }')"
+  POD_NAME="$(echo $LINE | awk '{ print $2 }')"
+  k3s kubectl delete pod $POD_NAME -n $NAMESPACE --grace-period=0 --force
 done < <(k3s kubectl get pods -A | grep Terminating | awk '{ print $1 " " $2 }')
 k3s kubectl delete node ip-10-0-2-54
 
