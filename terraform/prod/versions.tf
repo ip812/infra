@@ -23,10 +23,6 @@ terraform {
       source  = "integrations/github"
       version = "6.4.0"
     }
-    grafana = {
-      source  = "grafana/grafana"
-      version = "3.22.3"
-    }
     doppler = {
       source  = "DopplerHQ/doppler"
       version = "1.20.0"
