@@ -21,7 +21,7 @@ resource "gitsync_values_yaml" "go-template" {
 isInit: false
 name: "${local.go_template_app_name}"
 image: "ghcr.io/iypetrov/go-template:1.15.0"
-hostname: "${cloudflare_dns_record.go_template_dns_record.name}"
+hostname: "${cloudflare_dns_record.dns_record["template"].name}"
 replicas: 1
 minMemory: "64Mi"
 maxMemory: "128Mi"
@@ -32,7 +32,7 @@ env:
   - name: APP_ENV
     value: "${local.env}"
   - name: APP_DOMAIN
-    value: "${cloudflare_dns_record.go_template_dns_record.name}"
+    value: "${cloudflare_dns_record.dns_record["template"].name}"
   - name: APP_PORT
     value: "8080"
   - name: DB_NAME
@@ -71,7 +71,7 @@ resource "gitsync_values_yaml" "blog" {
 isInit: false
 name: "${local.blog_app_name}"
 image: "ghcr.io/iypetrov/blog:1.25.2"
-hostname: "${cloudflare_dns_record.blog_dns_record.name}"
+hostname: "${cloudflare_dns_record.dns_record["blog"].name}"
 replicas: 1
 minMemory: "64Mi"
 maxMemory: "128Mi"
@@ -82,7 +82,7 @@ env:
   - name: APP_ENV
     value: "${local.env}"
   - name: APP_DOMAIN
-    value: "${cloudflare_dns_record.blog_dns_record.name}"
+    value: "${cloudflare_dns_record.dns_record["blog"].name}"
   - name: APP_PORT
     value: "8080"
   - name: DB_NAME
