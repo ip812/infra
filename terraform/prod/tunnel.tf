@@ -27,6 +27,12 @@ locals {
       k8s_svc_port = "9000",
       is_protected = true
     }
+    capacitor = {
+      k8s_ns       = "monitoring",
+      k8s_svc_name = "kube-prometheus-stack-grafana",
+      k8s_svc_port = "80",
+      is_protected = true
+    }
   }
 }
 
