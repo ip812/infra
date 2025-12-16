@@ -16,13 +16,13 @@ locals {
       is_protected = false
     }
     pgadmin = {
-      k8s_ns       = "database",
+      k8s_ns       = "postgres",
       k8s_svc_name = "pgadmin-svc",
       k8s_svc_port = "8080",
       is_protected = true
     }
     capacitor = {
-      k8s_ns       = "monitoring",
+      k8s_ns       = "capacitor",
       k8s_svc_name = "capacitor",
       k8s_svc_port = "9000",
       is_protected = true
