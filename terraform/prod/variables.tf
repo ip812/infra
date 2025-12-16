@@ -8,6 +8,8 @@ locals {
   aws_vpc_cidr = "10.0.0.0/16"
 
   cf_tunnel_name         = "ip812_tunnel"
+  gf_aws_account_id      = "008923505280"
+  gf_region_slug         = "prod-eu-west-2"
   gh_username            = "iypetrov"
   slk_general_channel_id = "C08KHNSSK5M"
   ts_tailnet             = "ilia.yavorov.petrov@gmail.com"
@@ -58,6 +60,11 @@ variable "cf_ip812_zone_id" {
 }
 
 variable "gh_access_token" {
+  type      = string
+  sensitive = true
+}
+
+variable "gf_cloud_access_policy_token" {
   type      = string
   sensitive = true
 }
