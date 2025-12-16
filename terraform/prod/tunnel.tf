@@ -42,36 +42,36 @@ data "cloudflare_zero_trust_tunnel_cloudflared_token" "cf_tunnel_token" {
   tunnel_id  = cloudflare_zero_trust_tunnel_cloudflared.cf_tunnel.id
 }
 
-resource "cloudflare_dns_record" "dns_record" {
-  zone_id = var.cf_ip812_zone_id
-  for_each = local.config
-  name    = "${each.key}.${local.org}.com" 
-  content = "${cloudflare_zero_trust_tunnel_cloudflared.cf_tunnel.id}.cfargotunnel.com"
-  type    = "CNAME"
-  ttl     = 1
-  proxied = true
-}
-
-resource "cloudflare_zero_trust_tunnel_cloudflared_config" "cf_tunnel_cfg" {
-  account_id = var.cf_account_id
-  tunnel_id  = cloudflare_zero_trust_tunnel_cloudflared.cf_tunnel.id
-
-  config = {
-    ingress = concat(
-      [
-        for key, cfg in local.config : {
-          hostname = cloudflare_dns_record.dns_record[key].name
-          service  = "http://${cfg.k8s_svc_name}.${cfg.k8s_ns}.svc.cluster.local:${cfg.k8s_svc_port}"
-        }
-      ],
-      [
-        {
-          service = "http_status:404"
-        }
-      ]
-    )
-  }
-}
+# resource "cloudflare_dns_record" "dns_record" {
+#   zone_id = var.cf_ip812_zone_id
+#   for_each = local.config
+#   name    = "${each.key}.${local.org}.com" 
+#   content = "${cloudflare_zero_trust_tunnel_cloudflared.cf_tunnel.id}.cfargotunnel.com"
+#   type    = "CNAME"
+#   ttl     = 1
+#   proxied = true
+# }
+# 
+# resource "cloudflare_zero_trust_tunnel_cloudflared_config" "cf_tunnel_cfg" {
+#   account_id = var.cf_account_id
+#   tunnel_id  = cloudflare_zero_trust_tunnel_cloudflared.cf_tunnel.id
+# 
+#   config = {
+#     ingress = concat(
+#       [
+#         for key, cfg in local.config : {
+#           hostname = cloudflare_dns_record.dns_record[key].name
+#           service  = "http://${cfg.k8s_svc_name}.${cfg.k8s_ns}.svc.cluster.local:${cfg.k8s_svc_port}"
+#         }
+#       ],
+#       [
+#         {
+#           service = "http_status:404"
+#         }
+#       ]
+#     )
+#   }
+# }
 
 # resource "cloudflare_dns_record" "blog_dns_record" {
 #   zone_id = var.cf_ip812_zone_id
