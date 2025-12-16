@@ -4,8 +4,8 @@ locals {
   ]
   config = {
     template = {
-      k8s_ns       = "template",
-      k8s_svc_name = "template-svc",
+      k8s_ns       = "go-template",
+      k8s_svc_name = "go-template-svc",
       k8s_svc_port = "8080",
       is_protected = false
     }
