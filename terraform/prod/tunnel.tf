@@ -33,6 +33,12 @@ locals {
       k8s_svc_port = "80",
       is_protected = true
     }
+    jaeger = {
+      k8s_ns       = "monitoring",
+      k8s_svc_name = "jaeger-query",
+      k8s_svc_port = "16686",
+      is_protected = true
+    }
   }
 }
 
