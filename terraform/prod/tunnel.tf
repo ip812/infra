@@ -114,7 +114,7 @@ resource "cloudflare_zero_trust_access_application" "zt_access_application" {
   }
 
   account_id                = var.cf_account_id
-  name                      = "Prod Avalon Backoffice"
+  name                      = "${each.key} ${local.org} ${local.env}"
   domain                    = "${each.key}.${local.org}.com"
   type                      = "self_hosted"
   session_duration          = "8h"

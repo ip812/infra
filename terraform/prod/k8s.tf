@@ -86,7 +86,6 @@ resource "aws_launch_template" "asg_lt" {
 # curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--tls-san ${local.org}-${local.env} --https-listen-port 16443" sh -
 # echo "alias kubectl='k3s kubectl'" >> /root/.bashrc
 # echo "alias k='k3s kubectl'" >> /root/.bashrc
-# foo
 
 k3s kubectl cordon ip-10-0-2-54
 while read LINE; do
@@ -149,7 +148,7 @@ resource "aws_autoscaling_group" "asg" {
   force_delete              = true
   wait_for_capacity_timeout = "0"
   health_check_type         = "EC2"
-  health_check_grace_period = 60
+  health_check_grace_period = 300
   termination_policies      = ["OldestInstance"]
   enabled_metrics           = ["GroupInServiceInstances"]
   instance_refresh {
@@ -174,7 +173,7 @@ resource "aws_autoscaling_policy" "asg_scale_in_policy" {
   adjustment_type        = "ChangeInCapacity"
   policy_type            = "SimpleScaling"
   enabled                = true
-  cooldown               = 60
+  cooldown               = 300
   scaling_adjustment     = -1
 }
 
@@ -184,6 +183,6 @@ resource "aws_autoscaling_policy" "asg_scale_out_policy" {
   adjustment_type        = "ChangeInCapacity"
   policy_type            = "SimpleScaling"
   enabled                = true
-  cooldown               = 60
+  cooldown               = 300
   scaling_adjustment     = 1
 }
