@@ -39,6 +39,12 @@ locals {
       k8s_svc_port = "9090",
       is_protected = true
     }
+    kibana = {
+      k8s_ns       = "elasticsearch",
+      k8s_svc_name = "kibana-kibana",
+      k8s_svc_port = "5601",
+      is_protected = true
+    }
     jaeger = {
       k8s_ns       = "monitoring",
       k8s_svc_name = "jaeger-query",
