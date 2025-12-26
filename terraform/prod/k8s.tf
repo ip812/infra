@@ -65,8 +65,8 @@ resource "random_string" "asg_suffix" {
 
 resource "aws_launch_template" "asg_lt" {
   name_prefix = "asg-lt-"
-  image_id               = "ami-0a628e1e89aaedf80"
-  # image_id               = "ami-0bbc9ded5022da188"
+  # image_id               = "ami-0a628e1e89aaedf80"
+  image_id               = "ami-058d51b1d804d89e3"
   instance_type          = "t3.medium"
   vpc_security_group_ids = [aws_security_group.asg_sg.id]
   iam_instance_profile {
@@ -78,35 +78,35 @@ resource "aws_launch_template" "asg_lt" {
   user_data = base64encode(<<-EOF
 #!/bin/bash
 
-apt-get update -y
-apt-get install -y curl wget unzip make git vim tmux
-curl -fsSL https://tailscale.com/install.sh | sh
-tailscale up --authkey ${var.ts_auth_key} --hostname "${local.org}-${local.env}" --ssh
+# apt-get update -y
+# apt-get install -y curl wget unzip make git vim tmux
+# curl -fsSL https://tailscale.com/install.sh | sh
+# tailscale up --authkey ${var.ts_auth_key} --hostname "${local.org}-${local.env}" --ssh
+# 
+# curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--tls-san ${local.org}-${local.env} --https-listen-port 16443" sh -
+# echo "alias kubectl='k3s kubectl'" >> /root/.bashrc
+# echo "alias k='k3s kubectl'" >> /root/.bashrc
+ 
+k3s kubectl cordon ip-10-0-2-54
+while read LINE; do
+  NAMESPACE="$(echo $LINE | awk '{ print $1 }')"
+  POD_NAME="$(echo $LINE | awk '{ print $2 }')"
+  k3s kubectl delete pod $POD_NAME -n $NAMESPACE --grace-period=0 --force
+done < <(k3s kubectl get pods -A | grep Terminating | awk '{ print $1 " " $2 }')
+k3s kubectl delete node ip-10-0-2-54
 
-curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--tls-san ${local.org}-${local.env} --https-listen-port 16443" sh -
-echo "alias kubectl='k3s kubectl'" >> /root/.bashrc
-echo "alias k='k3s kubectl'" >> /root/.bashrc
-#  
-# k3s kubectl cordon ip-10-0-2-54
-# while read LINE; do
-#   NAMESPACE="$(echo $LINE | awk '{ print $1 }')"
-#   POD_NAME="$(echo $LINE | awk '{ print $2 }')"
-#   k3s kubectl delete pod $POD_NAME -n $NAMESPACE --grace-period=0 --force
-# done < <(k3s kubectl get pods -A | grep Terminating | awk '{ print $1 " " $2 }')
-# k3s kubectl delete node ip-10-0-2-54
-# 
-# KUBECONFIG=/etc/rancher/k3s/k3s.yaml k3s kubectl create namespace doppler-operator-system
-# KUBECONFIG=/etc/rancher/k3s/k3s.yaml k3s kubectl create secret generic doppler-token-secret -n doppler-operator-system --from-literal=serviceToken=${var.dp_token}
-# 
-# curl -s https://fluxcd.io/install.sh | sudo bash
-# KUBECONFIG=/etc/rancher/k3s/k3s.yaml GITHUB_TOKEN=${var.gh_access_token} flux bootstrap github \
-# 	    --token-auth=true \
-# 	    --owner=ip812 \
-# 	    --repository=apps \
-# 	    --branch=main \
-# 	    --path=envs/prod \
-# 	    --read-write-key=true \
-# 	    --personal=false
+KUBECONFIG=/etc/rancher/k3s/k3s.yaml k3s kubectl create namespace doppler-operator-system
+KUBECONFIG=/etc/rancher/k3s/k3s.yaml k3s kubectl create secret generic doppler-token-secret -n doppler-operator-system --from-literal=serviceToken=${var.dp_token}
+
+curl -s https://fluxcd.io/install.sh | sudo bash
+KUBECONFIG=/etc/rancher/k3s/k3s.yaml GITHUB_TOKEN=${var.gh_access_token} flux bootstrap github \
+	    --token-auth=true \
+	    --owner=ip812 \
+	    --repository=apps \
+	    --branch=main \
+	    --path=envs/prod \
+	    --read-write-key=true \
+	    --personal=false
 EOF
   )
 
