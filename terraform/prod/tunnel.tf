@@ -1,8 +1,5 @@
 locals {
-  whitelist_emails = [
-    "ilia.yavorov.petrov@gmail.com"
-  ]
-  config = {
+  tunnel_config = {
     template = {
       k8s_ns       = "go-template",
       k8s_svc_name = "go-template-svc",
@@ -67,7 +64,7 @@ data "cloudflare_zero_trust_tunnel_cloudflared_token" "cf_tunnel_token" {
 }
 
 resource "cloudflare_dns_record" "dns_record" {
-  for_each = local.config
+  for_each = local.tunnel_config
   zone_id  = var.cf_ip812_zone_id
   name     = "${each.key}.${local.org}.com"
   content  = "${cloudflare_zero_trust_tunnel_cloudflared.cf_tunnel.id}.cfargotunnel.com"
@@ -83,7 +80,7 @@ resource "cloudflare_zero_trust_tunnel_cloudflared_config" "cf_tunnel_cfg" {
   config = {
     ingress = concat(
       [
-        for key, cfg in local.config : {
+        for key, cfg in local.tunnel_config : {
           hostname = cloudflare_dns_record.dns_record[key].name
           service  = "http://${cfg.k8s_svc_name}.${cfg.k8s_ns}.svc.cluster.local:${cfg.k8s_svc_port}"
         }
@@ -114,7 +111,7 @@ resource "cloudflare_zero_trust_access_policy" "zt_access_policy" {
 
 resource "cloudflare_zero_trust_access_application" "zt_access_application" {
   for_each = {
-    for key, cfg in local.config :
+    for key, cfg in local.tunnel_config :
     key => cfg
     if cfg.is_protected
   }

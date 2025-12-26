@@ -1,4 +1,8 @@
 locals {
+  whitelist_emails = [
+    "ilia.yavorov.petrov@gmail.com"
+  ]
+
   org = "ip812"
   env = "prod"
 
@@ -119,6 +123,16 @@ variable "dp_token" {
 }
 
 variable "slk_blog_bot_token" {
+  type      = string
+  sensitive = true
+}
+
+variable "es_username" {
+  type      = string
+  sensitive = true
+}
+
+variable "es_password" {
   type      = string
   sensitive = true
 }
