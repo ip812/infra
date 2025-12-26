@@ -92,6 +92,12 @@ resource "cloudflare_zero_trust_tunnel_cloudflared_config" "cf_tunnel_cfg" {
       ]
     )
   }
+
+  lifecycle {
+    ignore_changes = [
+      config["warp_routing"],
+    ]
+  }
 }
 
 resource "cloudflare_zero_trust_access_policy" "zt_access_policy" {

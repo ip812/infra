@@ -86,7 +86,7 @@ tailscale up --authkey ${var.ts_auth_key} --hostname "${local.org}-${local.env}"
 curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--tls-san ${local.org}-${local.env} --https-listen-port 16443" sh -
 echo "alias kubectl='k3s kubectl'" >> /root/.bashrc
 echo "alias k='k3s kubectl'" >> /root/.bashrc
-  
+#  
 # k3s kubectl cordon ip-10-0-2-54
 # while read LINE; do
 #   NAMESPACE="$(echo $LINE | awk '{ print $1 }')"
