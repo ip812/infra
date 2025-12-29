@@ -78,6 +78,8 @@ resource "aws_launch_template" "asg_lt" {
   user_data = base64encode(<<-EOF
 #!/bin/bash
 
+set -x
+
 # apt-get update -y
 # apt-get install -y curl wget unzip make git vim tmux
 # curl -fsSL https://tailscale.com/install.sh | sh
@@ -102,10 +104,10 @@ KUBECONFIG=/etc/rancher/k3s/k3s.yaml k3s kubectl create secret generic doppler-t
 
 KUBECONFIG=/etc/rancher/k3s/k3s.yaml GITHUB_TOKEN=${var.gh_access_token} flux bootstrap github \
 	    --token-auth=true \
-	    --owner=ip812 \
+	    --owner=${local.org} \
 	    --repository=apps \
 	    --branch=main \
-	    --path=envs/prod \
+	    --path=envs/${local.env} \
 	    --read-write-key=true \
 	    --personal=false
 EOF
