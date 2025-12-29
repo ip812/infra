@@ -127,6 +127,11 @@ variable "slk_blog_bot_token" {
   sensitive = true
 }
 
+variable "es_username" {
+  type      = string
+  sensitive = true
+}
+
 variable "es_password" {
   type      = string
   sensitive = true
