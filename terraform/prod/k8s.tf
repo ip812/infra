@@ -87,13 +87,13 @@ resource "aws_launch_template" "asg_lt" {
 # echo "alias kubectl='k3s kubectl'" >> /root/.bashrc
 # echo "alias k='k3s kubectl'" >> /root/.bashrc
 
-k3s kubectl cordon ip-10-0-2-54
+k3s kubectl cordon ip-10-0-1-108
 while read LINE; do
   NAMESPACE="$(echo $LINE | awk '{ print $1 }')"
   POD_NAME="$(echo $LINE | awk '{ print $2 }')"
   k3s kubectl delete pod $POD_NAME -n $NAMESPACE --grace-period=0 --force
 done < <(k3s kubectl get pods -A | grep Terminating | awk '{ print $1 " " $2 }')
-k3s kubectl delete node ip-10-0-2-54
+k3s kubectl delete node ip-10-0-1-108
 
 KUBECONFIG=/etc/rancher/k3s/k3s.yaml k3s kubectl create namespace doppler-operator-system
 KUBECONFIG=/etc/rancher/k3s/k3s.yaml k3s kubectl create secret generic doppler-token-secret -n doppler-operator-system --from-literal=serviceToken=${var.dp_token}
