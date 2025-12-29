@@ -86,7 +86,8 @@ resource "aws_launch_template" "asg_lt" {
 # curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--tls-san ${local.org}-${local.env} --https-listen-port 16443" sh -
 # echo "alias kubectl='k3s kubectl'" >> /root/.bashrc
 # echo "alias k='k3s kubectl'" >> /root/.bashrc
-# foo
+
+curl -s https://fluxcd.io/install.sh | sudo bash
 
 k3s kubectl cordon ip-10-0-1-108
 while read LINE; do
@@ -99,7 +100,6 @@ k3s kubectl delete node ip-10-0-1-108
 KUBECONFIG=/etc/rancher/k3s/k3s.yaml k3s kubectl create namespace doppler-operator-system
 KUBECONFIG=/etc/rancher/k3s/k3s.yaml k3s kubectl create secret generic doppler-token-secret -n doppler-operator-system --from-literal=serviceToken=${var.dp_token}
 
-curl -s https://fluxcd.io/install.sh | sudo bash
 KUBECONFIG=/etc/rancher/k3s/k3s.yaml GITHUB_TOKEN=${var.gh_access_token} flux bootstrap github \
 	    --token-auth=true \
 	    --owner=ip812 \
