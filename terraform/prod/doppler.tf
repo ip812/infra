@@ -65,11 +65,11 @@ locals {
       value = var.slk_blog_bot_token
     },
     {
-      name  = "ELASTICSEARCH_USERNAME"
+      name  = "ELASTIC_USERNAME"
       value = var.es_username
     },
     {
-      name  = "ELASTICSEARCH_PASSWORD"
+      name  = "ELASTIC_PASSWORD"
       value = var.es_password
     }
   ]
