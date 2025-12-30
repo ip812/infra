@@ -20,7 +20,7 @@ resource "gitsync_values_yaml" "go-template" {
   content = <<EOT
 isInit: false
 name: "${local.go_template_app_name}"
-image: "ghcr.io/iypetrov/go-template:1.15.0"
+image: "ghcr.io/iypetrov/go-template:1.16.0"
 hostname: "${cloudflare_dns_record.dns_record["template"].name}"
 replicas: 1
 minMemory: "64Mi"
