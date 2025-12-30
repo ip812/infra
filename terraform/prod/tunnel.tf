@@ -73,26 +73,26 @@ resource "cloudflare_dns_record" "dns_record" {
   proxied  = true
 }
 
-resource "cloudflare_zero_trust_tunnel_cloudflared_config" "cf_tunnel_cfg" {
-  account_id = var.cf_account_id
-  tunnel_id  = cloudflare_zero_trust_tunnel_cloudflared.cf_tunnel.id
-
-  config = {
-    ingress = concat(
-      [
-        for key, cfg in local.tunnel_config : {
-          hostname = cloudflare_dns_record.dns_record[key].name
-          service  = "http://${cfg.k8s_svc_name}.${cfg.k8s_ns}.svc.cluster.local:${cfg.k8s_svc_port}"
-        }
-      ],
-      [
-        {
-          service = "http_status:404"
-        }
-      ]
-    )
-  }
-}
+# resource "cloudflare_zero_trust_tunnel_cloudflared_config" "cf_tunnel_cfg" {
+#   account_id = var.cf_account_id
+#   tunnel_id  = cloudflare_zero_trust_tunnel_cloudflared.cf_tunnel.id
+# 
+#   config = {
+#     ingress = concat(
+#       [
+#         for key, cfg in local.tunnel_config : {
+#           hostname = cloudflare_dns_record.dns_record[key].name
+#           service  = "http://${cfg.k8s_svc_name}.${cfg.k8s_ns}.svc.cluster.local:${cfg.k8s_svc_port}"
+#         }
+#       ],
+#       [
+#         {
+#           service = "http_status:404"
+#         }
+#       ]
+#     )
+#   }
+# }
 
 resource "cloudflare_zero_trust_access_policy" "zt_access_policy" {
   account_id       = var.cf_account_id
