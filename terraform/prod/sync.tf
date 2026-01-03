@@ -52,7 +52,7 @@ env:
   - name: DB_SSL_MODE
     value: disable
   - name: OTEL_EXPORTER_OTLP_ENDPOINT
-    value: jaeger.monitoring.svc.cluster.local:4318
+    value: "jaeger.monitoring.svc.cluster.local:4318"
   - name: OTEL_EXPORTER_OTLP_INSECURE
     value: true
 database:
