@@ -54,7 +54,7 @@ env:
   - name: OTEL_EXPORTER_OTLP_ENDPOINT
     value: "jaeger.monitoring.svc.cluster.local:4318"
   - name: OTEL_EXPORTER_OTLP_INSECURE
-    value: true
+    value: "true"
 database:
   postgres:
     name: "${local.go_template_db_name}"
