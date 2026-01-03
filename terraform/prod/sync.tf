@@ -51,8 +51,10 @@ env:
     value: "${local.go_template_db_name}-pg-rw.${local.go_template_app_name}.svc.cluster.local"
   - name: DB_SSL_MODE
     value: disable
-  - name: OTEL_ENDPOINT
-    value: jaeger.monitoring.svc.cluster.local:4317
+  - name: OTEL_EXPORTER_OTLP_ENDPOINT
+    value: jaeger.monitoring.svc.cluster.local:4318
+  - name: OTEL_EXPORTER_OTLP_INSECURE
+    value: true
 database:
   postgres:
     name: "${local.go_template_db_name}"
