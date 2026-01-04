@@ -24,16 +24,22 @@ locals {
       k8s_svc_port = "9000",
       is_protected = true
     }
-    grafana = {
-      k8s_ns       = "monitoring",
-      k8s_svc_name = "kube-prometheus-stack-grafana",
-      k8s_svc_port = "80",
-      is_protected = true
-    }
     prometheus = {
       k8s_ns       = "monitoring",
-      k8s_svc_name = "kube-prometheus-stack-prometheus",
+      k8s_svc_name = "prometheus-stack-kube-prom-prometheus",
       k8s_svc_port = "9090",
+      is_protected = true
+    }
+    alertmanager = {
+      k8s_ns       = "monitoring",
+      k8s_svc_name = "prometheus-stack-kube-prom-alertmanager",
+      k8s_svc_port = "9093",
+      is_protected = true
+    }
+    grafana = {
+      k8s_ns       = "monitoring",
+      k8s_svc_name = "prometheus-stack-grafana",
+      k8s_svc_port = "80",
       is_protected = true
     }
     kibana = {
