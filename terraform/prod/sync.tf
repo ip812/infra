@@ -35,6 +35,8 @@ env:
     value: "${cloudflare_dns_record.dns_record["template"].name}"
   - name: APP_PORT
     value: "8080"
+  - name: APP_METRICS_PORT
+    value: "2112"
   - name: DB_NAME
     value: "${local.go_template_db_name}"
   - name: DB_USERNAME
@@ -89,6 +91,8 @@ env:
     value: "${cloudflare_dns_record.dns_record["blog"].name}"
   - name: APP_PORT
     value: "8080"
+  - name: APP_METRICS_PORT
+    value: "2112"
   - name: DB_NAME
     value: "${local.blog_db_name}"
   - name: DB_USERNAME
