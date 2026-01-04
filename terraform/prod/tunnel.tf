@@ -43,7 +43,7 @@ locals {
       is_protected = true
     }
     jaeger = {
-      k8s_ns       = "monitoring",
+      k8s_ns       = "tracing",
       k8s_svc_name = "jaeger",
       k8s_svc_port = "16686",
       is_protected = true
