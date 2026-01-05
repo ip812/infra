@@ -71,6 +71,14 @@ locals {
     {
       name  = "ELASTIC_PASSWORD"
       value = var.es_password
+    },
+    { 
+      name  = "GRAFANA_USERNAME"
+      value = var.gf_username
+    },
+    { 
+      name  = "GRAFANA_PASSWORD"
+      value = var.gf_password
     }
   ]
 }

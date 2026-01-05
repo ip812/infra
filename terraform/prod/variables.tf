@@ -136,3 +136,13 @@ variable "es_password" {
   type      = string
   sensitive = true
 }
+
+variable "gf_username" {
+  type      = string
+  sensitive = true
+}
+
+variable "gf_password" {
+  type      = string
+  sensitive = true
+}
