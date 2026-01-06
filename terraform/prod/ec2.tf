@@ -40,8 +40,8 @@ resource "aws_iam_instance_profile" "this" {
 }
 
 resource "aws_instance" "this" {
-  # ami                         = "ami-0a628e1e89aaedf80"
-  ami                         = "ami-09313abc8e0f39f9a"
+  ami                         = "ami-0a628e1e89aaedf80"
+  # ami                         = "ami-09313abc8e0f39f9a"
   instance_type               = "t3.medium"
   subnet_id                   = aws_subnet.public_subnet_a.id
   vpc_security_group_ids      = [aws_security_group.this.id]
@@ -52,30 +52,31 @@ resource "aws_instance" "this" {
 
     set -x
     
-    # apt-get update -y
-    # apt-get install -y curl wget iptables libsqlite3-dev unzip make git vim tmux
-    # curl -fsSL https://tailscale.com/install.sh | sh
-    # tailscale up --authkey ${var.ts_auth_key} --hostname "${local.org}-${local.env}" --ssh
-    # 
-    # curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-    # install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-    # curl -sfL https://get.kubesolo.io | sudo sh -
-    # echo "alias k='kubectl'" >> /root/.bashrc
-    #
-    # curl -s https://fluxcd.io/install.sh | sudo bash
-
+    apt-get update -y
+    apt-get install -y curl wget iptables libsqlite3-dev unzip make git vim tmux
+    curl -fsSL https://tailscale.com/install.sh | sh
+    tailscale up --authkey ${var.ts_auth_key} --hostname "${local.org}-${local.env}" --ssh
+    
+    curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+    install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+    curl -sfL https://get.kubesolo.io | sudo sh -
+    echo "alias k='kubectl'" >> /root/.bashrc
+    mkdir -p /root/.kube
+    cp /var/lib/kubesolo/pki/admin/admin.kubeconfig /root/.kube/config
+    
+    curl -s https://fluxcd.io/install.sh | sudo bash
     
     kubectl create namespace doppler-operator-system
     kubectl create secret generic doppler-token-secret -n doppler-operator-system --from-literal=serviceToken=${var.dp_token}
     
-    GITHUB_TOKEN=${var.gh_access_token} flux bootstrap github \
-    	    --token-auth=true \
-    	    --owner=${local.org} \
-    	    --repository=apps \
-    	    --branch=main \
-    	    --path=envs/${local.env} \
-    	    --read-write-key=true \
-    	    --personal=false
+    # GITHUB_TOKEN=${var.gh_access_token} flux bootstrap github \
+    # 	    --token-auth=true \
+    # 	    --owner=${local.org} \
+    # 	    --repository=apps \
+    # 	    --branch=main \
+    # 	    --path=envs/${local.env} \
+    # 	    --read-write-key=true \
+    # 	    --personal=false
   EOF
 
   tags = merge(
