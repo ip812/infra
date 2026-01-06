@@ -29,25 +29,3 @@ resource "aws_route_table_association" "public_subnet_a_rt_association" {
   subnet_id      = aws_subnet.public_subnet_a.id
   route_table_id = aws_route_table.public_subnet_a_rt.id
 }
-
-resource "aws_subnet" "public_subnet_b" {
-  vpc_id                  = aws_vpc.vpc.id
-  cidr_block              = cidrsubnet(local.aws_vpc_cidr, 8, 2)
-  availability_zone       = local.aws_az_b
-  map_public_ip_on_launch = true
-  tags                    = local.default_tags
-}
-
-resource "aws_route_table" "public_subnet_b_rt" {
-  vpc_id = aws_vpc.vpc.id
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.igw.id
-  }
-  tags = local.default_tags
-}
-
-resource "aws_route_table_association" "public_subnet_b_rt_association" {
-  subnet_id      = aws_subnet.public_subnet_b.id
-  route_table_id = aws_route_table.public_subnet_b_rt.id
-}

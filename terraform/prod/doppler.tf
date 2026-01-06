@@ -7,7 +7,7 @@ locals {
     {
       name  = "TS_CLIENT_SECRET"
       value = var.ts_client_secret
-    },  
+    },
     {
       name  = "TS_API_KEY"
       value = var.ts_api_key
@@ -33,7 +33,7 @@ locals {
       value = var.pgadmin_password
     },
     {
-      name  = "GHCR_DOCKERCONFIGJSON"
+      name = "GHCR_DOCKERCONFIGJSON"
       value = jsonencode({
         auths = {
           "ghcr.io" = {
@@ -60,11 +60,11 @@ locals {
       name  = "ELASTIC_PASSWORD"
       value = var.es_password
     },
-    { 
+    {
       name  = "GRAFANA_USERNAME"
       value = var.gf_username
     },
-    { 
+    {
       name  = "GRAFANA_PASSWORD"
       value = var.gf_password
     }
@@ -73,8 +73,8 @@ locals {
 
 resource "doppler_secret" "secret" {
   for_each = { for secret in local.secrets_config : secret.name => secret }
-  project = "prod"
-  config  = "prd"
-  name    = each.value.name
-  value   = each.value.value
+  project  = "prod"
+  config   = "prd"
+  name     = each.value.name
+  value    = each.value.value
 }

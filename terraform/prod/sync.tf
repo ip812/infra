@@ -66,6 +66,7 @@ database:
     storageSize: "1Gi"
     retentionPolicy: "7d"
     backupsBucket: "${cloudflare_r2_bucket.pg_backups_bucket.name}"
+    backupEndpoint: "https://${var.cf_account_id}.r2.cloudflarestorage.com"
     backupSchedule: "0 0 0 * * *"
 EOT
 }
@@ -123,6 +124,7 @@ database:
     storageSize: "1Gi"
     retentionPolicy: "7d"
     backupsBucket: "${cloudflare_r2_bucket.pg_backups_bucket.name}"
+    backupEndpoint: "https://${var.cf_account_id}.r2.cloudflarestorage.com"
     backupSchedule: "0 0 0 * * *"
 EOT
 }
