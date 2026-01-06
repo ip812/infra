@@ -10,9 +10,7 @@ resource "aws_vpc_security_group_egress_rule" "egress" {
   security_group_id = aws_security_group.this.id
 
   cidr_ipv4   = "0.0.0.0/0"
-  from_port   = 0
   ip_protocol = -1
-  to_port     = 0
 }
 
 resource "aws_iam_role" "this" {
