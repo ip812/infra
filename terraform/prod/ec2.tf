@@ -67,8 +67,17 @@ resource "aws_instance" "this" {
     # curl -s https://fluxcd.io/install.sh | sudo bash
     wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/local/bin/yq
     chmod +x /usr/local/bin/yq
-    yq -i '(.clusters[] | select(.name == "kubesolo") | .cluster.server) = "http://127.0.0.1:6443"' /root/.kube/config
-    yq -i '(.clusters[] | select(.name == "kubesolo") | .cluster.server) = "http://127.0.0.1:6443"' /var/lib/kubesolo/pki/admin/admin.kubeconfig
+    yq -i '(.clusters[] | select(.name == "kubesolo") | .cluster.server) = "https://127.0.0.1:6443"' /var/lib/kubesolo/pki/admin/admin.kubeconfig
+    yq -i '(.clusters[] | select(.name == "kubesolo") | .cluster.server) = "https://127.0.0.1:6443"' /root/.kube/config
+
+    for i in {1..60}; do
+      if KUBECONFIG=/var/lib/kubesolo/pki/admin/admin.kubeconfig kubectl get nodes >/dev/null 2>&1; then
+        echo "Kubernetes is ready"
+        break
+      fi
+      echo "Still waiting..."
+      sleep 5
+    done
       
     KUBECONFIG=/var/lib/kubesolo/pki/admin/admin.kubeconfig kubectl create namespace doppler-operator-system
     KUBECONFIG=/var/lib/kubesolo/pki/admin/admin.kubeconfig kubectl create secret generic doppler-token-secret -n doppler-operator-system --from-literal=serviceToken=${var.dp_token}
