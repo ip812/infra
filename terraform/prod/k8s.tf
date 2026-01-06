@@ -85,9 +85,9 @@ apt-get install -y curl wget iptables libsqlite3-dev unzip make git vim tmux
 curl -fsSL https://tailscale.com/install.sh | sh
 tailscale up --authkey ${var.ts_auth_key} --hostname "${local.org}-${local.env}" --ssh
 
-curl -sfL https://get.kubesolo.io | sudo sh -
 curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
 install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+curl -sfL https://get.kubesolo.io | sudo sh -
 
 # curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--tls-san ${local.org}-${local.env} --https-listen-port 16443" sh -
 # echo "alias kubectl='k3s kubectl'" >> /root/.bashrc
