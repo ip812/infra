@@ -1,8 +1,12 @@
 locals {
   secrets_config = [
     {
-      name  = "TS_CLIENT_ID"
-      value = var.ts_client_id
+      name  = "POSTGRES_BACKUPS_ACCESS_KEY_ID"
+      value = var.pg_backups_access_key_id
+    },
+    {
+      name  = "POSTGRES_BACKUPS_SECRET_ACCESS_KEY"
+      value = var.pg_backups_secret_access_key
     },
     {
       name  = "TS_CLIENT_SECRET"

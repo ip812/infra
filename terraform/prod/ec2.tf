@@ -63,10 +63,17 @@ resource "aws_instance" "this" {
     curl -sfL https://get.kubesolo.io | sudo sh -
   EOF
 
+  tags = merge(
+    {
+      Name = "${local.org}-${local.env}"
+    },
+    local.default_tags
+  )
+
   lifecycle {
     replace_triggered_by = [
       aws_security_group.this.name,
-      aws_security_group.this.egress.security_group_rule_id 
+      aws_security_group.this.egress.security_group_rule_id
     ]
   }
 }

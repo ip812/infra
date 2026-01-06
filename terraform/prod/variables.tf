@@ -116,6 +116,16 @@ variable "pg_password" {
   sensitive = true
 }
 
+variable "pg_backups_access_key_id" {
+  type      = string
+  sensitive = true
+}
+
+variable "pg_backups_secret_access_key" {
+  type      = string
+  sensitive = true
+}
+
 variable "dp_token" {
   type      = string
   sensitive = true
