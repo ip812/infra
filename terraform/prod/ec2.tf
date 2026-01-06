@@ -66,8 +66,8 @@ resource "aws_instance" "this" {
     
     curl -s https://fluxcd.io/install.sh | sudo bash
     
-    KUBECONFIG=./admin.kubeconfig kubectl create namespace doppler-operator-system
-    KUBECONFIG=./admin.kubeconfig kubectl create secret generic doppler-token-secret -n doppler-operator-system --from-literal=serviceToken=${var.dp_token}
+    KUBECONFIG=/var/lib/kubesolo/pki/admin/admin.kubeconfig kubectl create namespace doppler-operator-system
+    KUBECONFIG=/var/lib/kubesolo/pki/admin/admin.kubeconfig kubectl create secret generic doppler-token-secret -n doppler-operator-system --from-literal=serviceToken=${var.dp_token}
     
     # GITHUB_TOKEN=${var.gh_access_token} flux bootstrap github \
     # 	    --token-auth=true \
