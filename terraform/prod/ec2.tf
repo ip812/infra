@@ -65,6 +65,8 @@ resource "aws_instance" "this" {
     # cp /var/lib/kubesolo/pki/admin/admin.kubeconfig /root/.kube/config
     # 
     # curl -s https://fluxcd.io/install.sh | sudo bash
+    wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/local/bin/yq
+    chmod +x /usr/local/bin/yq
       
     KUBECONFIG=/var/lib/kubesolo/pki/admin/admin.kubeconfig kubectl create namespace doppler-operator-system
     KUBECONFIG=/var/lib/kubesolo/pki/admin/admin.kubeconfig kubectl create secret generic doppler-token-secret -n doppler-operator-system --from-literal=serviceToken=${var.dp_token}
