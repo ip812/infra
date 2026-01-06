@@ -40,8 +40,8 @@ resource "aws_iam_instance_profile" "this" {
 }
 
 resource "aws_instance" "this" {
-  # ami                         = "ami-0a628e1e89aaedf80"
-  ami                         = "ami-07dd6a9afae2d544a"
+  ami                         = "ami-0a628e1e89aaedf80"
+  # ami                         = "ami-07dd6a9afae2d544a"
   instance_type               = "t3.medium"
   subnet_id                   = aws_subnet.public_subnet_a.id
   vpc_security_group_ids      = [aws_security_group.this.id]
@@ -49,46 +49,39 @@ resource "aws_instance" "this" {
   user_data_replace_on_change = true
   user_data                   = <<-EOF
     #!/bin/bash
-
+    
     set -x
     
-    # apt-get update -y
-    # apt-get install -y curl wget iptables libsqlite3-dev unzip make git vim tmux
-    # curl -fsSL https://tailscale.com/install.sh | sh
-    # tailscale up --authkey ${var.ts_auth_key} --hostname "${local.org}-${local.env}" --ssh
-    # 
-    # curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-    # install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-    # curl -sfL https://get.kubesolo.io | sudo sh -
-    # echo "alias k='kubectl'" >> /root/.bashrc
-    # mkdir -p /root/.kube
-    # cp /var/lib/kubesolo/pki/admin/admin.kubeconfig /root/.kube/config
-    # 
-    # curl -s https://fluxcd.io/install.sh | sudo bash
-    wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/local/bin/yq
-    chmod +x /usr/local/bin/yq
-    yq -i '(.clusters[] | select(.name == "kubesolo") | .cluster.server) = "https://127.0.0.1:6443"' /root/.kube/config
-
-    for i in {1..60}; do
-      if KUBECONFIG=/root/.kube/config kubectl get nodes >/dev/null 2>&1; then
-        echo "Kubernetes is ready"
-        break
-      fi
-      echo "Still waiting..."
-      sleep 5
-    done
-      
-    KUBECONFIG=/root/.kube/config kubectl create namespace doppler-operator-system
-    KUBECONFIG=/root/.kube/config kubectl create secret generic doppler-token-secret -n doppler-operator-system --from-literal=serviceToken=${var.dp_token}
+    apt-get update -y
+    apt-get install -y curl wget unzip make git vim tmux
+    curl -fsSL https://tailscale.com/install.sh | sh
+    tailscale up --authkey ${var.ts_auth_key} --hostname "${local.org}-${local.env}" --ssh
     
-    KUBECONFIG=/root/.kube/config GITHUB_TOKEN=${var.gh_access_token} flux bootstrap github \
-    	    --token-auth=true \
-    	    --owner=${local.org} \
-    	    --repository=apps \
-    	    --branch=main \
-    	    --path=envs/${local.env} \
-    	    --read-write-key=true \
-    	    --personal=false
+    curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--tls-san ${local.org}-${local.env} --https-listen-port 16443" sh -
+    echo "alias kubectl='k3s kubectl'" >> /root/.bashrc
+    echo "alias k='k3s kubectl'" >> /root/.bashrc
+    
+    curl -s https://fluxcd.io/install.sh | sudo bash
+     
+    # k3s kubectl cordon ip-10-0-1-108
+    # while read LINE; do
+    #   NAMESPACE="$(echo $LINE | awk '{ print $1 }')"
+    #   POD_NAME="$(echo $LINE | awk '{ print $2 }')"
+    #   k3s kubectl delete pod $POD_NAME -n $NAMESPACE --grace-period=0 --force
+    # done < <(k3s kubectl get pods -A | grep Terminating | awk '{ print $1 " " $2 }')
+    # k3s kubectl delete node ip-10-0-1-108
+    # 
+    # KUBECONFIG=/etc/rancher/k3s/k3s.yaml k3s kubectl create namespace doppler-operator-system
+    # KUBECONFIG=/etc/rancher/k3s/k3s.yaml k3s kubectl create secret generic doppler-token-secret -n doppler-operator-system --from-literal=serviceToken=${var.dp_token}
+    # 
+    # KUBECONFIG=/etc/rancher/k3s/k3s.yaml GITHUB_TOKEN=${var.gh_access_token} flux bootstrap github \
+    # 	    --token-auth=true \
+    # 	    --owner=${local.org} \
+    # 	    --repository=apps \
+    # 	    --branch=main \
+    # 	    --path=envs/${local.env} \
+    # 	    --read-write-key=true \
+    # 	    --personal=false
   EOF
 
   tags = merge(
