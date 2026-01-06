@@ -67,11 +67,10 @@ resource "aws_instance" "this" {
     # curl -s https://fluxcd.io/install.sh | sudo bash
     wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/local/bin/yq
     chmod +x /usr/local/bin/yq
-    yq -i '(.clusters[] | select(.name == "kubesolo") | .cluster.server) = "https://127.0.0.1:6443"' /var/lib/kubesolo/pki/admin/admin.kubeconfig
     yq -i '(.clusters[] | select(.name == "kubesolo") | .cluster.server) = "https://127.0.0.1:6443"' /root/.kube/config
 
     for i in {1..60}; do
-      if KUBECONFIG=/var/lib/kubesolo/pki/admin/admin.kubeconfig kubectl get nodes >/dev/null 2>&1; then
+      if KUBECONFIG=/root/.kube/config kubectl get nodes >/dev/null 2>&1; then
         echo "Kubernetes is ready"
         break
       fi
@@ -79,10 +78,10 @@ resource "aws_instance" "this" {
       sleep 5
     done
       
-    KUBECONFIG=/var/lib/kubesolo/pki/admin/admin.kubeconfig kubectl create namespace doppler-operator-system
-    KUBECONFIG=/var/lib/kubesolo/pki/admin/admin.kubeconfig kubectl create secret generic doppler-token-secret -n doppler-operator-system --from-literal=serviceToken=${var.dp_token}
+    KUBECONFIG=/root/.kube/config kubectl create namespace doppler-operator-system
+    KUBECONFIG=/root/.kube/config kubectl create secret generic doppler-token-secret -n doppler-operator-system --from-literal=serviceToken=${var.dp_token}
     
-    KUBECONFIG=/var/lib/kubesolo/pki/admin/admin.kubeconfig GITHUB_TOKEN=${var.gh_access_token} flux bootstrap github \
+    KUBECONFIG=/root/.kube/config GITHUB_TOKEN=${var.gh_access_token} flux bootstrap github \
     	    --token-auth=true \
     	    --owner=${local.org} \
     	    --repository=apps \
