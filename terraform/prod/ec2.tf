@@ -68,12 +68,12 @@ resource "aws_instance" "this" {
     wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/local/bin/yq
     chmod +x /usr/local/bin/yq
     yq -i '(.clusters[] | select(.name == "kubesolo") | .cluster.server) = "https://127.0.0.1:6443"' /root/.kube/config
-
+    yq -i '(.clusters[] | select(.name == "kubesolo") | .cluster.server) = "https://127.0.0.1:6443"' /var/lib/kubesolo/pki/admin/admin.kubeconfig
       
-    KUBECONFIG=/root/.kube/config kubectl create namespace doppler-operator-system
-    KUBECONFIG=/root/.kube/config kubectl create secret generic doppler-token-secret -n doppler-operator-system --from-literal=serviceToken=${var.dp_token}
+    KUBECONFIG=/var/lib/kubesolo/pki/admin/admin.kubeconfig kubectl create namespace doppler-operator-system
+    KUBECONFIG=/var/lib/kubesolo/pki/admin/admin.kubeconfig kubectl create secret generic doppler-token-secret -n doppler-operator-system --from-literal=serviceToken=${var.dp_token}
     
-    KUBECONFIG=/root/.kube/config GITHUB_TOKEN=${var.gh_access_token} flux bootstrap github \
+    KUBECONFIG=/var/lib/kubesolo/pki/admin/admin.kubeconfig GITHUB_TOKEN=${var.gh_access_token} flux bootstrap github \
     	    --token-auth=true \
     	    --owner=${local.org} \
     	    --repository=apps \
