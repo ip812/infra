@@ -65,7 +65,7 @@ database:
     username: "${var.pg_username}"
     storageSize: "1Gi"
     retentionPolicy: "7d"
-    backupsBucket: "${aws_s3_bucket.pg_backups.bucket}"
+    backupsBucket: "${cloudflare_r2_bucket.pg_backups_bucket.name}"
     backupSchedule: "0 0 0 * * *"
 EOT
 }
@@ -109,8 +109,6 @@ env:
     value: "${local.blog_db_name}-pg-rw.${local.blog_app_name}.svc.cluster.local"
   - name: DB_SSL_MODE
     value: disable
-  - name: SLACK_GENERAL_CHANNEL_ID
-    value: "${local.slk_general_channel_id}"
   - name: SLACK_BLOG_BOT_TOKEN
     valueFrom:
       secretKeyRef:
@@ -124,7 +122,7 @@ database:
     username: "${var.pg_username}"
     storageSize: "1Gi"
     retentionPolicy: "7d"
-    backupsBucket: "${aws_s3_bucket.pg_backups.bucket}"
+    backupsBucket: "${cloudflare_r2_bucket.pg_backups_bucket.name}"
     backupSchedule: "0 0 0 * * *"
 EOT
 }

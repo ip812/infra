@@ -13,7 +13,6 @@ locals {
 
   cf_tunnel_name         = "ip812_tunnel"
   gh_username            = "iypetrov"
-  slk_general_channel_id = "C08KHNSSK5M"
   ts_tailnet             = "ilia.yavorov.petrov@gmail.com"
 
   blog_app_name        = "blog"

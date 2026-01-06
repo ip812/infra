@@ -1,18 +1,6 @@
 locals {
   secrets_config = [
     {
-      name  = "AWS_ACCESS_KEY_ID"
-      value = var.aws_access_key_id
-    },
-    {
-      name  = "AWS_SECRET_ACCESS_KEY"
-      value = var.aws_secret_access_key
-    },
-    {
-      name  = "AWS_REGION"
-      value = local.aws_region
-    },
-    {
       name  = "TS_CLIENT_ID"
       value = var.ts_client_id
     },
