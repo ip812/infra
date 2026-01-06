@@ -59,7 +59,7 @@ resource "aws_instance" "this" {
     curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
     install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
     curl -sfL https://get.kubesolo.io | sudo sh -
-    echo "alias k='k3s kubectl'" >> /root/.bashrc
+    echo "alias k='kubectl'" >> /root/.bashrc
 
     curl -s https://fluxcd.io/install.sh | sudo bash
   EOF
