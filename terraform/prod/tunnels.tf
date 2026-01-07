@@ -30,24 +30,24 @@ locals {
       k8s_svc_port = "9090",
       is_protected = true
     }
-    alertmanager = {
-      k8s_ns       = "monitoring",
-      k8s_svc_name = "prometheus-stack-kube-prom-alertmanager",
-      k8s_svc_port = "9093",
-      is_protected = true
-    }
+    # alertmanager = {
+    #   k8s_ns       = "monitoring",
+    #   k8s_svc_name = "prometheus-stack-kube-prom-alertmanager",
+    #   k8s_svc_port = "9093",
+    #   is_protected = true
+    # }
     grafana = {
       k8s_ns       = "monitoring",
       k8s_svc_name = "prometheus-stack-grafana",
       k8s_svc_port = "80",
       is_protected = true
     }
-    kibana = {
-      k8s_ns       = "elasticsearch",
-      k8s_svc_name = "kibana-kibana",
-      k8s_svc_port = "5601",
-      is_protected = true
-    }
+    # kibana = {
+    #   k8s_ns       = "elasticsearch",
+    #   k8s_svc_name = "kibana-kibana",
+    #   k8s_svc_port = "5601",
+    #   is_protected = true
+    # }
     jaeger = {
       k8s_ns       = "tracing",
       k8s_svc_name = "jaeger",

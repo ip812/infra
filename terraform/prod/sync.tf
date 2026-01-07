@@ -59,7 +59,7 @@ env:
     value: "true"
 database:
   postgres:
-    enabled: false
+    enabled: true
     name: "${local.go_template_db_name}"
     host: "${local.go_template_db_name}-pg-rw.${local.go_template_app_name}.svc.cluster.local"
     image: "ghcr.io/cloudnative-pg/postgresql:16.1"
@@ -118,7 +118,7 @@ env:
         key: SLACK_BLOG_BOT_TOKEN
 database:
   postgres:
-    enabled: false
+    enabled: true
     name: "${local.blog_db_name}"
     host: "${local.blog_db_name}-pg-rw.${local.blog_app_name}.svc.cluster.local"
     image: "ghcr.io/cloudnative-pg/postgresql:16.1"
