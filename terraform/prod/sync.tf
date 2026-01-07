@@ -18,7 +18,7 @@ resource "gitsync_values_yaml" "go-template" {
   branch  = "main"
   path    = "values/${local.go_template_app_name}.yaml"
   content = <<EOT
-isInit: true
+isInit: false
 name: "${local.go_template_app_name}"
 image: "ghcr.io/iypetrov/go-template:1.18.0"
 hostname: "${cloudflare_dns_record.dns_record["template"].name}"
@@ -76,7 +76,7 @@ resource "gitsync_values_yaml" "blog" {
   branch  = "main"
   path    = "values/${local.blog_app_name}.yaml"
   content = <<EOT
-isInit: true
+isInit: false
 name: "${local.blog_app_name}"
 image: "ghcr.io/iypetrov/blog:1.26.0"
 hostname: "${cloudflare_dns_record.dns_record["blog"].name}"
