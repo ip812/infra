@@ -11,9 +11,10 @@ locals {
   aws_az_b     = "eu-central-1b"
   aws_vpc_cidr = "10.0.0.0/16"
 
-  cf_tunnel_name = "ip812_tunnel"
-  gh_username    = "iypetrov"
-  ts_tailnet     = "ilia.yavorov.petrov@gmail.com"
+  cf_tunnel_name         = "ip812_tunnel"
+  gh_username            = "iypetrov"
+  ts_tailnet             = "ilia.yavorov.petrov@gmail.com"
+  slk_general_channel_id = "C08KHNSSK5M"
 
   blog_app_name        = "blog"
   blog_domain          = "blog"
