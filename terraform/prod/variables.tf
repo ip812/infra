@@ -22,6 +22,8 @@ locals {
   go_template_app_name = "go-template"
   go_template_domain   = "template"
   go_template_db_name  = "template"
+  family_drive_name    = "family-drive"
+  family_drive_domain  = "familydrive"
   pgadmin_domain       = "pgadmin"
 
   default_tags = {
