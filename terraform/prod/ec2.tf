@@ -62,7 +62,6 @@ resource "aws_instance" "this" {
     # echo "alias k='k3s kubectl'" >> /root/.bashrc
     # 
     # curl -s https://fluxcd.io/install.sh | sudo bash
-    # foo
     
     k3s kubectl cordon ip-10-0-1-214
     while read LINE; do
@@ -87,7 +86,7 @@ resource "aws_instance" "this" {
 
   root_block_device {
     iops        = 3000
-    volume_size = 15
+    volume_size = 13
     volume_type = "gp3"
   }
 
