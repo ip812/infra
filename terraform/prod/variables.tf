@@ -158,3 +158,13 @@ variable "gf_password" {
   type      = string
   sensitive = true
 }
+
+variable "fd_email_1" {
+  type      = string
+  sensitive = true
+}
+
+variable "fd_email_2" {
+  type      = string
+  sensitive = true
+}
