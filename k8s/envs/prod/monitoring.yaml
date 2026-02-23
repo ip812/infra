@@ -9,7 +9,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./envs/prod/monitoring
+  path: ./k8s/envs/prod/monitoring
   prune: true
   wait: true
   dependsOn:

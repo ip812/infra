@@ -9,7 +9,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./envs/prod/elasticsearch
+  path: ./k8s/envs/prod/elasticsearch
   prune: true
   wait: true
   dependsOn:

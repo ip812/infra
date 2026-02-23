@@ -9,6 +9,6 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./envs/prod/doppler
+  path: ./k8s/envs/prod/doppler
   prune: true
   wait: true

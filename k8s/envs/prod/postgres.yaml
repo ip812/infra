@@ -9,6 +9,6 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./envs/prod/postgres
+  path: ./k8s/envs/prod/postgres
   prune: true
   wait: true
