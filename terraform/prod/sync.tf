@@ -2,7 +2,6 @@ resource "gitsync_values_yaml" "pgadmin" {
   branch  = "main"
   path    = "k8s/values/pgadmin.yaml"
   content = <<EOT
-# Managed by Terraform
 servers:
   - name: "${local.go_template_app_name}"
     database: "${local.go_template_db_name}"
@@ -19,7 +18,6 @@ resource "gitsync_values_yaml" "go-template" {
   branch  = "main"
   path    = "k8s/values/${local.go_template_app_name}.yaml"
   content = <<EOT
-# Managed by Terraform
 isInit: false
 name: "${local.go_template_app_name}"
 image: "ghcr.io/iypetrov/go-template:1.19.0"
@@ -78,7 +76,6 @@ resource "gitsync_values_yaml" "blog" {
   branch  = "main"
   path    = "k8s/values/${local.blog_app_name}.yaml"
   content = <<EOT
-# Managed by Terraform
 isInit: false
 name: "${local.blog_app_name}"
 image: "ghcr.io/iypetrov/blog:1.30.1"
