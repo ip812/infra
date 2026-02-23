@@ -1,3 +1,4 @@
+# Managed by Terraform
 isInit: false
 name: "go-template"
 image: "ghcr.io/iypetrov/go-template:1.19.0"
