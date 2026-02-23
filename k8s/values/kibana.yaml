@@ -1,0 +1,9 @@
+replicas: 1
+elasticsearchCredentialSecret: kibana-secret
+resources:
+  requests:
+    cpu: "400m"
+    memory: "512Mi"
+  limits:
+    cpu: "400m"
+    memory: "512Mi"

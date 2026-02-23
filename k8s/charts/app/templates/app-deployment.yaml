@@ -1,0 +1,52 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ .Values.name }}-deploy"
+  labels:
+    app: {{ .Values.name | quote }} 
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.name | quote }}  
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.name | quote }}  
+    spec:
+      imagePullSecrets:
+        - name: ghcr-auth
+      containers:
+        - name: {{ .Values.name | quote }}  
+          image: {{ .Values.image | quote }} 
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+            - containerPort: 2112
+              protocol: TCP
+          env:
+{{- toYaml .Values.env | nindent 12 }}
+          resources:
+            requests:
+              memory: {{ .Values.minMemory | quote }}
+              cpu: {{ .Values.minCPU | quote }}
+            limits:
+              memory: {{ .Values.maxMemory | quote }}
+              cpu: {{ .Values.maxCPU | quote }}
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.healthCheckEndpoint | quote }}
+              port: 8080
+            initialDelaySeconds: 30 
+            periodSeconds: 10 
+            timeoutSeconds: 5 
+            failureThreshold: 3 
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.healthCheckEndpoint | quote }}
+              port: 8080
+            initialDelaySeconds: 5 
+            periodSeconds: 5 
+            timeoutSeconds: 3 
+            failureThreshold: 3

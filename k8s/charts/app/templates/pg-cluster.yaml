@@ -1,0 +1,63 @@
+{{- if .Values.database.postgres.enabled }}
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: "{{ .Values.database.postgres.name }}-pg"
+  annotations:
+    cnpg.io/skipEmptyWalArchiveCheck: "enabled"
+spec:
+  imageName: {{ .Values.database.postgres.image | quote }}
+  instances: 1
+  primaryUpdateStrategy: unsupervised
+  enablePDB: false
+  monitoring:
+    enablePodMonitor: true
+  storage:
+    storageClass: local-path
+    size: {{ .Values.database.postgres.storageSize | quote }}
+  bootstrap:
+    {{- if .Values.isInit }}
+    initdb:
+      database: {{ .Values.database.postgres.name | quote }}
+      owner: {{ .Values.database.postgres.username | quote }}
+      secret:
+        name: "{{ .Values.name }}-pg-bootstrap-creds"
+    {{- else }}
+    recovery:
+      source: {{ printf "%s-pg-backup" .Values.database.postgres.name | quote }}
+      database: {{ .Values.database.postgres.name | quote }}
+      owner: {{ .Values.database.postgres.username | quote }}
+      secret:
+        name: "{{ .Values.name }}-pg-bootstrap-creds"
+    {{- end }}
+  externalClusters:
+    - name: {{ printf "%s-pg-backup" .Values.database.postgres.name | quote }}
+      barmanObjectStore:
+        serverName: {{ printf "%s-pg" .Values.database.postgres.name | quote }}
+        endpointURL: {{ .Values.database.postgres.backupEndpoint | quote }} 
+        destinationPath: {{ printf "s3://%s" .Values.database.postgres.backupsBucket | quote }}
+        s3Credentials:
+          accessKeyId:
+            name: {{ printf "%s-creds" .Values.name | quote }}
+            key: POSTGRES_BACKUPS_ACCESS_KEY_ID
+          secretAccessKey:
+            name: {{ printf "%s-creds" .Values.name | quote }}
+            key: POSTGRES_BACKUPS_SECRET_ACCESS_KEY
+  backup:
+    barmanObjectStore:
+      destinationPath: {{ printf "s3://%s" .Values.database.postgres.backupsBucket | quote }}
+      endpointURL: {{ .Values.database.postgres.backupEndpoint | quote }} 
+      retentionPolicy: {{ .Values.database.postgres.retentionPolicy | quote }}
+      s3Credentials:
+        accessKeyId:
+          name: {{ printf "%s-creds" .Values.name | quote }}
+          key: POSTGRES_BACKUPS_ACCESS_KEY_ID
+        secretAccessKey:
+          name: {{ printf "%s-creds" .Values.name | quote }}
+          key: POSTGRES_BACKUPS_SECRET_ACCESS_KEY
+      wal:
+        compression: gzip
+      data:
+        compression: gzip
+{{- end }}

@@ -1,7 +1,13 @@
 * text=auto
 .editorconfig text
-*.tf       text eol=lf
-*.tfvars   text eol=lf
-*.tftpl    text eol=lf
-*.hcl      text eol=lf
-*.pem      binary
+*.tf          text eol=lf
+*.tfvars      text eol=lf
+*.tftpl       text eol=lf
+*.hcl         text eol=lf
+*.pem         binary
+*.yml         text
+*.yaml        text
+*.yml         linguist-detectable=true
+*.yaml        linguist-detectable=true
+k8s/charts/** linguist-vendored=false
+k8s/charts/** linguist-detectable=true

@@ -1,0 +1,37 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: cnpg
+  namespace: postgres
+spec:
+  releaseName: cnpg
+  interval: 10m
+  chart:
+    spec:
+      chart: cloudnative-pg
+      version: 0.24.0
+      sourceRef:
+        kind: HelmRepository
+        name: cnpg
+        namespace: postgres
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: pgadmin
+  namespace: postgres
+spec:
+  releaseName: pgadmin
+  interval: 1m
+  chart:
+    spec:
+      chart: ./charts/pgadmin
+      reconcileStrategy: Revision
+      sourceRef:
+        kind: GitRepository
+        name: flux-system
+        namespace: flux-system
+  valuesFrom:
+    - kind: ConfigMap
+      name: pgadmin-values

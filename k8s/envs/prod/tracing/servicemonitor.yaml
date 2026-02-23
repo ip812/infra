@@ -1,0 +1,21 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    name: "jaeger-svc-monitor"
+    release: prometheus-stack
+  name: "jaeger-svc-monitor"
+  namespace: monitoring
+spec:
+  jobLabel: job
+  endpoints:
+    - interval: 60s
+      port: metrics
+      path: /metrics
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: jaeger
+  namespaceSelector:
+    matchNames:
+      - tracing

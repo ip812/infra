@@ -1,0 +1,43 @@
+tag: "2.14.1"
+
+provisionDataStore:
+  cassandra: false
+  elasticsearch: false
+
+storage:
+  type: badger
+  badger:
+    ephemeral: true
+    persistence:
+      mountPath: /mnt/data
+      useExistingPvcName: ""
+#   type: elasticsearch
+#   elasticsearch:
+#     host: elasticsearch-master.elasticsearch
+#     port: 9200
+#     scheme: https
+#     user: elastic
+#     password: admin123
+#     tls:
+#       enabled: true
+#       ca: /tls/ca-cert.pem
+
+# query:
+#   cmdlineParams:
+#     es.tls.ca: "/tls/ca-cert.pem"
+#   extraConfigmapMounts:
+#     - name: jaeger-tls
+#       mountPath: /tls
+#       subPath: ""
+#       configMap: jaeger-tls
+#       readOnly: true
+# 
+# collector:
+#   cmdlineParams:
+#     es.tls.ca: "/tls/ca-cert.pem"
+#   extraConfigmapMounts:
+#     - name: jaeger-tls
+#       mountPath: /tls
+#       subPath: ""
+#       configMap: jaeger-tls
+#       readOnly: true

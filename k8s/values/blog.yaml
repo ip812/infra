@@ -1,0 +1,58 @@
+isInit: false
+name: "blog"
+image: "ghcr.io/iypetrov/blog:1.29.1"
+hostname: "blog.ip812.com"
+replicas: 1
+minMemory: "64Mi"
+maxMemory: "128Mi"
+minCPU: "50m"
+maxCPU: "100m"
+healthCheckEndpoint: "/healthz"
+env:
+  - name: APP_ENV
+    value: "prod"
+  - name: APP_DOMAIN
+    value: "blog.ip812.com"
+  - name: APP_PORT
+    value: "8080"
+  - name: APP_METRICS_PORT
+    value: "2112"
+  - name: DB_NAME
+    value: "blog"
+  - name: DB_USERNAME
+    valueFrom:
+      secretKeyRef:
+        name: "blog-creds"
+        key: PG_USERNAME
+  - name: DB_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: "blog-creds"
+        key: PG_PASSWORD
+  - name: DB_ENDPOINT
+    value: "blog-pg-rw.blog.svc.cluster.local"
+  - name: DB_SSL_MODE
+    value: disable
+  - name: SLACK_GENERAL_CHANNEL_ID
+    value: "C08KHNSSK5M"
+  - name: SLACK_BLOG_BOT_TOKEN
+    valueFrom:
+      secretKeyRef:
+        name: "blog-creds" 
+        key: SLACK_BLOG_BOT_TOKEN
+  - name: OTEL_EXPORTER_OTLP_ENDPOINT
+    value: "http://jaeger.tracing.svc.cluster.local:4318"
+  - name: OTEL_EXPORTER_OTLP_INSECURE
+    value: "true"
+database:
+  postgres:
+    enabled: true
+    name: "blog"
+    host: "blog-pg-rw.blog.svc.cluster.local"
+    image: "ghcr.io/cloudnative-pg/postgresql:16.1"
+    username: "admin123"
+    storageSize: "1Gi"
+    retentionPolicy: "7d"
+    backupsBucket: "ip812-pg-backups-bucket"
+    backupEndpoint: "https://cb54b3c79e547fe9cbcc0456f67c7bbf.r2.cloudflarestorage.com"
+    backupSchedule: "0 0 0 * * *"

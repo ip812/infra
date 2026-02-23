@@ -1,0 +1,9 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: doppler
+  namespace: doppler-operator-system
+spec:
+  interval: 10m0s         
+  url: https://helm.doppler.com
