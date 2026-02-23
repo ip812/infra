@@ -1,9 +1,0 @@
-servers:
-  - name: "go-template"
-    database: "template"
-    host: "template-pg-rw.go-template.svc.cluster.local"
-    username: "admin123"
-  - name: "blog"
-    database: "blog"
-    host: "blog-pg-rw.blog.svc.cluster.local"
-    username: "admin123"
