@@ -1,3 +1,4 @@
+# Managed by Terraform
 isInit: false
 name: "blog"
 image: "ghcr.io/iypetrov/blog:1.30.1"
