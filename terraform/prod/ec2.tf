@@ -77,9 +77,9 @@ resource "aws_instance" "this" {
     KUBECONFIG=/etc/rancher/k3s/k3s.yaml GITHUB_TOKEN=${var.gh_access_token} flux bootstrap github \
     	    --token-auth=true \
     	    --owner=${local.org} \
-    	    --repository=apps \
+    	    --repository=infra \
     	    --branch=main \
-    	    --path=envs/${local.env} \
+    	    --path=k8s/envs/${local.env} \
     	    --read-write-key=true \
     	    --personal=false
   EOF

@@ -24,6 +24,6 @@ provider "doppler" {
 }
 
 provider "gitsync" {
-  url   = "https://github.com/ip812/apps.git"
+  url   = "https://github.com/ip812/infra.git"
   token = var.gh_access_token
 }
