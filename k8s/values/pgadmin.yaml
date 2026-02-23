@@ -1,4 +1,3 @@
-# Managed by Terraform
 servers:
   - name: "go-template"
     database: "template"
