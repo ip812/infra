@@ -9,7 +9,7 @@ spec:
   interval: 1m
   chart:
     spec:
-      chart: ./charts/app
+      chart: ./k8s/charts/app
       reconcileStrategy: Revision
       sourceRef:
         kind: GitRepository
