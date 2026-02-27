@@ -26,7 +26,7 @@ spec:
   interval: 1m
   chart:
     spec:
-      chart: ./charts/pgadmin
+      chart: ./k8s/charts/pgadmin
       reconcileStrategy: Revision
       sourceRef:
         kind: GitRepository
