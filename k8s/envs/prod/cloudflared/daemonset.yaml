@@ -18,6 +18,8 @@ spec:
         image: "cloudflare/cloudflared:2025.7.0"
         args:
           - "tunnel"
+          - "--config"
+          - "/etc/cloudflared/config/config.yaml"
           - "run"
           - "--protocol"
           - "http2"
@@ -27,6 +29,9 @@ spec:
               secretKeyRef:
                 name: cloudflared-creds
                 key: TUNNEL_TOKEN
+        volumeMounts:
+          - name: config
+            mountPath: /etc/cloudflared/config
         livenessProbe:
           httpGet:
             path: /ready
@@ -34,3 +39,7 @@ spec:
           failureThreshold: 1
           initialDelaySeconds: 10
           periodSeconds: 10
+      volumes:
+        - name: config
+          configMap:
+            name: cloudflared-config
