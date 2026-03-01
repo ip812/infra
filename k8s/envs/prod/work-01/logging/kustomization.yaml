@@ -7,9 +7,9 @@ resources:
 - helmrepository.yaml
 - helmrelease.yaml
 configMapGenerator:
-  - name: pgadmin-values
-    namespace: postgres
+  - name: fluent-bit-values
+    namespace: logging
     options:
       disableNameSuffixHash: true
     files:
-      - values.yaml=../../../values/pgadmin.yaml
+      - values.yaml=../../../../values/fluent-bit.yaml

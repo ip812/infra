@@ -6,12 +6,10 @@ resources:
 - secret.yaml
 - helmrepository.yaml
 - helmrelease.yaml
-- service.yaml
-- servicemonitor.yaml
 configMapGenerator:
-  - name: jaeger-values
-    namespace: tracing
+  - name: pgadmin-values
+    namespace: postgres
     options:
       disableNameSuffixHash: true
     files:
-      - values.yaml=../../../values/jaeger.yaml
+      - values.yaml=../../../../values/pgadmin.yaml

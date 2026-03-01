@@ -6,11 +6,12 @@ resources:
 - secret.yaml
 - helmrepository.yaml
 - helmrelease.yaml
-- dashboard-go-processes.yaml
+- service.yaml
+- servicemonitor.yaml
 configMapGenerator:
-  - name: kube-prometheus-stack-values
-    namespace: monitoring
+  - name: jaeger-values
+    namespace: tracing
     options:
       disableNameSuffixHash: true
     files:
-      - values.yaml=../../../values/kube-prometheus-stack.yaml
+      - values.yaml=../../../../values/jaeger.yaml

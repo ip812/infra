@@ -7,9 +7,9 @@ resources:
 - helmrelease.yaml
 - dashboard.yaml
 configMapGenerator:
-  - name: go-template-values
-    namespace: go-template 
+  - name: blog-values
+    namespace: blog
     options:
       disableNameSuffixHash: true
     files:
-      - values.yaml=../../../values/go-template.yaml
+      - values.yaml=../../../../values/blog.yaml

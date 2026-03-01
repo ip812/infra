@@ -4,12 +4,13 @@ kind: Kustomization
 resources:
 - namespace.yaml
 - secret.yaml
+- helmrepository.yaml
 - helmrelease.yaml
-- dashboard.yaml
+- dashboard-go-processes.yaml
 configMapGenerator:
-  - name: blog-values
-    namespace: blog
+  - name: kube-prometheus-stack-values
+    namespace: monitoring
     options:
       disableNameSuffixHash: true
     files:
-      - values.yaml=../../../values/blog.yaml
+      - values.yaml=../../../../values/kube-prometheus-stack.yaml

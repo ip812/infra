@@ -2,18 +2,16 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: go-template
+  name: monitoring
   namespace: flux-system
 spec:
   interval: 60s
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./k8s/envs/prod/go-template
+  path: ./k8s/envs/prod/work-01/monitoring
   prune: true
   wait: true
   dependsOn:
-    - name: postgres
-      namespace: flux-system
-    - name: monitoring
+    - name: doppler
       namespace: flux-system

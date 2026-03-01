@@ -80,7 +80,7 @@ resource "aws_instance" "this" {
     	    --owner=${local.org} \
     	    --repository=infra \
     	    --branch=main \
-    	    --path=k8s/envs/${local.env} \
+    	    --path=k8s/envs/${local.env}/work-01 \
     	    --read-write-key=true \
     	    --personal=false
   EOF

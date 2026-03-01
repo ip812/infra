@@ -2,13 +2,18 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: reloader
+  name: tracing
   namespace: flux-system
 spec:
   interval: 60s
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./k8s/envs/prod/reloader
+  path: ./k8s/envs/prod/work-01/tracing
   prune: true
   wait: true
+  dependsOn:
+    - name: doppler
+      namespace: flux-system
+    # - name: elasticsearch
+    #   namespace: flux-system
