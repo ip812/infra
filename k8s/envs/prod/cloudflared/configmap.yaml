@@ -17,8 +17,8 @@ data:
         service: http://capacitor.capacitor.svc.cluster.local:9000
       - hostname: prometheus.ip812.com
         service: http://prometheus-stack-kube-prom-prometheus.monitoring.svc.cluster.local:9090
-      # - hostname: grafana.ip812.com
-      #   service: http://prometheus-stack-grafana.monitoring.svc.cluster.local:80
+      - hostname: grafana.ip812.com
+        service: http://prometheus-stack-grafana.monitoring.svc.cluster.local:80
       - hostname: jaeger.ip812.com
         service: http://jaeger.tracing.svc.cluster.local:16686
       - service: http_status:404
