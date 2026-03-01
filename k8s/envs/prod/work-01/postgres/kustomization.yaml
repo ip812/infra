@@ -12,4 +12,4 @@ configMapGenerator:
     options:
       disableNameSuffixHash: true
     files:
-      - values.yaml=../../../values/pgadmin.yaml
+      - values.yaml=../../../../values/pgadmin.yaml
