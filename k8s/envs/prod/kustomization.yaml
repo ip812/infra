@@ -4,6 +4,7 @@ kind: Kustomization
 resources:
 - doppler.yaml
 - capacitor.yaml
+- reloader.yaml
 - cloudflared.yaml
 - monitoring.yaml
 # - elasticsearch.yaml
