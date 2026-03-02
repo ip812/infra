@@ -13,8 +13,6 @@ data:
         service: http://blog-svc.blog.svc.cluster.local:8080
       - hostname: pgadmin.ip812.com
         service: http://pgadmin-svc.postgres.svc.cluster.local:8080
-      - hostname: capacitor.ip812.com
-        service: http://capacitor.capacitor.svc.cluster.local:9000
       - hostname: prometheus.ip812.com
         service: http://prometheus-stack-kube-prom-prometheus.monitoring.svc.cluster.local:9090
       - hostname: grafana.ip812.com
