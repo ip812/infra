@@ -1,57 +1,27 @@
 locals {
   tunnel_config = {
     template = {
-      k8s_ns       = "go-template",
-      k8s_svc_name = "go-template-svc",
-      k8s_svc_port = "8080",
       is_protected = false
     }
     blog = {
-      k8s_ns       = "blog",
-      k8s_svc_name = "blog-svc",
-      k8s_svc_port = "8080",
       is_protected = false
     }
     pgadmin = {
-      k8s_ns       = "postgres",
-      k8s_svc_name = "pgadmin-svc",
-      k8s_svc_port = "8080",
-      is_protected = true
-    }
-    capacitor = {
-      k8s_ns       = "capacitor",
-      k8s_svc_name = "capacitor",
-      k8s_svc_port = "9000",
       is_protected = true
     }
     prometheus = {
-      k8s_ns       = "monitoring",
-      k8s_svc_name = "prometheus-stack-kube-prom-prometheus",
-      k8s_svc_port = "9090",
       is_protected = true
     }
     # alertmanager = {
-    #   k8s_ns       = "monitoring",
-    #   k8s_svc_name = "prometheus-stack-kube-prom-alertmanager",
-    #   k8s_svc_port = "9093",
     #   is_protected = true
     # }
     grafana = {
-      k8s_ns       = "monitoring",
-      k8s_svc_name = "prometheus-stack-grafana",
-      k8s_svc_port = "80",
       is_protected = true
     }
     # kibana = {
-    #   k8s_ns       = "elasticsearch",
-    #   k8s_svc_name = "kibana-kibana",
-    #   k8s_svc_port = "5601",
     #   is_protected = true
     # }
     jaeger = {
-      k8s_ns       = "tracing",
-      k8s_svc_name = "jaeger",
-      k8s_svc_port = "16686",
       is_protected = true
     }
   }
