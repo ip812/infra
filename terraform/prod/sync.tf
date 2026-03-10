@@ -78,7 +78,7 @@ resource "gitsync_values_yaml" "blog" {
   content = <<EOT
 isInit: false
 name: "${local.blog_app_name}"
-image: "ghcr.io/iypetrov/blog:1.30.1"
+image: "ghcr.io/iypetrov/blog:1.30.2"
 hostname: "${cloudflare_dns_record.dns_record["blog"].name}"
 replicas: 1
 minMemory: "64Mi"
