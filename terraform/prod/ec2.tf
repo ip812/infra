@@ -62,7 +62,6 @@ resource "aws_instance" "this" {
     # echo "alias k='k3s kubectl'" >> /root/.bashrc
     # 
     # curl -s https://fluxcd.io/install.sh | sudo bash
-    # foo
     
     k3s kubectl cordon ip-10-0-1-214
     while read LINE; do
@@ -80,7 +79,7 @@ resource "aws_instance" "this" {
     	    --owner=${local.org} \
     	    --repository=infra \
     	    --branch=main \
-    	    --path=k8s/envs/${local.env}/work-01 \
+    	    --path=k8s/overlays/${local.env}/work-01 \
     	    --read-write-key=true \
     	    --personal=false
   EOF
