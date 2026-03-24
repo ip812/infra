@@ -27,9 +27,5 @@ terraform {
       source  = "DopplerHQ/doppler"
       version = "1.20.0"
     }
-    gitsync = {
-      source  = "ip812/gitsync"
-      version = "1.3.0"
-    }
   }
 }
