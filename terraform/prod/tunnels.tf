@@ -1,5 +1,8 @@
 locals {
   tunnel_config = {
+    shoot-work-01 = {
+      is_protected = true
+    }
     blog = {
       is_protected = false
     }
