@@ -1,0 +1,15 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jaeger-metrics
+  namespace: tracing
+  labels:
+    app.kubernetes.io/name: jaeger
+spec:
+  selector:
+    app.kubernetes.io/name: jaeger
+  ports:
+    - name: metrics
+      port: 8888
+      targetPort: 8888

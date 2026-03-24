@@ -1,0 +1,40 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: elasticsearch
+  namespace: elasticsearch
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: elasticsearch
+      sourceRef:
+        kind: HelmRepository
+        name: elastic
+        namespace: elasticsearch
+  valuesFrom:
+    - kind: ConfigMap
+      name: elasticsearch-values
+# there is no enough resources on the VM to run Kibana
+# ---
+# apiVersion: helm.toolkit.fluxcd.io/v2
+# kind: HelmRelease
+# metadata:
+#   name: kibana
+#   namespace: elasticsearch
+# spec:
+#   interval: 5m
+#   chart:
+#     spec:
+#       chart: kibana
+#       sourceRef:
+#         kind: HelmRepository
+#         name: elastic
+#         namespace: elasticsearch
+#   valuesFrom:
+#     - kind: ConfigMap
+#       name: kibana-values
+#   dependsOn:
+#     - name: elasticsearch
+#       namespace: elasticsearch
