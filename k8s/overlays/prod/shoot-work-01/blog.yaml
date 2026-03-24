@@ -15,5 +15,5 @@ spec:
   dependsOn:
     - name: postgres
       namespace: flux-system
-    - name: monitoring
-      namespace: flux-system
+        # - name: monitoring
+        #   namespace: flux-system
