@@ -1,27 +1,9 @@
 locals {
   tunnel_config = {
-    template = {
-      is_protected = false
-    }
     blog = {
       is_protected = false
     }
     pgadmin = {
-      is_protected = true
-    }
-    prometheus = {
-      is_protected = true
-    }
-    # alertmanager = {
-    #   is_protected = true
-    # }
-    grafana = {
-      is_protected = true
-    }
-    # kibana = {
-    #   is_protected = true
-    # }
-    jaeger = {
       is_protected = true
     }
   }
