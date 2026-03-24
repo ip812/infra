@@ -2,14 +2,14 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: go-template
+  name: blog
   namespace: flux-system
 spec:
   interval: 60s
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./k8s/overlays/prod/work-01/go-template
+  path: ./k8s/overlays/prod/shoot-work-01/blog
   prune: true
   wait: true
   dependsOn:

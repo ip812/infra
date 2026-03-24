@@ -20,7 +20,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 10m0s
-  path: ./k8s/overlays/prod/work-01
+  path: ./k8s/overlays/prod/shoot-work-01
   prune: true
   sourceRef:
     kind: GitRepository
