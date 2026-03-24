@@ -79,7 +79,7 @@ resource "aws_instance" "this" {
     	    --owner=${local.org} \
     	    --repository=infra \
     	    --branch=main \
-    	    --path=k8s/overlays/${local.env}/work-01 \
+    	    --path=k8s/overlays/${local.env}/shoot-work-01 \
     	    --read-write-key=true \
     	    --personal=false
   EOF
