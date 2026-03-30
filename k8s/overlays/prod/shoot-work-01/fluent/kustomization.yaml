@@ -10,6 +10,7 @@ resources:
 - https://raw.githubusercontent.com/fluent/fluent-operator/release-3.7/manifests/setup/fluent-operator-deployment.yaml
 - https://raw.githubusercontent.com/fluent/fluent-operator/release-3.7/manifests/setup/fluent-operator-serviceAccount.yaml
 - fluent-bit.yaml
+- parsers.yaml
 
 # Change to the namespace you want such as:
 # namespace: fluent
