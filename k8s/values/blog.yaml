@@ -1,6 +1,6 @@
 isInit: false
 name: "blog"
-image: "ghcr.io/iypetrov/blog:1.30.2"
+image: "ghcr.io/iypetrov/blog:1.30.3"
 hostname: "blog.ip812.com"
 replicas: 1
 minMemory: "64Mi"
