@@ -1,0 +1,14 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- namespace.yaml
+- https://raw.githubusercontent.com/fluent/fluent-operator/release-3.7/manifests/setup/fluent-operator-crd.yaml
+- https://raw.githubusercontent.com/fluent/fluent-operator/release-3.7/manifests/setup/fluent-operator-clusterRoleBinding.yaml
+- https://raw.githubusercontent.com/fluent/fluent-operator/release-3.7/manifests/setup/fluent-operator-clusterRole.yaml
+- https://raw.githubusercontent.com/fluent/fluent-operator/release-3.7/manifests/setup/fluent-operator-configMap-env.yaml
+- https://raw.githubusercontent.com/fluent/fluent-operator/release-3.7/manifests/setup/fluent-operator-deployment.yaml
+- https://raw.githubusercontent.com/fluent/fluent-operator/release-3.7/manifests/setup/fluent-operator-serviceAccount.yaml
+
+# Change to the namespace you want such as:
+# namespace: fluent

@@ -4,5 +4,6 @@ kind: Kustomization
 resources:
 - ../../../base
 - cloudflared.yaml
+- fluent.yaml
 - postgres.yaml
 - blog.yaml
