@@ -8,7 +8,7 @@ data:
   config.yaml: |
     ingress:
       - hostname: shoot-work-01.ip812.com
-        service: tcp://kubernetes.default.svc:16443
+        service: tcp://kubernetes.default.svc:443
         originRequest:
           proxyType: socks
       - hostname: blog.ip812.com
