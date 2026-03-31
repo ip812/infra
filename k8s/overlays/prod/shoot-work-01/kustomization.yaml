@@ -7,3 +7,5 @@ resources:
 - fluent.yaml
 - postgres.yaml
 - blog.yaml
+- cert-manager.yaml
+- otel-col.yaml
