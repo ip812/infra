@@ -3,6 +3,8 @@ apiVersion: fluentbit.fluent.io/v1alpha2
 kind: ClusterOutput
 metadata:
   name: opentelemetry-output
+  labels:
+    fluentbit.fluent.io/enabled: "true"
 spec:
   match: "*"
   plugin: opentelemetry
