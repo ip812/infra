@@ -1,0 +1,50 @@
+---
+apiVersion: opentelemetry.io/v1beta1
+kind: OpenTelemetryCollector
+metadata:
+  name: opentelemetry-collector
+  namespace: opentelemetry-operator-system
+spec:
+  mode: deployment
+  config:
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+            endpoint: '[::]:4317'
+          http:
+            endpoint: '[::]:4318'
+    processors:
+      batch:
+        send_batch_max_size: 4000
+        send_batch_size: 2000
+        timeout: 10s
+      memory_limiter:
+        check_interval: 1s
+        limit_mib: 3000
+        spike_limit_mib: 600
+    exporters:
+      debug:
+        verbosity: detailed
+    service:
+      telemetry:
+        logs:
+          encoding: json
+          level: info
+        metrics:
+          level: basic
+          readers:
+            - pull:
+                exporter:
+                  prometheus:
+                    host: '[::]'
+                    port: 8888
+      pipelines:
+        logs:
+          receivers: 
+            - otlp
+          processors: 
+            - memory_limiter
+            - batch 
+          exporters:
+            - debug
