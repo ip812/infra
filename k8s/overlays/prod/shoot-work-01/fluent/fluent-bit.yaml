@@ -21,13 +21,6 @@ spec:
   fluentBitConfigName: fluent-bit-config
   tolerations:
     - operator: Exists
-  affinity:
-    nodeAffinity:
-      requiredDuringSchedulingIgnoredDuringExecution:
-        nodeSelectorTerms:
-          - matchExpressions:
-              - key: node-role.kubernetes.io/edge
-                operator: DoesNotExist
 ---
 apiVersion: fluentbit.fluent.io/v1alpha2
 kind: ClusterFluentBitConfig
@@ -51,7 +44,7 @@ spec:
       maxChunksUp: 200
       metrics: "on"
       path: /var/fluentbit/chunks
-      sync: normal
+      sync: Normal
   parserSelector:
     matchLabels:
       fluentbit.fluent.io/enabled: "true"
