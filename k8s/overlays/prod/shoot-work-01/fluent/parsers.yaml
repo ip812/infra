@@ -5,6 +5,7 @@ metadata:
   name: containerd-parser
   labels:
     fluentbit.fluent.io/enabled: "true"
+    fluentbit.fluent.io/component: logging
 spec:
   decoders:
   - decodeFieldAs: json log

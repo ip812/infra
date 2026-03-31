@@ -5,6 +5,7 @@ metadata:
   name: opentelemetry-output
   labels:
     fluentbit.fluent.io/enabled: "true"
+    fluentbit.fluent.io/component: logging
 spec:
   match: "*"
   plugin: opentelemetry
