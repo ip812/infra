@@ -1,0 +1,21 @@
+---
+apiVersion: fluentbit.fluent.io/v1alpha2
+kind: ClusterInput
+metadata:
+  name: tail
+  labels:
+    fluentbit.fluent.io/enabled: "true"
+    fluentbit.fluent.io/component: logging
+spec:
+  tail:
+    db: /var/fluentbit/flb_kube.db
+    dbSync: Normal
+    ignoredOlder: 30m
+    memBufLimit: 60MB
+    parser: containerd-parser
+    path: /var/log/containers/*.log
+    pauseOnChunksOverlimit: "on"
+    refreshIntervalSeconds: 10
+    skipLongLines: true
+    storageType: filesystem
+    tag: kubernetes.*

@@ -37,8 +37,25 @@ metadata:
     app.kubernetes.io/name: fluent-bit
 spec:
   service:
-    parsersFile: parsers.conf
+    daemon: false
+    flushSeconds: 30
+    httpListen: '::'
+    httpPort: 2020
     httpServer: true
+    logLevel: error
+    parsersFile: parsers.conf
+    storage:
+      backlogMemLimit: 50M
+      checksum: "off"
+      deleteIrrecoverableChunks: "on"
+      maxChunksUp: 200
+      metrics: "on"
+      path: /var/fluentbit/chunks
+      sync: normal
+  parserSelector:
+    matchLabels:
+      fluentbit.fluent.io/enabled: "true"
+  multilineParserSelector: {}
   inputSelector:
     matchLabels:
       fluentbit.fluent.io/enabled: "true"
@@ -46,8 +63,5 @@ spec:
     matchLabels:
       fluentbit.fluent.io/enabled: "true"
   outputSelector:
-    matchLabels:
-      fluentbit.fluent.io/enabled: "true"
-  parserSelector:
     matchLabels:
       fluentbit.fluent.io/enabled: "true"
