@@ -12,5 +12,3 @@ spec:
     host: opentelemetry-collector-collector.opentelemetry-operator-system.svc
     port: 4318
     logsUri: /v1/logs
-    tls:
-      verify: false
