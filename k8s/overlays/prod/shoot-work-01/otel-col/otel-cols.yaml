@@ -29,7 +29,8 @@ spec:
     service:
       telemetry:
         logs:
-          encoding: json
+          # encoding: json
+          encoding: console
           level: info
         metrics:
           level: basic
