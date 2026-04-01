@@ -44,7 +44,7 @@ spec:
       maxChunksUp: 200
       metrics: "on"
       path: /var/fluentbit/chunks
-      sync: Normal
+      sync: normal
   parserSelector:
     matchLabels:
       fluentbit.fluent.io/enabled: "true"
