@@ -24,22 +24,19 @@ spec:
         limit_mib: 3000
         spike_limit_mib: 600
     exporters:
+      otlphttp/victoriametrics:
+        compression: gzip
+        encoding: proto
+        logs_endpoint: http://vls-victoria-logs-single-server.victoria-logs.svc:9428/insert/opentelemetry/v1/logs
+        tls:
+          insecure: true
       debug:
-        verbosity: detailed
+        verbosity: basic
     service:
       telemetry:
         logs:
-          # encoding: json
-          encoding: console
+          encoding: json
           level: info
-        metrics:
-          level: basic
-          readers:
-            - pull:
-                exporter:
-                  prometheus:
-                    host: '[::]'
-                    port: 8888
       pipelines:
         logs:
           receivers: 
@@ -49,3 +46,4 @@ spec:
             - batch 
           exporters:
             - debug
+            - otlphttp/victoriametrics
