@@ -41,7 +41,7 @@ env:
         name: "blog-creds" 
         key: SLACK_BLOG_BOT_TOKEN
   - name: OTEL_EXPORTER_OTLP_ENDPOINT
-    value: "http://jaeger.tracing.svc.cluster.local:4318"
+    value: "http://vts-victoria-traces-single-server.victoria-traces.svc:10428/insert/opentelemetry/v1/traces"
   - name: OTEL_EXPORTER_OTLP_INSECURE
     value: "true"
 database:
