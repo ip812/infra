@@ -9,6 +9,9 @@ locals {
     pgadmin = {
       is_protected = true
     }
+    victoria-logs = {
+      is_protected = true
+    }
   }
 }
 
