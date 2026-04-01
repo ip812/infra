@@ -5,7 +5,9 @@ metadata:
   name: otel-http-output
 spec:
   match: "*"
-  otlp:
+  opentelemetry:
     host: opentelemetry-collector-collector.opentelemetry-operator-system.svc
     port: 4318
-    uri: /v1/logs
+    logsUri: /v1/logs
+    tls:
+      verify: false
