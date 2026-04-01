@@ -10,3 +10,4 @@ resources:
 - cert-manager.yaml
 - otel-col.yaml
 - victoria-logs.yaml
+- victoria-traces.yaml
