@@ -17,4 +17,6 @@ data:
         service: http://pgadmin-svc.postgres.svc.cluster.local:8080
       - hostname: victoria-logs.ip812.com
         service: http://vls-victoria-logs-single-server.victoria-logs.svc:9428
+      - hostname: victoria-traces.ip812.com
+        service: http://vts-vt-single-server.victoria-logs.svc:10428
       - service: http_status:404

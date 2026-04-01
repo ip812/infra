@@ -12,6 +12,9 @@ locals {
     victoria-logs = {
       is_protected = true
     }
+    victoria-traces = {
+      is_protected = true
+    }
   }
 }
 
