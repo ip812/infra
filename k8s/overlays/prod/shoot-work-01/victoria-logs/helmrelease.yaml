@@ -1,0 +1,20 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: victoria-logs-single
+  namespace: victoria-logs
+spec:
+  releaseName: vls
+  interval: 10m
+  chart:
+    spec:
+      chart: victoria-logs-single
+      version: 0.2.14
+      sourceRef:
+        kind: HelmRepository
+        name: vm
+        namespace: victoria-logs
+  valuesFrom:
+    - kind: ConfigMap
+      name: victoria-logs-values

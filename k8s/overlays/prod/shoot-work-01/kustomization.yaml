@@ -9,3 +9,4 @@ resources:
 - blog.yaml
 - cert-manager.yaml
 - otel-col.yaml
+- victoria-logs.yaml
