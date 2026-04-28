@@ -26,11 +26,11 @@ spec:
           - "--protocol"
           - "http2"
         env:
-          - name: TUNNEL_TOKEN
+          - name: TUNNEL_SHOOT_WORK_01_TOKEN
             valueFrom:
               secretKeyRef:
                 name: cloudflared-creds
-                key: TUNNEL_TOKEN
+                key: TUNNEL_SHOOT_WORK_01_TOKEN
         volumeMounts:
           - name: config
             mountPath: /etc/cloudflared/config

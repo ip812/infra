@@ -49,8 +49,12 @@ locals {
       })
     },
     {
-      name  = "TUNNEL_TOKEN"
-      value = data.cloudflare_zero_trust_tunnel_cloudflared_token.cf_tunnel_token.token
+      name  = "TUNNEL_SHOOT_WORK_01_TOKEN"
+      value = data.cloudflare_zero_trust_tunnel_cloudflared_token.cf_shoot_work_01_tunnel_token.token
+    },
+    {
+      name  = "TUNNEL_SHOOT_O11Y_01_TOKEN"
+      value = data.cloudflare_zero_trust_tunnel_cloudflared_token.cf_shoot_o11y_01_tunnel_token.token
     },
     {
       name  = "SLACK_BLOG_BOT_TOKEN"
