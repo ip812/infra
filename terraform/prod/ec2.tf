@@ -70,7 +70,7 @@ resource "aws_instance" "this" {
         curl -sf -X DELETE -H "Authorization: Bearer $TOKEN" "$API_BASE/device/$DEVICE_ID" || true
     fi
 
-    TAGS_JSON=$(jq -Rn --arg tags "$TS_TAGS" '$tags | split(",")')
+    TAGS_JSON=$(jq -Rn --arg tags "tag:vm" '$tags | split(",")')
     AUTH_KEY=$(curl -sf -X POST \
         -H "Authorization: Bearer $TOKEN" \
         -H "Content-Type: application/json" \
