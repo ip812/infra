@@ -57,7 +57,7 @@ resource "aws_instance" "this" {
     curl -fsSL https://tailscale.com/install.sh | sh
 
     API_BASE="https://api.tailscale.com/api/v2"
-		TS_TAGS="tag:vm"
+    TS_TAGS="tag:vm"
 
     TOKEN=$(curl -sf -d "client_id=${var.ts_oauth_client_id}" -d "client_secret=${var.ts_oauth_client_secret}" "$API_BASE/oauth/token" | jq -r '.access_token')
     if [ -z "$TOKEN" ] || [ "$TOKEN" = "null" ]; then
