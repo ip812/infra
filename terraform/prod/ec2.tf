@@ -57,6 +57,7 @@ resource "aws_instance" "this" {
     curl -fsSL https://tailscale.com/install.sh | sh
 
     API_BASE="https://api.tailscale.com/api/v2"
+		TS_TAGS="tag:vm"
 
     TOKEN=$(curl -sf -d "client_id=${var.ts_oauth_client_id}" -d "client_secret=${var.ts_oauth_client_secret}" "$API_BASE/oauth/token" | jq -r '.access_token')
     if [ -z "$TOKEN" ] || [ "$TOKEN" = "null" ]; then
@@ -70,7 +71,7 @@ resource "aws_instance" "this" {
         curl -sf -X DELETE -H "Authorization: Bearer $TOKEN" "$API_BASE/device/$DEVICE_ID" || true
     fi
 
-    TAGS_JSON=$(jq -Rn --arg tags "tag:vm" '$tags | split(",")')
+    TAGS_JSON=$(jq -Rn --arg tags "$TS_TAGS" '$tags | split(",")')
     AUTH_KEY=$(curl -sf -X POST \
         -H "Authorization: Bearer $TOKEN" \
         -H "Content-Type: application/json" \
