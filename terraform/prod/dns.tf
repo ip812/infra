@@ -27,7 +27,7 @@ resource "cloudflare_dns_record" "dns_record" {
   for_each = local.route_config
   zone_id  = var.cf_ip812_zone_id
   name     = "${each.key}.${local.org}.com"
-  content  = "${each.value.id}.cfargotunnel.com"
+  content  = "${each.value.tunnel.id}.cfargotunnel.com"
   type     = "CNAME"
   ttl      = 1
   proxied  = true
