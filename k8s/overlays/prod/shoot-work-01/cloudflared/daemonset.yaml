@@ -26,7 +26,7 @@ spec:
           - "--protocol"
           - "http2"
         env:
-          - name: TUNNEL_SHOOT_WORK_01_TOKEN
+          - name: TUNNEL_TOKEN
             valueFrom:
               secretKeyRef:
                 name: cloudflared-creds
