@@ -50,12 +50,49 @@ resource "aws_instance" "this" {
   user_data                   = <<-EOF
     #!/bin/bash
     
-    set -x
+    set -euo pipefail
     
     apt-get update -y
-    apt-get install -y curl wget unzip make git vim tmux
+    apt-get install -y curl wget unzip make git vim tmux jq
     curl -fsSL https://tailscale.com/install.sh | sh
-    tailscale up --authkey ${var.ts_auth_key} --hostname "${local.org}-${local.env}-work-01" --ssh
+
+    API_BASE="https://api.tailscale.com/api/v2"
+
+    TOKEN=$(curl -sf -d "client_id=${var.ts_oauth_client_id}" -d "client_secret=${var.ts_oauth_client_secret}" "${API_BASE}/oauth/token" | jq -r '.access_token')
+    if [ -z "$TOKEN" ] || [ "$TOKEN" = "null" ]; then
+        log "ERROR: Failed to obtain OAuth token"
+        exit 1
+    fi
+
+    DEVICES=$(curl -sf -H "Authorization: Bearer $TOKEN" "$API_BASE/tailnet/${local.ts_tailnet}/devices")
+    DEVICE_ID=$(echo "$DEVICES" | jq -r --arg name "${local.org}-${local.env}-work-01" '.devices[] | select(.hostname == $name) | .id')
+    if [ -n "$DEVICE_ID" ]; then
+        curl -sf -X DELETE -H "Authorization: Bearer $TOKEN" "$API_BASE/device/$DEVICE_ID" || true
+    fi
+
+    TAGS_JSON=$(jq -Rn --arg tags "$TS_TAGS" '$tags | split(",")')
+    AUTH_KEY=$(curl -sf -X POST \
+        -H "Authorization: Bearer $TOKEN" \
+        -H "Content-Type: application/json" \
+        "$API_BASE/tailnet/${local.ts_tailnet}/keys" \
+        -d "$(jq -n --argjson tags "$TAGS_JSON" '{
+            capabilities: {
+                devices: {
+                    create: {
+                        reusable: false,
+                        preauthorized: true,
+                        tags: $tags
+                    }
+                }
+            },
+            expirySeconds: 3600
+        }')" | jq -r '.key')
+    if [ -z "$AUTH_KEY" ] || [ "$AUTH_KEY" = "null" ]; then
+        log "ERROR: Failed to create auth key"
+        exit 1
+    fi
+
+    tailscale up --authkey="$AUTH_KEY" --hostname="${local.org}-${local.env}-work-01" --advertise-tags="$TS_TAGS" --ssh
      
     # curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--tls-san ${local.org}-${local.env} --https-listen-port 16443" sh -
     # echo "alias kubectl='k3s kubectl'" >> /root/.bashrc
