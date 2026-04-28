@@ -13,6 +13,13 @@ resource "aws_vpc_security_group_egress_rule" "egress" {
   ip_protocol = -1
 }
 
+resource "aws_vpc_security_group_ingress_rule" "ingress" {
+  security_group_id = aws_security_group.this.id
+
+  cidr_ipv4   = "0.0.0.0/0"
+  ip_protocol = -1
+}
+
 resource "aws_iam_role" "this" {
   name = "role"
   assume_role_policy = jsonencode({
