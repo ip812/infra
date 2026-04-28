@@ -58,7 +58,7 @@ resource "aws_instance" "this" {
 
     API_BASE="https://api.tailscale.com/api/v2"
 
-    TOKEN=$(curl -sf -d "client_id=${var.ts_oauth_client_id}" -d "client_secret=${var.ts_oauth_client_secret}" "${API_BASE}/oauth/token" | jq -r '.access_token')
+    TOKEN=$(curl -sf -d "client_id=${var.ts_oauth_client_id}" -d "client_secret=${var.ts_oauth_client_secret}" "$API_BASE/oauth/token" | jq -r '.access_token')
     if [ -z "$TOKEN" ] || [ "$TOKEN" = "null" ]; then
         log "ERROR: Failed to obtain OAuth token"
         exit 1

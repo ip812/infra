@@ -14,7 +14,6 @@ locals {
   cf_tunnel_name         = "ip812_tunnel"
   gh_username            = "iypetrov"
   ts_tailnet             = "ilia.yavorov.petrov@gmail.com"
-  slk_general_channel_id = "C08KHNSSK5M"
 
   blog_app_name        = "blog"
   blog_domain          = "blog"
@@ -92,6 +91,16 @@ variable "ts_client_secret" {
 }
 
 variable "ts_api_key" {
+  type      = string
+  sensitive = true
+}
+
+variable "ts_oauth_client_id" {
+  type      = string
+  sensitive = true
+}
+
+variable "ts_oauth_client_secret" {
   type      = string
   sensitive = true
 }
