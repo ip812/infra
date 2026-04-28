@@ -41,7 +41,6 @@ resource "aws_iam_instance_profile" "this" {
 
 resource "aws_instance" "this" {
   ami                         = "ami-0da1f66573556d917"
-  # ami                         = "ami-0b5ef45933f8fa37d"
   instance_type               = "t3.medium"
   subnet_id                   = aws_subnet.public_subnet_a.id
   vpc_security_group_ids      = [aws_security_group.this.id]
@@ -95,31 +94,23 @@ resource "aws_instance" "this" {
 
     tailscale up --authkey="$AUTH_KEY" --hostname="${local.org}-${local.env}-work-01" --advertise-tags="$TS_TAGS" --ssh
      
-    # curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--tls-san ${local.org}-${local.env} --https-listen-port 16443" sh -
-    # echo "alias kubectl='k3s kubectl'" >> /root/.bashrc
-    # echo "alias k='k3s kubectl'" >> /root/.bashrc
-    # 
-    # curl -s https://fluxcd.io/install.sh | sudo bash
+    curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--tls-san ${local.org}-${local.env} --https-listen-port 16443" sh -
+    echo "alias kubectl='k3s kubectl'" >> /root/.bashrc
+    echo "alias k='k3s kubectl'" >> /root/.bashrc
     
-    # k3s kubectl cordon ip-10-0-1-214
-    # while read LINE; do
-    #   NAMESPACE="$(echo $LINE | awk '{ print $1 }')"
-    #   POD_NAME="$(echo $LINE | awk '{ print $2 }')"
-    #   k3s kubectl delete pod $POD_NAME -n $NAMESPACE --grace-period=0 --force
-    # done < <(k3s kubectl get pods -A | grep Terminating | awk '{ print $1 " " $2 }')
-    # k3s kubectl delete node ip-10-0-1-214
-    # 
-    # KUBECONFIG=/etc/rancher/k3s/k3s.yaml k3s kubectl create namespace doppler-operator-system
-    # KUBECONFIG=/etc/rancher/k3s/k3s.yaml k3s kubectl create secret generic doppler-token-secret -n doppler-operator-system --from-literal=serviceToken=${var.dp_token}
-    # 
-    # KUBECONFIG=/etc/rancher/k3s/k3s.yaml GITHUB_TOKEN=${var.gh_access_token} flux bootstrap github \
-    # 	    --token-auth=true \
-    # 	    --owner=${local.org} \
-    # 	    --repository=infra \
-    # 	    --branch=main \
-    # 	    --path=k8s/overlays/${local.env}/shoot-work-01 \
-    # 	    --read-write-key=true \
-    # 	    --personal=false
+    curl -s https://fluxcd.io/install.sh | sudo bash
+    
+    KUBECONFIG=/etc/rancher/k3s/k3s.yaml k3s kubectl create namespace doppler-operator-system
+    KUBECONFIG=/etc/rancher/k3s/k3s.yaml k3s kubectl create secret generic doppler-token-secret -n doppler-operator-system --from-literal=serviceToken=${var.dp_token}
+    
+    KUBECONFIG=/etc/rancher/k3s/k3s.yaml GITHUB_TOKEN=${var.gh_access_token} flux bootstrap github \
+    	    --token-auth=true \
+    	    --owner=${local.org} \
+    	    --repository=infra \
+    	    --branch=main \
+    	    --path=k8s/overlays/${local.env}/shoot-work-01 \
+    	    --read-write-key=true \
+    	    --personal=false
   EOF
 
   root_block_device {
