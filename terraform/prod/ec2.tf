@@ -50,7 +50,6 @@ resource "aws_instance" "this" {
     #!/bin/bash
     
     set -euo pipefail
-    # foo
     
     apt-get update -y
     apt-get install -y curl wget unzip make git vim tmux jq
