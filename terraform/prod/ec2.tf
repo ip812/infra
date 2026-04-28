@@ -40,7 +40,7 @@ resource "aws_iam_instance_profile" "this" {
 }
 
 resource "aws_instance" "this" {
-  ami                         = "ami-051eaec1417c5d4ae"
+  ami                         = "ami-0da1f66573556d917"
   # ami                         = "ami-0b5ef45933f8fa37d"
   instance_type               = "t3.medium"
   subnet_id                   = aws_subnet.public_subnet_a.id
