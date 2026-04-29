@@ -33,6 +33,12 @@ resource "cloudflare_dns_record" "dns_record" {
   proxied  = true
 }
 
+resource "cloudflare_zero_trust_access_service_token" "work_to_o11y" {
+  name       = "work-to-o11y"
+  zone_id    = var.cf_ip812_zone_id
+  duration   = "175200h" # 20 years
+}
+
 resource "cloudflare_zero_trust_access_policy" "zt_access_policy" {
   account_id       = var.cf_account_id
   name             = "Admin allowlist"
@@ -43,6 +49,11 @@ resource "cloudflare_zero_trust_access_policy" "zt_access_policy" {
     for email in local.whitelist_emails : {
       email = {
         email = email
+      }
+    }
+    {
+      service_token = {
+        token_id = cloudflare_zero_trust_access_service_token.work_to_o11y.id
       }
     }
   ]

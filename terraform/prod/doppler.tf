@@ -57,6 +57,14 @@ locals {
       value = data.cloudflare_zero_trust_tunnel_cloudflared_token.cf_shoot_o11y_01_tunnel_token.token
     },
     {
+      name  = "WORK_01_TO_O11Y_01_SERVICE_TOKEN_CLIENT_ID"
+      value = cloudflare_zero_trust_access_service_token.work_to_o11y.client_id
+    },
+    {
+      name  = "WORK_01_TO_O11Y_01_SERVICE_TOKEN_CLIENT_SECRET"
+      value = cloudflare_zero_trust_access_service_token.work_to_o11y.client_secret
+    },
+    {
       name  = "SLACK_BLOG_BOT_TOKEN"
       value = var.slk_blog_bot_token
     },
