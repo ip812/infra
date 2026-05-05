@@ -51,6 +51,7 @@ resource "aws_instance" "this" {
     
     set -euo pipefail
     
+    # VM prep
     apt-get update -y
     apt-get install -y curl wget unzip make git vim tmux jq
     curl -fsSL https://tailscale.com/install.sh | sh
@@ -94,6 +95,7 @@ resource "aws_instance" "this" {
 
     tailscale up --authkey="$AUTH_KEY" --hostname="${local.org}-${local.env}-work-01" --advertise-tags="$TS_TAGS" --ssh
      
+    # K8s init
     curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--tls-san ${local.org}-${local.env} --https-listen-port 16443" sh -
     echo "alias kubectl='k3s kubectl'" >> /root/.bashrc
     echo "alias k='k3s kubectl'" >> /root/.bashrc
