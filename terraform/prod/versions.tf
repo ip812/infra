@@ -11,10 +11,6 @@ terraform {
       source  = "hashicorp/aws"
       version = "5.77.0"
     }
-    awscc = {
-      source  = "hashicorp/awscc"
-      version = "1.35.0"
-    }
     cloudflare = {
       source  = "cloudflare/cloudflare"
       version = "5.7.1"

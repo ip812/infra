@@ -4,12 +4,6 @@ provider "aws" {
   region     = local.aws_region
 }
 
-provider "awscc" {
-  access_key = var.aws_access_key_id
-  secret_key = var.aws_secret_access_key
-  region     = local.aws_region
-}
-
 provider "cloudflare" {
   api_token = var.cf_api_token
 }
