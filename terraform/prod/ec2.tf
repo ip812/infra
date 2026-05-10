@@ -117,9 +117,7 @@ resource "aws_instance" "this" {
     systemctl mask swap.target
 
     # Sysctl params required by setup, params persist across reboots
-    cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
-    net.ipv4.ip_forward                 = 1
-    EOF
+    echo "net.ipv4.ip_forward                 = 1" >> /etc/sysctl.d/k8s.conf
 
     kubeadm init --upload-certs --skip-phases=addon/kube-proxy
 
