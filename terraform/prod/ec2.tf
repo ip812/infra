@@ -116,6 +116,11 @@ resource "aws_instance" "this" {
     sed -e '/swap/ s/^#*/#/' -i /etc/fstab
     systemctl mask swap.target
 
+    # Sysctl params required by setup, params persist across reboots
+    cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
+    net.ipv4.ip_forward                 = 1
+    EOF
+
     kubeadm init --upload-certs --skip-phases=addon/kube-proxy
 
     export KUBECONFIG=/etc/kubernetes/admin.conf
