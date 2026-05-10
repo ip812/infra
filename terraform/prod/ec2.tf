@@ -116,8 +116,7 @@ resource "aws_instance" "this" {
     sed -e '/swap/ s/^#*/#/' -i /etc/fstab
     systemctl mask swap.target
 
-    NODE_IP="$(ip --json addr show eth0 | jq -r '.[0].addr_info[] | select(.family == "inet") | .local')"
-    kubeadm init --apiserver-advertise-address $NODE_IP --upload-certs --skip-phases=addon/kube-proxy
+    kubeadm init --upload-certs --skip-phases=addon/kube-proxy
 
     export KUBECONFIG=/etc/kubernetes/admin.conf
 
@@ -161,7 +160,7 @@ resource "aws_instance" "this" {
 
   tags = merge(
     {
-      Name = "${local.org}-${local.env}"
+      Name = "${local.org}-${local.env}-work-01"
     },
     local.default_tags
   )
