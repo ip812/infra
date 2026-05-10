@@ -96,16 +96,54 @@ resource "aws_instance" "this" {
     tailscale up --authkey="$AUTH_KEY" --hostname="${local.org}-${local.env}-work-01" --advertise-tags="$TS_TAGS" --ssh
      
     # K8s init
-    curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--tls-san ${local.org}-${local.env} --https-listen-port 16443" sh -
-    echo "alias kubectl='k3s kubectl'" >> /root/.bashrc
-    echo "alias k='k3s kubectl'" >> /root/.bashrc
-    
-    curl -s https://fluxcd.io/install.sh | sudo bash
-    
-    KUBECONFIG=/etc/rancher/k3s/k3s.yaml k3s kubectl create namespace doppler-operator-system
-    KUBECONFIG=/etc/rancher/k3s/k3s.yaml k3s kubectl create secret generic doppler-token-secret -n doppler-operator-system --from-literal=serviceToken=${var.dp_token}
-    
-    KUBECONFIG=/etc/rancher/k3s/k3s.yaml GITHUB_TOKEN=${var.gh_access_token} flux bootstrap github \
+    K8S_VERSION="1.36"
+
+    # https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/#installing-kubeadm-kubelet-and-kubectl
+    apt-get update
+    apt-get install -y apt-transport-https ca-certificates curl gpg jq
+    curl -fsSL "https://pkgs.k8s.io/core:/stable:/v$K8S_VERSION/deb/Release.key" | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+    echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v$K8S_VERSION/deb/ /" | tee /etc/apt/sources.list.d/kubernetes.list
+    apt-get update
+    apt-get install -y kubelet kubeadm kubectl containerd
+    apt-mark hold kubelet kubeadm kubectl
+
+    # https://kubernetes.io/docs/setup/production-environment/container-runtimes/#containerd-systemd
+    containerd config default | sed 's/SystemdCgroup = false/SystemdCgroup = true/' | tee /etc/containerd/config.toml
+    systemctl restart containerd
+
+    # Disable swap (required by kubelet)
+    swapoff -a
+    sed -e '/swap/ s/^#*/#/' -i /etc/fstab
+    systemctl mask swap.target
+
+    NODE_IP="$(ip --json addr show eth0 | jq -r '.[0].addr_info[] | select(.family == "inet") | .local')"
+    kubeadm init --apiserver-advertise-address $NODE_IP --upload-certs --skip-phases=addon/kube-proxy
+
+    export KUBECONFIG=/etc/kubernetes/admin.conf
+
+    # Untaint control-plane so workloads can be scheduled on this single-node cluster
+    kubectl taint nodes --all node-role.kubernetes.io/control-plane-
+
+    # Cilium CNI
+    curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-4
+    chmod 700 get_helm.sh
+    bash get_helm.sh
+
+    CILIUM_VERSION="1.17.3"
+    curl -LO "https://github.com/cilium/cilium/archive/refs/tags/v$CILIUM_VERSION.tar.gz"
+    tar xzf "v$CILIUM_VERSION.tar.gz"
+    helm install cilium "./cilium-$CILIUM_VERSION/install/kubernetes/cilium" \
+       --namespace kube-system \
+       --set hubble.relay.enabled=true \
+       --set hubble.ui.enabled=true
+
+    # Bootstrap with FluxCD
+    curl -s https://fluxcd.io/install.sh | bash
+
+    kubectl create namespace doppler-operator-system
+    kubectl create secret generic doppler-token-secret -n doppler-operator-system --from-literal=serviceToken=${var.dp_token}
+
+    GITHUB_TOKEN=${var.gh_access_token} flux bootstrap github \
     	    --token-auth=true \
     	    --owner=${local.org} \
     	    --repository=infra \
