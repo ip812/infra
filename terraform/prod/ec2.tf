@@ -124,9 +124,7 @@ resource "aws_instance" "this" {
     mount bpffs /sys/fs/bpf -t bpf
 
     kubeadm init --upload-certs --skip-phases=addon/kube-proxy
-
-    # Wait for API server to become ready
-    until KUBECONFIG=/etc/kubernetes/admin.conf kubectl get --raw /readyz &>/dev/null; do sleep 2; done
+    sleep 60
 
     # Untaint control-plane so workloads can be scheduled on this single-node cluster
     KUBECONFIG=/etc/kubernetes/admin.conf kubectl taint nodes --all node-role.kubernetes.io/control-plane-
@@ -140,8 +138,6 @@ resource "aws_instance" "this" {
     curl -LO "https://github.com/cilium/cilium/archive/refs/tags/v$CILIUM_VERSION.tar.gz"
     tar xzf "v$CILIUM_VERSION.tar.gz"
 
-    # Wait for API server to be ready before helm install (it can cycle after initial readyz)
-    until KUBECONFIG=/etc/kubernetes/admin.conf kubectl get --raw /readyz &>/dev/null; do sleep 3; done
     KUBECONFIG=/etc/kubernetes/admin.conf helm install cilium "./cilium-$CILIUM_VERSION/install/kubernetes/cilium" \
        --namespace kube-system \
        --set operator.replicas=1 \
@@ -151,8 +147,6 @@ resource "aws_instance" "this" {
     # Bootstrap with FluxCD
     curl -s https://fluxcd.io/install.sh | bash
 
-    # Wait for API server to be ready before helm install (it can cycle after initial readyz)
-    until KUBECONFIG=/etc/kubernetes/admin.conf kubectl get --raw /readyz &>/dev/null; do sleep 3; done
     KUBECONFIG=/etc/kubernetes/admin.conf kubectl create namespace doppler-operator-system
     KUBECONFIG=/etc/kubernetes/admin.conf kubectl create secret generic doppler-token-secret -n doppler-operator-system --from-literal=serviceToken=${var.dp_token}
     KUBECONFIG=/etc/kubernetes/admin.conf GITHUB_TOKEN=${var.gh_access_token} flux bootstrap github \
