@@ -127,6 +127,9 @@ resource "aws_instance" "this" {
 
     export KUBECONFIG=/etc/kubernetes/admin.conf
 
+    # Wait for API server to become ready
+    until kubectl get --raw /readyz &>/dev/null; do sleep 2; done
+
     # Untaint control-plane so workloads can be scheduled on this single-node cluster
     kubectl taint nodes --all node-role.kubernetes.io/control-plane-
 
