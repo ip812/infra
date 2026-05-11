@@ -143,6 +143,9 @@ resource "aws_instance" "this" {
 
     helm install cilium "./cilium-$CILIUM_VERSION/install/kubernetes/cilium" \
        --namespace kube-system \
+       --set kubeProxyReplacement=true \
+       --set k8sServiceHost=localhost \
+       --set k8sServicePort=6443 \
        --set operator.replicas=1 \
        --set hubble.relay.enabled=true \
        --set hubble.ui.enabled=true
