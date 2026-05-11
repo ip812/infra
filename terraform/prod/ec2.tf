@@ -108,15 +108,8 @@ resource "aws_instance" "this" {
     apt-mark hold kubelet kubeadm kubectl
 
     # https://kubernetes.io/docs/setup/production-environment/container-runtimes/#containerd-systemd
-    CONTAINERD_VERSION="2.3.0"
-    curl -LO "https://github.com/containerd/containerd/releases/download/v$CONTAINERD_VERSION/containerd-$CONTAINERD_VERSION-linux-amd64.tar.gz"
-    tar Cxzvf /usr/local "containerd-$CONTAINERD_VERSION-linux-amd64.tar.gz"
-    curl -LO "https://raw.githubusercontent.com/containerd/containerd/main/containerd.service"
-    mv containerd.service /usr/lib/systemd/system/
-    systemctl daemon-reload
-    mkdir -p /etc/containerd
-    containerd config default | sed 's/SystemdCgroup = false/SystemdCgroup = true/' | tee /etc/containerd/config.toml
-    systemctl enable --now containerd
+    apt-get install -y containerd 
+    systemctl restart containerd
 
     # Disable swap (required by kubelet)
     swapoff -a
