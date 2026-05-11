@@ -129,6 +129,8 @@ resource "aws_instance" "this" {
     export KUBECONFIG=/etc/kubernetes/admin.conf
     until kubectl get --raw /readyz &>/dev/null; do sleep 5; done
 
+    NODE_IP=$(kubectl get nodes -o jsonpath='{.items[0].status.addresses[?(@.type=="InternalIP")].address}')
+
     # Untaint control-plane so workloads can be scheduled on this single-node cluster
     kubectl taint nodes --all node-role.kubernetes.io/control-plane-
 
@@ -144,7 +146,7 @@ resource "aws_instance" "this" {
     helm install cilium "./cilium-$CILIUM_VERSION/install/kubernetes/cilium" \
        --namespace kube-system \
        --set kubeProxyReplacement=true \
-       --set k8sServiceHost=localhost \
+       --set k8sServiceHost=$NODE_IP \
        --set k8sServicePort=6443 \
        --set operator.replicas=1 \
        --set hubble.relay.enabled=true \
