@@ -100,14 +100,17 @@ resource "aws_instance" "this" {
 
     # https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/#installing-kubeadm-kubelet-and-kubectl
     apt-get update
-    apt-get install -y apt-transport-https ca-certificates curl gpg jq
+    apt-get install -y apt-transport-https ca-certificates curl gpg
     curl -fsSL "https://pkgs.k8s.io/core:/stable:/v$K8S_VERSION/deb/Release.key" | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
     echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v$K8S_VERSION/deb/ /" | tee /etc/apt/sources.list.d/kubernetes.list
     apt-get update
-    apt-get install -y kubelet kubeadm kubectl containerd
+    apt-get install -y kubelet kubeadm kubectl
     apt-mark hold kubelet kubeadm kubectl
 
     # https://kubernetes.io/docs/setup/production-environment/container-runtimes/#containerd-systemd
+    CONTAINERD_VERSION="2.3.0"
+    curl -LO "https://github.com/containerd/containerd/releases/download/v$CONTAINERD_VERSION/containerd-$CONTAINERD_VERSION-linux-amd64.tar.gz"
+    tar Cxzvf "containerd-$CONTAINERD_VERSION-linux-amd64.tar.gz" 
     containerd config default | sed 's/SystemdCgroup = false/SystemdCgroup = true/' | tee /etc/containerd/config.toml
     systemctl restart containerd
 
@@ -137,6 +140,7 @@ resource "aws_instance" "this" {
     tar xzf "v$CILIUM_VERSION.tar.gz"
     helm install cilium "./cilium-$CILIUM_VERSION/install/kubernetes/cilium" \
        --namespace kube-system \
+       --set operator.replicas=1 \
        --set hubble.relay.enabled=true \
        --set hubble.ui.enabled=true
 
