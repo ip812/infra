@@ -126,10 +126,10 @@ resource "aws_instance" "this" {
     kubeadm init --upload-certs --skip-phases=addon/kube-proxy
 
     # Wait for API server to become ready
-    until kubectl --kubeconfig=/etc/kubernetes/admin.conf get --raw /readyz &>/dev/null; do sleep 2; done
+    until KUBECONFIG=/etc/kubernetes/admin.conf kubectl get --raw /readyz &>/dev/null; do sleep 2; done
 
     # Untaint control-plane so workloads can be scheduled on this single-node cluster
-    kubectl --kubeconfig=/etc/kubernetes/admin.conf taint nodes --all node-role.kubernetes.io/control-plane-
+    KUBECONFIG=/etc/kubernetes/admin.conf kubectl taint nodes --all node-role.kubernetes.io/control-plane-
 
     # Cilium CNI
     curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-4
@@ -139,7 +139,7 @@ resource "aws_instance" "this" {
     CILIUM_VERSION="1.17.3"
     curl -LO "https://github.com/cilium/cilium/archive/refs/tags/v$CILIUM_VERSION.tar.gz"
     tar xzf "v$CILIUM_VERSION.tar.gz"
-    helm install cilium "./cilium-$CILIUM_VERSION/install/kubernetes/cilium" \
+    KUBECONFIG=/etc/kubernetes/admin.conf helm install cilium "./cilium-$CILIUM_VERSION/install/kubernetes/cilium" \
        --namespace kube-system \
        --set operator.replicas=1 \
        --set hubble.relay.enabled=true \
@@ -148,10 +148,10 @@ resource "aws_instance" "this" {
     # Bootstrap with FluxCD
     curl -s https://fluxcd.io/install.sh | bash
 
-    kubectl --kubeconfig=/etc/kubernetes/admin.conf create namespace doppler-operator-system
-    kubectl --kubeconfig=/etc/kubernetes/admin.conf create secret generic doppler-token-secret -n doppler-operator-system --from-literal=serviceToken=${var.dp_token}
+    KUBECONFIG=/etc/kubernetes/admin.conf kubectl create namespace doppler-operator-system
+    KUBECONFIG=/etc/kubernetes/admin.conf kubectl create secret generic doppler-token-secret -n doppler-operator-system --from-literal=serviceToken=${var.dp_token}
 
-    GITHUB_TOKEN=${var.gh_access_token} flux bootstrap github \
+    KUBECONFIG=/etc/kubernetes/admin.conf GITHUB_TOKEN=${var.gh_access_token} flux bootstrap github \
     	    --token-auth=true \
     	    --owner=${local.org} \
     	    --repository=infra \
