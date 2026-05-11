@@ -110,9 +110,13 @@ resource "aws_instance" "this" {
     # https://kubernetes.io/docs/setup/production-environment/container-runtimes/#containerd-systemd
     CONTAINERD_VERSION="2.3.0"
     curl -LO "https://github.com/containerd/containerd/releases/download/v$CONTAINERD_VERSION/containerd-$CONTAINERD_VERSION-linux-amd64.tar.gz"
-    tar Cxzvf "containerd-$CONTAINERD_VERSION-linux-amd64.tar.gz" 
+    tar Cxzvf /usr/local "containerd-$CONTAINERD_VERSION-linux-amd64.tar.gz"
+    curl -LO "https://raw.githubusercontent.com/containerd/containerd/main/containerd.service"
+    mv containerd.service /usr/lib/systemd/system/
+    systemctl daemon-reload
+    mkdir -p /etc/containerd
     containerd config default | sed 's/SystemdCgroup = false/SystemdCgroup = true/' | tee /etc/containerd/config.toml
-    systemctl restart containerd
+    systemctl enable --now containerd
 
     # Disable swap (required by kubelet)
     swapoff -a
@@ -122,6 +126,9 @@ resource "aws_instance" "this" {
     # Sysctl params required by setup, params persist across reboots
     echo "net.ipv4.ip_forward                 = 1" >> /etc/sysctl.d/k8s.conf
     sysctl --system
+
+    # Mount BPF filesystem (required by Cilium)
+    mount bpffs /sys/fs/bpf -t bpf
 
     kubeadm init --upload-certs --skip-phases=addon/kube-proxy
 
