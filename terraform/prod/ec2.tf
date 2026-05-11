@@ -144,6 +144,10 @@ resource "aws_instance" "this" {
        --set hubble.relay.enabled=true \
        --set hubble.ui.enabled=true
 
+    # Wait for Cilium to be ready and API server to stabilize
+    until KUBECONFIG=/etc/kubernetes/admin.conf kubectl get --raw /readyz &>/dev/null; do sleep 5; done
+    KUBECONFIG=/etc/kubernetes/admin.conf kubectl wait --for=condition=ready -n kube-system pod -l app.kubernetes.io/name=cilium-agent --timeout=120s
+
     # Bootstrap with FluxCD
     curl -s https://fluxcd.io/install.sh | bash
 
