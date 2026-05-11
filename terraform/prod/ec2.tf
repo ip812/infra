@@ -139,6 +139,10 @@ resource "aws_instance" "this" {
     CILIUM_VERSION="1.17.3"
     curl -LO "https://github.com/cilium/cilium/archive/refs/tags/v$CILIUM_VERSION.tar.gz"
     tar xzf "v$CILIUM_VERSION.tar.gz"
+
+    # Wait for API server to be ready before helm install (it can cycle after initial readyz)
+    until KUBECONFIG=/etc/kubernetes/admin.conf kubectl get --raw /readyz &>/dev/null; do sleep 3; done
+
     KUBECONFIG=/etc/kubernetes/admin.conf helm install cilium "./cilium-$CILIUM_VERSION/install/kubernetes/cilium" \
        --namespace kube-system \
        --set operator.replicas=1 \
