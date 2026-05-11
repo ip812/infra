@@ -39,13 +39,13 @@ resource "cloudflare_zero_trust_access_policy" "zt_access_policy" {
   decision         = "allow"
   session_duration = "8h"
 
-  include = concat(
+  include = [
     for email in local.whitelist_emails : {
       email = {
         email = email
       }
     }
-  )
+  ]
 }
 
 resource "cloudflare_zero_trust_access_application" "zt_access_application" {
