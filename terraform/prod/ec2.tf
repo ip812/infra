@@ -108,10 +108,14 @@ resource "aws_instance" "this" {
     apt-mark hold kubelet kubeadm kubectl
 
     # https://kubernetes.io/docs/setup/production-environment/container-runtimes/#containerd-systemd
-    apt-get install -y containerd
+    apt-get install -y containerd containernetworking-plugins
     mkdir -p /etc/containerd
     containerd config default | sed 's/SystemdCgroup = false/SystemdCgroup = true/' > /etc/containerd/config.toml
     systemctl restart containerd
+
+    # Point kubelet to both CNI bin paths (Cilium uses /opt/cni/bin, Debian puts loopback in /usr/lib/cni)
+    mkdir -p /etc/default
+    echo 'KUBELET_EXTRA_ARGS=--cni-bin-dir=/opt/cni/bin,/usr/lib/cni' > /etc/default/kubelet
 
     # Disable swap (required by kubelet)
     swapoff -a
