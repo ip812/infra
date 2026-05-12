@@ -113,9 +113,9 @@ resource "aws_instance" "this" {
     containerd config default | sed 's/SystemdCgroup = false/SystemdCgroup = true/' > /etc/containerd/config.toml
     systemctl restart containerd
 
-    # Point kubelet to both CNI bin paths (Cilium uses /opt/cni/bin, Debian puts loopback in /usr/lib/cni)
-    mkdir -p /etc/default
-    echo 'KUBELET_EXTRA_ARGS=--cni-bin-dir=/opt/cni/bin,/usr/lib/cni' > /etc/default/kubelet
+    # Copy standard CNI plugins (loopback, etc.) to /opt/cni/bin where kubelet expects them
+    mkdir -p /opt/cni/bin
+    cp /usr/lib/cni/* /opt/cni/bin/
 
     # Disable swap (required by kubelet)
     swapoff -a
