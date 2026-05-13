@@ -178,10 +178,8 @@ resource "aws_instance" "this" {
     # Wait for CoreDNS to be ready (depends on Cilium for networking)
     kubectl wait --for=condition=ready -n kube-system pod -l k8s-app=kube-dns --timeout=300s
 
-    # Wait until cluster DNS can actually resolve external names
-    until kubectl run -i --rm --restart=Never dns-test --image=busybox:1.36 -- nslookup github.com 2>/dev/null | grep -q "Address"; do
-      sleep 10
-    done
+    # Give Cilium a moment to fully program eBPF service maps after pods are ready
+    sleep 15
 
     # Bootstrap with FluxCD
     curl -s https://fluxcd.io/install.sh | bash
@@ -195,7 +193,8 @@ resource "aws_instance" "this" {
     	    --branch=main \
     	    --path=k8s/overlays/${local.env}/shoot-work-01 \
     	    --read-write-key=true \
-    	    --personal=false
+    	    --personal=false \
+    	    --timeout=10m
   EOF
 
   root_block_device {
