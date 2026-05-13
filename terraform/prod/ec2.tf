@@ -96,40 +96,56 @@ resource "aws_instance" "this" {
     tailscale up --authkey="$AUTH_KEY" --hostname="${local.org}-${local.env}-work-01" --advertise-tags="$TS_TAGS" --ssh
      
     # K8s init
-    K8S_VERSION="1.36"
-
-    # https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/#installing-kubeadm-kubelet-and-kubectl
-    apt-get update
-    apt-get install -y apt-transport-https ca-certificates curl gpg
-    curl -fsSL "https://pkgs.k8s.io/core:/stable:/v$K8S_VERSION/deb/Release.key" | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
-    echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v$K8S_VERSION/deb/ /" | tee /etc/apt/sources.list.d/kubernetes.list
-    apt-get update
-    apt-get install -y kubelet kubeadm kubectl
-    apt-mark hold kubelet kubeadm kubectl
-
-    # https://kubernetes.io/docs/setup/production-environment/container-runtimes/#containerd-systemd
-    apt-get install -y containerd containernetworking-plugins
-    mkdir -p /etc/containerd
-    containerd config default | sed 's/SystemdCgroup = false/SystemdCgroup = true/' > /etc/containerd/config.toml
-    systemctl restart containerd
-
-    # Copy standard CNI plugins (loopback, etc.) to /opt/cni/bin where kubelet expects them
-    mkdir -p /opt/cni/bin
-    cp /usr/lib/cni/* /opt/cni/bin/
+    K8S_VERSION="1.33"
 
     # Disable swap (required by kubelet)
     swapoff -a
     sed -e '/swap/ s/^#*/#/' -i /etc/fstab
     systemctl mask swap.target
 
+    # Load required kernel modules
+    cat <<MODULES > /etc/modules-load.d/k8s.conf
+    overlay
+    br_netfilter
+    MODULES
+    modprobe overlay
+    modprobe br_netfilter
+
     # Sysctl params required by setup, params persist across reboots
-    echo "net.ipv4.ip_forward                 = 1" >> /etc/sysctl.d/k8s.conf
+    cat <<SYSCTL > /etc/sysctl.d/k8s.conf
+    net.ipv4.ip_forward = 1
+    net.bridge.bridge-nf-call-iptables = 1
+    net.bridge.bridge-nf-call-ip6tables = 1
+    SYSCTL
     sysctl --system
 
-    # Mount BPF filesystem (required by Cilium)
-    mount bpffs /sys/fs/bpf -t bpf
+    # Install containerd from Docker repo
+    apt-get install -y ca-certificates curl gpg socat conntrack
+    install -m 0755 -d /etc/apt/keyrings
+    curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
+    chmod a+r /etc/apt/keyrings/docker.asc
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+    apt-get update
+    apt-get install -y containerd.io
 
-    kubeadm init --upload-certs --skip-phases=addon/kube-proxy
+    # Configure containerd with systemd cgroup driver
+    mkdir -p /etc/containerd
+    containerd config default > /etc/containerd/config.toml
+    sed -i 's/SystemdCgroup = false/SystemdCgroup = true/' /etc/containerd/config.toml
+    sed -i 's|sandbox_image = "registry.k8s.io/pause:.*"|sandbox_image = "registry.k8s.io/pause:3.10"|' /etc/containerd/config.toml
+    systemctl restart containerd
+
+    # Install kubeadm, kubelet, kubectl
+    curl -fsSL "https://pkgs.k8s.io/core:/stable:/v$K8S_VERSION/deb/Release.key" | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+    echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v$K8S_VERSION/deb/ /" | tee /etc/apt/sources.list.d/kubernetes.list
+    apt-get update
+    apt-get install -y kubelet kubeadm kubectl
+    apt-mark hold kubelet kubeadm kubectl
+
+    # Mount BPF filesystem (required by Cilium)
+    mount bpffs /sys/fs/bpf -t bpf || true
+
+    kubeadm init --skip-phases=addon/kube-proxy
     export KUBECONFIG=/etc/kubernetes/admin.conf
     until kubectl get --raw /readyz &>/dev/null; do sleep 5; done
 
