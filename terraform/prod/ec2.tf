@@ -95,6 +95,7 @@ resource "aws_instance" "this" {
 
     tailscale up --authkey="$AUTH_KEY" --hostname="${local.org}-${local.env}-work-01" --advertise-tags="$TS_TAGS" --ssh
      
+    # https://max-pfeiffer.github.io/installing-kubernetes-on-debian-13-trixie.html
     # K8s init
     K8S_VERSION="1.33"
 
