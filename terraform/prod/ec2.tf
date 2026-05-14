@@ -119,6 +119,7 @@ resource "aws_instance" "this" {
     SYSCTL
     sysctl --system
 
+    # https://containerd.io/releases/#kubernetes-support
     # Install containerd from Docker repo
     apt-get install -y ca-certificates curl gpg socat conntrack
     install -m 0755 -d /etc/apt/keyrings
