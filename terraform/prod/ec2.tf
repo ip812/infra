@@ -254,15 +254,28 @@ resource "aws_instance" "this" {
     # 6a. Wait for CoreDNS pods to be ready
     kubectl wait --for=condition=ready -n kube-system pod -l k8s-app=kube-dns --timeout=300s
 
-    # 6b. Verify DNS resolution actually works end-to-end
+    # 6b. Restart CoreDNS to ensure it picks up networking post-Cilium
+    # CoreDNS may have started before Cilium fully programmed eBPF routes
+    # to upstream DNS (VPC resolver at 10.0.0.2), causing cached failures.
+    kubectl rollout restart deployment/coredns -n kube-system
+    kubectl rollout status deployment/coredns -n kube-system --timeout=120s
+
+    # 6c. Verify DNS resolution actually works end-to-end from a pod
     # (pod readiness != eBPF datapath readiness for service routing)
+    dns_ok=false
     for i in $(seq 1 30); do
-        if kubectl run -i --rm dns-test-$i --image=busybox:1.36 --restart=Never -- nslookup github.com > /dev/null 2>&1; then
+        if kubectl run -i --rm dns-test-$i --image=busybox:1.36 --restart=Never -- nslookup github.com 2>&1 | grep -q "Address"; then
+            echo "DNS resolution verified on attempt $i"
+            dns_ok=true
             break
         fi
         echo "DNS not ready yet, retrying in 10s... (attempt $i/30)"
         sleep 10
     done
+    if [ "$dns_ok" != "true" ]; then
+        echo "ERROR: DNS resolution failed after 30 attempts"
+        exit 1
+    fi
 
     # =============================================================================
     # STEP 7: GITOPS BOOTSTRAP (FluxCD)

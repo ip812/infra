@@ -1,6 +1,8 @@
 resource "aws_vpc" "vpc" {
-  cidr_block = local.aws_vpc_cidr
-  tags       = local.default_tags
+  cidr_block           = local.aws_vpc_cidr
+  enable_dns_support   = true
+  enable_dns_hostnames = true
+  tags                 = local.default_tags
 }
 
 resource "aws_internet_gateway" "igw" {
