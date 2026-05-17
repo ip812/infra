@@ -186,9 +186,10 @@ resource "aws_instance" "this" {
     # =============================================================================
     echo "$(hostname -i)  k8s-endpoint" >> /etc/hosts
     kubeadm init --kubernetes-version $K8S_MAJOR.$K8S_MINOR.$K8S_PATCH --control-plane-endpoint k8s-endpoint
-    mkdir -p $HOME/.kube
-    cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-    chown $(id -u):$(id -g) $HOME/.kube/config
+    mkdir -p /root/.kube
+    cp -i /etc/kubernetes/admin.conf /root/.kube/config
+    chown $(id -u):$(id -g) /root/.kube/config
+    export KUBECONFIG=/root/.kube/config
 
     until kubectl get --raw /readyz &>/dev/null; do sleep 5; done
     NODE_IP=$(kubectl get nodes -o jsonpath='{.items[0].status.addresses[?(@.type=="InternalIP")].address}')
