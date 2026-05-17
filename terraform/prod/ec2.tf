@@ -202,7 +202,7 @@ resource "aws_instance" "this" {
 
     helm repo add cilium https://helm.cilium.io
     helm install cilium cilium/cilium \
-        --version ${CILIUM_VERSION} \
+        --version $CILIUM_VERSION \
         --namespace kube-system \
         --set kubeProxyReplacement=true \
         --set operator.replicas=1 \
