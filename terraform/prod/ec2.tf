@@ -56,7 +56,7 @@ resource "aws_instance" "this" {
     # =============================================================================
 
     apt update -y
-    apt install -y curl wget unzip make git vim tmux jq
+    apt install -y curl wget unzip make git vim tmux jq gnupg
 
     # =============================================================================
     # STEP 1: ADD NODE TO TAILNET
