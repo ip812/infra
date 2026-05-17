@@ -56,8 +56,8 @@ resource "aws_instance" "this" {
     # STEP 1: CORE DEPENDENCIES 
     # =============================================================================
 
-    apt-get update -y
-    apt-get install -y curl wget unzip make git vim tmux jq
+    apt update -y
+    apt install -y curl wget unzip make git vim tmux jq
 
     # =============================================================================
     # STEP 1: ADD NODE TO TAILNET
@@ -212,10 +212,10 @@ resource "aws_instance" "this" {
 
     # CILIUM_CLI_VERSION=$(curl -s https://raw.githubusercontent.com/cilium/cilium-cli/main/stable.txt)
     # CLI_ARCH=amd64
-    # curl -L --fail --remote-name-all "https://github.com/cilium/cilium-cli/releases/download/$CILIUM_CLI_VERSION/cilium-linux-$(dpkg --print-architecture).tar.gz{,.sha256sum}"
+    # curl -L --fail --remote-name-all "https://github.com/cilium/cilium-cli/releases/download/$CILIUM_CLI_VERSION/cilium-linux-$(dpkg --print-architecture).tar.gz"
     # sha256sum --check "cilium-linux-$(dpkg --print-architecture).tar.gz.sha256sum"
     # tar xzvfC "cilium-linux-$(dpkg --print-architecture).tar.gz" /usr/local/bin
-    # rm cilium-linux-$(dpkg --print-architecture).tar.gz{,.sha256sum}
+    # rm cilium-linux-$(dpkg --print-architecture).tar.gz
 
     # cilium status --wait
 
