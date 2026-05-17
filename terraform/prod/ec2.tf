@@ -196,6 +196,7 @@ resource "aws_instance" "this" {
 
     # 4c. Configure kubectl access
     export KUBECONFIG=/etc/kubernetes/admin.conf
+    cp /etc/kubernetes/admin.conf ~/.kube/config
 
     # 4d. Wait for the API server to become ready
     until kubectl get --raw /readyz &>/dev/null; do sleep 5; done
