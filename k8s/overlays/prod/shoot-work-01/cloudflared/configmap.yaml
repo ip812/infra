@@ -19,4 +19,6 @@ data:
         service: http://vlsingle-logs.victoria.svc:9428
       - hostname: victoria-traces.ip812.com
         service: http://vtsingle-traces.victoria.svc:10428
+      - hostname: cilium-hubble.ip812.com
+        service: http://hubble-ui.kube-system.svc:80
       - service: http_status:404

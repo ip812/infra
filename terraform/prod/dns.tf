@@ -20,6 +20,10 @@ locals {
       is_protected = true
       tunnel = cloudflare_zero_trust_tunnel_cloudflared.cf_shoot_work_01_tunnel
     }
+    cilium-hubble = {
+      is_protected = true
+      tunnel = cloudflare_zero_trust_tunnel_cloudflared.cf_shoot_work_01_tunnel
+    }
   }
 }
 
