@@ -50,7 +50,7 @@ resource "aws_instance" "this" {
   user_data                   = <<-EOF
     #!/bin/bash
 
-    # set -euo pipefail
+    set -euo pipefail
 
     # =============================================================================
     # STEP 1: CORE DEPENDENCIES 
@@ -168,8 +168,8 @@ resource "aws_instance" "this" {
     # STEP 3: HELM 
     # =============================================================================
 
-    curl -fsSL https://packages.buildkite.com/helm-linux/helm-debian/gpgkey | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
-    echo "deb [signed-by=/usr/share/keyrings/helm.gpg] https://packages.buildkite.com/helm-linux/helm-debian/any/ any main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+    curl -fsSL https://packages.buildkite.com/helm-linux/helm-debian/gpgkey | gpg --dearmor | tee /usr/share/keyrings/helm.gpg > /dev/null
+    echo "deb [signed-by=/usr/share/keyrings/helm.gpg] https://packages.buildkite.com/helm-linux/helm-debian/any/ any main" | tee /etc/apt/sources.list.d/helm-stable-debian.list
     apt update
     apt install -y helm
 
@@ -191,7 +191,7 @@ resource "aws_instance" "this" {
     cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
     chown $(id -u):$(id -g) $HOME/.kube/config
 
-		until kubectl get --raw /readyz &>/dev/null; do sleep 5; done
+    until kubectl get --raw /readyz &>/dev/null; do sleep 5; done
     NODE_IP=$(kubectl get nodes -o jsonpath='{.items[0].status.addresses[?(@.type=="InternalIP")].address}')
 
     # Allow scheduling on control-plane (single-node cluster)
@@ -211,11 +211,11 @@ resource "aws_instance" "this" {
         --set hubble.ui.enabled=true
 
     CILIUM_CLI_VERSION=$(curl -s https://raw.githubusercontent.com/cilium/cilium-cli/main/stable.txt)
-    CLI_ARCH=amd64
-    curl -L --fail --remote-name-all "https://github.com/cilium/cilium-cli/releases/download/$CILIUM_CLI_VERSION/cilium-linux-$(dpkg --print-architecture).tar.gz{,.sha256sum}"
-    sha256sum --check "cilium-linux-$(dpkg --print-architecture).tar.gz.sha256sum"
-    tar xzvfC "cilium-linux-$(dpkg --print-architecture).tar.gz" /usr/local/bin
-    rm cilium-linux-$(dpkg --print-architecture).tar.gz{,.sha256sum}
+    CILIUM_ARCH=$(dpkg --print-architecture)
+    curl -L --fail --remote-name-all "https://github.com/cilium/cilium-cli/releases/download/$CILIUM_CLI_VERSION/cilium-linux-$CILIUM_ARCH.tar.gz" "https://github.com/cilium/cilium-cli/releases/download/$CILIUM_CLI_VERSION/cilium-linux-$CILIUM_ARCH.tar.gz.sha256sum"
+    sha256sum --check "cilium-linux-$CILIUM_ARCH.tar.gz.sha256sum"
+    tar xzvfC "cilium-linux-$CILIUM_ARCH.tar.gz" /usr/local/bin
+    rm "cilium-linux-$CILIUM_ARCH.tar.gz" "cilium-linux-$CILIUM_ARCH.tar.gz.sha256sum"
 
     cilium status --wait
 
