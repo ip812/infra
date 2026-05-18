@@ -24,7 +24,7 @@ spec:
         limit_mib: 3000
         spike_limit_mib: 600
     exporters:
-      otlphttp/victoriametrics:
+      otlphttp/victorialogs:
         compression: gzip
         encoding: proto
         logs_endpoint: http://vlsingle-logs.victoria.svc:9428/insert/opentelemetry/v1/logs
@@ -46,4 +46,4 @@ spec:
             - batch 
           exporters:
             - debug
-            - otlphttp/victoriametrics
+            # - otlphttp/victorialogs

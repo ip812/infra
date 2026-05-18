@@ -52,7 +52,7 @@ resource "aws_instance" "this" {
     set -euo pipefail
 
     # =============================================================================
-    # STEP 1: CORE DEPENDENCIES 
+    # STEP 0: CORE DEPENDENCIES 
     # =============================================================================
 
     apt update -y
@@ -184,8 +184,7 @@ resource "aws_instance" "this" {
     # =============================================================================
     # STEP 5: KUBEADM INIT 
     # =============================================================================
-    echo "$(hostname -i)  k8s-endpoint" >> /etc/hosts
-    kubeadm init --kubernetes-version $K8S_MAJOR.$K8S_MINOR.$K8S_PATCH --control-plane-endpoint k8s-endpoint --skip-phases=addon/kube-proxy
+    kubeadm init --kubernetes-version $K8S_MAJOR.$K8S_MINOR.$K8S_PATCH --control-plane-endpoint "$(hostname -i)" --skip-phases=addon/kube-proxy
     mkdir -p /root/.kube
     cp -i /etc/kubernetes/admin.conf /root/.kube/config
     chown $(id -u):$(id -g) /root/.kube/config
@@ -243,7 +242,7 @@ resource "aws_instance" "this" {
 
   root_block_device {
     iops        = 3000
-    volume_size = 13
+    volume_size = 15
     volume_type = "gp3"
   }
 
