@@ -44,6 +44,8 @@ env:
     value: "http://vtsingle-traces.victoria.svc:10428/insert/opentelemetry"
   - name: OTEL_EXPORTER_OTLP_INSECURE
     value: "true"
+  - name: OTEL_SDK_DISABLED
+    value: "true"
 database:
   postgres:
     enabled: true
