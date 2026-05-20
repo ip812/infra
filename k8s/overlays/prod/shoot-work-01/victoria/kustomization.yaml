@@ -4,7 +4,7 @@ kind: Kustomization
 resources:
   - github.com/VictoriaMetrics/operator/config/default?ref=v0.69.0
   - vlsingle.yaml
-  - vtsingle.yaml
+  # - vtsingle.yaml
 namespace: victoria
 images:
   - name: manager

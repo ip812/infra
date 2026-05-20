@@ -46,4 +46,4 @@ spec:
             - batch 
           exporters:
             - debug
-            # - otlphttp/victorialogs
+            - otlphttp/victorialogs
