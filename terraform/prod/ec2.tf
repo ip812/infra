@@ -239,6 +239,7 @@ resource "aws_instance" "this" {
         --read-write-key=true \
         --personal=false \
         --timeout=10m
+		# foo
   EOF
 
   root_block_device {
