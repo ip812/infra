@@ -185,7 +185,7 @@ resource "aws_instance" "this" {
     # STEP 5: KUBEADM INIT 
     # =============================================================================
     echo "$(hostname -i)  k8s-endpoint" >> /etc/hosts
-    kubeadm init --kubernetes-version $K8S_MAJOR.$K8S_MINOR.$K8S_PATCH --control-plane-endpoint k8s-endpoint --skip-phases=addon/kube-proxy
+    kubeadm init --kubernetes-version $K8S_MAJOR.$K8S_MINOR.$K8S_PATCH --control-plane-endpoint k8s-endpoint --pod-network-cidr=10.244.0.0/16 --skip-phases=addon/kube-proxy
     mkdir -p /root/.kube
     cp -i /etc/kubernetes/admin.conf /root/.kube/config
     chown $(id -u):$(id -g) /root/.kube/config
@@ -209,6 +209,7 @@ resource "aws_instance" "this" {
         --set k8sServiceHost=$NODE_IP \
         --set k8sServicePort=6443 \
         --set operator.replicas=1 \
+        --set ipam.mode=kubernetes \
         --set hubble.relay.enabled=true \
         --set hubble.ui.enabled=true
 
