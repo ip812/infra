@@ -223,7 +223,15 @@ resource "aws_instance" "this" {
     cilium status --wait
 
     # =============================================================================
-    # STEP 7: BOOTSTRAP WITH FLUXCD
+    # STEP 7: CSI (LOCAL-PATH-PROVISIONER)
+    # =============================================================================
+
+    LOCAL_PATH_VERSION="v0.0.36"
+    kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/$LOCAL_PATH_VERSION/deploy/local-path-storage.yaml
+    kubectl patch storageclass local-path -p '{"metadata":{"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+
+    # =============================================================================
+    # STEP 8: BOOTSTRAP WITH FLUXCD
     # =============================================================================
 
     curl -s https://fluxcd.io/install.sh | bash
