@@ -19,6 +19,18 @@ spec:
       cpu: 500m
       memory: 200Mi
   fluentBitConfigName: fluent-bit-config
+  envVars:
+    - name: NODE_NAME
+      valueFrom:
+        fieldRef:
+          fieldPath: spec.nodeName
+  volumes:
+    - name: lua-scripts
+      configMap:
+        name: fluent-bit-lua-scripts
+  volumesMounts:
+    - name: lua-scripts
+      mountPath: /fluent-bit/scripts
   tolerations:
     - operator: Exists
 ---

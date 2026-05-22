@@ -1,0 +1,185 @@
+---
+# 1. Attach Kubernetes metadata: namespace, pod, container, labels, host.
+apiVersion: fluentbit.fluent.io/v1alpha2
+kind: ClusterFilter
+metadata:
+  name: kubernetes
+  labels:
+    fluentbit.fluent.io/enabled: "true"
+    fluentbit.fluent.io/component: logging
+spec:
+  match: kubernetes.*
+  filters:
+    - kubernetes:
+        kubeURL: https://kubernetes.default.svc:443
+        kubeCAFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        kubeTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+        mergeLog: true
+        keepLog: true
+        k8sLoggingParser: true
+        k8sLoggingExclude: false
+        annotations: false
+        labels: true
+---
+# 2. Stamp every record with cluster + node identity.
+apiVersion: fluentbit.fluent.io/v1alpha2
+kind: ClusterFilter
+metadata:
+  name: enrich-cluster-identity
+  labels:
+    fluentbit.fluent.io/enabled: "true"
+    fluentbit.fluent.io/component: logging
+spec:
+  match: kubernetes.*
+  filters:
+    - recordModifier:
+        records:
+          - cluster shoot-work-01
+          - node ${NODE_NAME}
+---
+# 3. Preserve the fluent-bit tag on each record (useful for routing/debugging).
+apiVersion: fluentbit.fluent.io/v1alpha2
+kind: ClusterFilter
+metadata:
+  name: add-tag
+  labels:
+    fluentbit.fluent.io/enabled: "true"
+    fluentbit.fluent.io/component: logging
+spec:
+  match: kubernetes.*
+  filters:
+    - lua:
+        script:
+          name: fluent-bit-lua-scripts
+          key: add_tag_to_record.lua
+        call: add_tag_to_record
+---
+# 4. Per-app parsers. Each unpacks a known log format into structured fields.
+#    Reserve_Data keeps the kubernetes.* metadata around.
+apiVersion: fluentbit.fluent.io/v1alpha2
+kind: ClusterFilter
+metadata:
+  name: parse-coredns
+  labels:
+    fluentbit.fluent.io/enabled: "true"
+    fluentbit.fluent.io/component: logging
+spec:
+  match: kubernetes.*coredns*coredns*
+  filters:
+    - parser:
+        keyName: log
+        parser: coredns-parser
+        reserveData: true
+---
+apiVersion: fluentbit.fluent.io/v1alpha2
+kind: ClusterFilter
+metadata:
+  name: parse-cilium
+  labels:
+    fluentbit.fluent.io/enabled: "true"
+    fluentbit.fluent.io/component: logging
+spec:
+  match: kubernetes.*cilium*
+  filters:
+    - parser:
+        keyName: log
+        parser: json-parser
+        reserveData: true
+---
+apiVersion: fluentbit.fluent.io/v1alpha2
+kind: ClusterFilter
+metadata:
+  name: parse-cert-manager
+  labels:
+    fluentbit.fluent.io/enabled: "true"
+    fluentbit.fluent.io/component: logging
+spec:
+  match: kubernetes.*cert-manager*
+  filters:
+    - parser:
+        keyName: log
+        parser: certmanager-parser
+        reserveData: true
+---
+apiVersion: fluentbit.fluent.io/v1alpha2
+kind: ClusterFilter
+metadata:
+  name: parse-flux
+  labels:
+    fluentbit.fluent.io/enabled: "true"
+    fluentbit.fluent.io/component: logging
+spec:
+  match: kubernetes.*flux-system*
+  filters:
+    - parser:
+        keyName: log
+        parser: json-parser
+        reserveData: true
+---
+apiVersion: fluentbit.fluent.io/v1alpha2
+kind: ClusterFilter
+metadata:
+  name: parse-postgres
+  labels:
+    fluentbit.fluent.io/enabled: "true"
+    fluentbit.fluent.io/component: logging
+spec:
+  match: kubernetes.*postgres*
+  filters:
+    - parser:
+        keyName: log
+        parser: postgres-parser
+        reserveData: true
+---
+# kube-system control-plane components that emit klog format.
+apiVersion: fluentbit.fluent.io/v1alpha2
+kind: ClusterFilter
+metadata:
+  name: parse-kube-system-klog
+  labels:
+    fluentbit.fluent.io/enabled: "true"
+    fluentbit.fluent.io/component: logging
+spec:
+  match: kubernetes.*kube-system*
+  filters:
+    - parser:
+        keyName: log
+        parser: klog-parser
+        reserveData: true
+---
+# 5. Normalize message field name: rename msg/message → log so VictoriaLogs
+#    consistently sees the message under the `log` key.
+apiVersion: fluentbit.fluent.io/v1alpha2
+kind: ClusterFilter
+metadata:
+  name: normalize-message-field
+  labels:
+    fluentbit.fluent.io/enabled: "true"
+    fluentbit.fluent.io/component: logging
+spec:
+  match: kubernetes.*
+  filters:
+    - modify:
+        rules:
+          - rename:
+              msg: log
+          - rename:
+              message: log
+---
+# 6. Normalize severity values across producers (INFO/I/INF → INFO, etc.).
+#    Runs last so it sees both the original `level` and any renamed/parsed fields.
+apiVersion: fluentbit.fluent.io/v1alpha2
+kind: ClusterFilter
+metadata:
+  name: normalize-severity
+  labels:
+    fluentbit.fluent.io/enabled: "true"
+    fluentbit.fluent.io/component: logging
+spec:
+  match: kubernetes.*
+  filters:
+    - lua:
+        script:
+          name: fluent-bit-lua-scripts
+          key: modify_severity.lua
+        call: cb_modify

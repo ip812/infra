@@ -28,8 +28,6 @@ spec:
         compression: gzip
         encoding: proto
         logs_endpoint: http://vlsingle-logs.victoria.svc:9428/insert/opentelemetry/v1/logs
-        headers:
-          VL-Msg-Field: "log,body,message,msg"
         tls:
           insecure: true
       debug:

@@ -1,0 +1,49 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fluent-bit-lua-scripts
+  namespace: fluent
+data:
+  add_tag_to_record.lua: |
+    function add_tag_to_record(tag, timestamp, record)
+      record["tag"] = tag
+      return 1, timestamp, record
+    end
+  modify_severity.lua: |
+    function cb_modify(tag, timestamp, record)
+      cb_modify_unify_severity(record)
+      return 1, timestamp, record
+    end
+
+    function cb_modify_unify_severity(record)
+      local severity = record["severity"] or record["level"]
+      if severity == nil or severity == "" then
+        return false
+      end
+
+      severity = trim(tostring(severity)):upper()
+
+      if severity == "I" or severity == "INF" or severity == "INFO" then
+        record["severity"] = "INFO"
+      elseif severity == "W" or severity == "WRN" or severity == "WARN" or severity == "WARNING" then
+        record["severity"] = "WARN"
+      elseif severity == "E" or severity == "ERR" or severity == "ERROR" or severity == "EROR" then
+        record["severity"] = "ERR"
+      elseif severity == "D" or severity == "DBG" or severity == "DEBUG" then
+        record["severity"] = "DBG"
+      elseif severity == "N" or severity == "NOTICE" then
+        record["severity"] = "NOTICE"
+      elseif severity == "F" or severity == "FATAL" then
+        record["severity"] = "FATAL"
+      else
+        return false
+      end
+
+      record["level"] = record["severity"]
+      return true
+    end
+
+    function trim(s)
+      return (s:gsub("^%s*(.-)%s*$", "%1"))
+    end

@@ -13,6 +13,8 @@ resources:
 - parsers.yaml
 - inputs.yaml
 - outputs.yaml
+- filters.yaml
+- lua-scripts.yaml
 
 # Change to the namespace you want such as:
 # namespace: fluent

@@ -14,3 +14,71 @@ spec:
     timeFormat: '%Y-%m-%dT%H:%M:%S.%L%z'
     timeKeep: true
     timeKey: time
+---
+# Generic JSON parser — for apps emitting structured JSON logs.
+apiVersion: fluentbit.fluent.io/v1alpha2
+kind: ClusterParser
+metadata:
+  name: json-parser
+  labels:
+    fluentbit.fluent.io/enabled: "true"
+    fluentbit.fluent.io/component: logging
+spec:
+  json:
+    timeFormat: '%Y-%m-%dT%H:%M:%S.%L%z'
+    timeKeep: true
+    timeKey: time
+---
+# klog format used by Kubernetes core components (kube-apiserver, kube-controller-manager, etc.)
+# Example: I0522 17:30:04.123456       1 main.go:42] message
+apiVersion: fluentbit.fluent.io/v1alpha2
+kind: ClusterParser
+metadata:
+  name: klog-parser
+  labels:
+    fluentbit.fluent.io/enabled: "true"
+    fluentbit.fluent.io/component: logging
+spec:
+  regex:
+    regex: ^(?<severity>\w)(?<time>\d{4} [^\s]*)\s+(?<pid>\d+)\s+(?<source>[^ \]]+)\] (?<log>.*)$
+    timeFormat: '%m%d %H:%M:%S.%L'
+    timeKeep: true
+    timeKey: time
+---
+# CoreDNS log line: [INFO] plugin/reload: Running configuration MD5 = ...
+apiVersion: fluentbit.fluent.io/v1alpha2
+kind: ClusterParser
+metadata:
+  name: coredns-parser
+  labels:
+    fluentbit.fluent.io/enabled: "true"
+    fluentbit.fluent.io/component: logging
+spec:
+  regex:
+    regex: ^\[(?<severity>[^\]]+)\]\s+(?<log>.*)$
+---
+# cert-manager structured logs: time=... level=info msg="..." logger=...
+apiVersion: fluentbit.fluent.io/v1alpha2
+kind: ClusterParser
+metadata:
+  name: certmanager-parser
+  labels:
+    fluentbit.fluent.io/enabled: "true"
+    fluentbit.fluent.io/component: logging
+spec:
+  logfmt: {}
+---
+# PostgreSQL log line: 2026-05-22 17:30:04.123 UTC [123] LOG:  message
+apiVersion: fluentbit.fluent.io/v1alpha2
+kind: ClusterParser
+metadata:
+  name: postgres-parser
+  labels:
+    fluentbit.fluent.io/enabled: "true"
+    fluentbit.fluent.io/component: logging
+spec:
+  regex:
+    regex: ^(?<time>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d+ \w+) \[(?<pid>\d+)\] (?<severity>\w+):\s+(?<log>.*)$
+    timeFormat: '%Y-%m-%d %H:%M:%S.%L %Z'
+    timeKeep: true
+    timeKey: time
