@@ -28,6 +28,10 @@ spec:
         compression: gzip
         encoding: proto
         logs_endpoint: http://vlsingle-logs.victoria.svc:9428/insert/opentelemetry/v1/logs
+        headers:
+          VL-Msg-Field: "log,body,message,msg"
+          VL-Stream-Fields: "cluster,kubernetes.namespace_name,kubernetes.pod_name,kubernetes.container_name,service.name"
+          VL-Time-Field: "time"
         tls:
           insecure: true
       debug:
