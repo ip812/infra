@@ -1,5 +1,5 @@
 ---
-name: K8s Image Updater
+name: Docker Image Updater
 
 on:
   repository_dispatch:
@@ -29,16 +29,3 @@ jobs:
           git add .
           git commit -m "cicd: Update image ${{ env.IMAGE_NAME }} to version ${{ env.IMAGE_TAG }}"
           git push origin main
-  trigger-k8s-deploy:
-    needs: update-image
-    runs-on: ubuntu-latest
-  
-    steps:
-      - name: Trigger K8s Deploy
-        run: |
-          curl -X POST https://api.github.com/repos/ip812/infra/actions/workflows/terraform-apply-prod.yaml/dispatches \
-          -H "Authorization: token ${{ secrets.GH_ACCESS_TOKEN }}" \
-          -H "Accept: application/vnd.github+json" \
-          -d '{
-            "ref": "main"
-          }'

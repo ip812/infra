@@ -1,0 +1,5 @@
+- name: Install 
+  hosts: vms
+  become: yes
+  roles:
+    - common

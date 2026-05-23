@@ -1,0 +1,42 @@
+---
+name: Kubeadm Init
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'ansible/kubeadm-init.yml'
+  repository_dispatch:
+    types: [kubeadm-init]
+
+env:
+  TARGET_VM: ${{ github.event.client_payload.target_vm }}
+
+jobs:
+  run-playbook:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Tailscale
+        uses: tailscale/github-action@v4
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+          tags: tag:ci
+
+      - name: Run Ansible playbook
+        uses: dawidd6/action-ansible-playbook@v5
+        with:
+          playbook: ansible/kubeadm-init.yml
+          options: |
+            --inventory ansible/inventory.ini
+            --user root
+            --verbose

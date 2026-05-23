@@ -1,0 +1,14 @@
+- name: Install common utilities
+  apt:
+    name:
+      - curl
+      - wget
+      - unzip
+      - make
+      - git
+      - vim
+      - tmux
+      - jq
+      - yq
+      - gnupg
+    state: present
