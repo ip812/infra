@@ -38,6 +38,16 @@ locals {
       secret_name     = "TS_AUTH_KEY_CI_CD"
       plaintext_value = var.ts_auth_key_ci_cd
     }
+    infra_TS_OAUTH_CLIENT_ID = {
+      repository      = "infra"
+      secret_name     = "TS_OAUTH_CLIENT_ID"
+      plaintext_value = var.ts_oauth_client_id
+    }
+    infra_TS_OAUTH_SECRET = {
+      repository      = "infra"
+      secret_name     = "TS_OAUTH_SECRET"
+      plaintext_value = var.ts_oauth_client_secret
+    }
     lambdas_AWS_ACCESS_KEY_ID = {
       repository      = "lambdas"
       secret_name     = "AWS_ACCESS_KEY_ID"
