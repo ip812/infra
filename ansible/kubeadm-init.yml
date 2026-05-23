@@ -1,5 +1,5 @@
-- name: Install 
+- name: Install
   hosts: vms
   become: yes
-  roles:
-    - common
+  tasks:
+    - import_tasks: tasks/common.yml
