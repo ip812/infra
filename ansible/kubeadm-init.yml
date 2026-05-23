@@ -1,5 +1,24 @@
-- name: Install
-  hosts: vms
+- name: Bootstrap Kubernetes cluster (kubeadm)
+  hosts: "{{ target }}"
   become: yes
+  gather_facts: yes
+  vars:
+    k8s_major: "1"
+    k8s_minor: "35"
+    k8s_patch: "5"
+    cilium_version: "1.19.4"
+    local_path_version: "v0.0.36"
+    org: "ip812"
+    env: "prod"
+    flux_path_suffix: "shoot-work-01"
+    # Required (pass via --extra-vars from CI):
+    #   dp_token, gh_access_token
   tasks:
     - import_tasks: tasks/common.yml
+    - import_tasks: tasks/cri-containerd.yml
+    - import_tasks: tasks/helm.yml
+    - import_tasks: tasks/kubeadm-install.yml
+    - import_tasks: tasks/kubeadm-init.yml
+    - import_tasks: tasks/cni-cilium.yml
+    - import_tasks: tasks/csi-local-path.yml
+    - import_tasks: tasks/fluxcd.yml

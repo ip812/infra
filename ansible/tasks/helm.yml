@@ -1,0 +1,19 @@
+- name: Add Helm apt key
+  shell: |
+    set -o pipefail
+    curl -fsSL https://packages.buildkite.com/helm-linux/helm-debian/gpgkey | gpg --dearmor > /usr/share/keyrings/helm.gpg
+  args:
+    executable: /bin/bash
+    creates: /usr/share/keyrings/helm.gpg
+
+- name: Add Helm apt repository
+  copy:
+    dest: /etc/apt/sources.list.d/helm-stable-debian.list
+    content: "deb [signed-by=/usr/share/keyrings/helm.gpg] https://packages.buildkite.com/helm-linux/helm-debian/any/ any main\n"
+    mode: "0644"
+
+- name: Install Helm
+  apt:
+    name: helm
+    state: present
+    update_cache: yes

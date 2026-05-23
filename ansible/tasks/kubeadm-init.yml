@@ -1,0 +1,53 @@
+- name: Add k8s-endpoint to /etc/hosts
+  lineinfile:
+    path: /etc/hosts
+    line: "{{ ansible_default_ipv4.address }}  k8s-endpoint"
+    state: present
+
+- name: Check if kubeadm has already initialized
+  stat:
+    path: /etc/kubernetes/admin.conf
+  register: kubeadm_admin_conf
+
+- name: Run kubeadm init
+  command: >
+    kubeadm init
+    --kubernetes-version {{ k8s_major }}.{{ k8s_minor }}.{{ k8s_patch }}
+    --control-plane-endpoint k8s-endpoint
+    --pod-network-cidr=10.244.0.0/16
+    --skip-phases=addon/kube-proxy
+  when: not kubeadm_admin_conf.stat.exists
+
+- name: Ensure /root/.kube
+  file:
+    path: /root/.kube
+    state: directory
+    mode: "0755"
+
+- name: Copy admin.conf to /root/.kube/config
+  copy:
+    src: /etc/kubernetes/admin.conf
+    dest: /root/.kube/config
+    remote_src: yes
+    mode: "0600"
+
+- name: Wait for API server /readyz
+  shell: kubectl --kubeconfig=/root/.kube/config get --raw /readyz
+  register: readyz
+  retries: 60
+  delay: 5
+  until: readyz.rc == 0
+  changed_when: false
+
+- name: Get node InternalIP
+  shell: kubectl --kubeconfig=/root/.kube/config get nodes -o jsonpath='{.items[0].status.addresses[?(@.type=="InternalIP")].address}'
+  register: node_ip
+  changed_when: false
+
+- name: Untaint control-plane (single-node cluster)
+  command: kubectl --kubeconfig=/root/.kube/config taint nodes --all node-role.kubernetes.io/control-plane-
+  register: untaint
+  changed_when: '"untainted" in untaint.stdout'
+  failed_when:
+    - untaint.rc != 0
+    - '"not found" not in untaint.stderr'

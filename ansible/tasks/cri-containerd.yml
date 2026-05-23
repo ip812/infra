@@ -1,0 +1,108 @@
+# https://kubernetes.io/docs/setup/production-environment/container-runtimes
+# https://docs.docker.com/engine/install/debian/#install-using-the-repository
+
+- name: Disable swap (runtime)
+  command: swapoff -a
+  changed_when: false
+
+- name: Load kernel modules now
+  community.general.modprobe:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - overlay
+    - br_netfilter
+
+- name: Persist kernel modules
+  copy:
+    dest: /etc/modules-load.d/k8s.conf
+    content: |
+      overlay
+      br_netfilter
+    mode: "0644"
+
+- name: Configure sysctl for k8s networking
+  copy:
+    dest: /etc/sysctl.d/k8s.conf
+    content: |
+      net.ipv4.ip_forward = 1
+      net.bridge.bridge-nf-call-iptables = 1
+      net.bridge.bridge-nf-call-ip6tables = 1
+    mode: "0644"
+
+- name: Apply sysctl
+  command: sysctl --system
+  changed_when: false
+
+- name: Install containerd prereqs
+  apt:
+    name:
+      - ca-certificates
+      - curl
+    state: present
+    update_cache: yes
+
+- name: Ensure /etc/apt/keyrings exists
+  file:
+    path: /etc/apt/keyrings
+    state: directory
+    mode: "0755"
+
+- name: Fetch Docker apt key
+  get_url:
+    url: https://download.docker.com/linux/debian/gpg
+    dest: /etc/apt/keyrings/docker.asc
+    mode: "0644"
+
+- name: Resolve dpkg architecture
+  command: dpkg --print-architecture
+  register: dpkg_arch
+  changed_when: false
+
+- name: Resolve Debian codename
+  shell: . /etc/os-release && echo "$VERSION_CODENAME"
+  register: deb_codename
+  changed_when: false
+
+- name: Add Docker apt repository
+  copy:
+    dest: /etc/apt/sources.list.d/docker.list
+    content: "deb [arch={{ dpkg_arch.stdout }} signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian {{ deb_codename.stdout }} stable\n"
+    mode: "0644"
+
+- name: Install containerd.io
+  apt:
+    name: containerd.io
+    state: present
+    update_cache: yes
+
+- name: Generate default containerd config
+  shell: containerd config default > /etc/containerd/config.toml
+  args:
+    creates: /etc/containerd/config.toml
+
+- name: Enable SystemdCgroup in containerd
+  replace:
+    path: /etc/containerd/config.toml
+    regexp: 'SystemdCgroup = false'
+    replace: 'SystemdCgroup = true'
+
+- name: Enable + restart containerd
+  systemd:
+    name: containerd
+    enabled: yes
+    state: restarted
+
+- name: Wait for containerd socket to be ready
+  wait_for:
+    path: /run/containerd/containerd.sock
+    state: present
+    timeout: 60
+
+- name: Verify containerd is healthy
+  command: ctr version
+  register: ctr_check
+  retries: 10
+  delay: 3
+  until: ctr_check.rc == 0
+  changed_when: false

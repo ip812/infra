@@ -2,11 +2,6 @@
 name: Kubeadm Init
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'ansible/kubeadm-init.yml'
   repository_dispatch:
     types: [kubeadm-init]
 
@@ -39,4 +34,7 @@ jobs:
           options: |
             --inventory ansible/inventory.ini
             --user root
+            --extra-vars target=${{ env.TARGET_VM }}
+            --extra-vars dp_token=${{ secrets.DP_TOKEN }}
+            --extra-vars gh_access_token=${{ secrets.GH_ACCESS_TOKEN }}
             --verbose

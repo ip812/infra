@@ -1,0 +1,26 @@
+- name: Add Kubernetes apt key
+  shell: |
+    set -o pipefail
+    curl -fsSL "https://pkgs.k8s.io/core:/stable:/v{{ k8s_major }}.{{ k8s_minor }}/deb/Release.key" | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+  args:
+    executable: /bin/bash
+    creates: /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+
+- name: Add Kubernetes apt repository
+  copy:
+    dest: /etc/apt/sources.list.d/kubernetes.list
+    content: "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v{{ k8s_major }}.{{ k8s_minor }}/deb/ /\n"
+    mode: "0644"
+
+- name: Install kubelet/kubeadm/kubectl pinned
+  apt:
+    name:
+      - "kubelet={{ k8s_major }}.{{ k8s_minor }}.{{ k8s_patch }}-1.1"
+      - "kubeadm={{ k8s_major }}.{{ k8s_minor }}.{{ k8s_patch }}-1.1"
+      - "kubectl={{ k8s_major }}.{{ k8s_minor }}.{{ k8s_patch }}-1.1"
+    state: present
+    update_cache: yes
+
+- name: Hold kube* packages
+  command: apt-mark hold kubelet kubeadm kubectl
+  changed_when: false

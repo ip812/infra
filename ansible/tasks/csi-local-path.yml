@@ -1,0 +1,7 @@
+- name: Apply local-path-provisioner manifest
+  command: kubectl --kubeconfig=/root/.kube/config apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/{{ local_path_version }}/deploy/local-path-storage.yaml
+  changed_when: true
+
+- name: Mark local-path StorageClass as default
+  command: kubectl --kubeconfig=/root/.kube/config patch storageclass local-path -p '{"metadata":{"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+  changed_when: true

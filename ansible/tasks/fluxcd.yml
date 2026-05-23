@@ -1,0 +1,41 @@
+- name: Install flux CLI
+  shell: curl -s https://fluxcd.io/install.sh | bash
+  args:
+    executable: /bin/bash
+    creates: /usr/local/bin/flux
+
+- name: Ensure doppler-operator-system namespace
+  command: kubectl --kubeconfig=/root/.kube/config create namespace doppler-operator-system
+  register: ns_create
+  changed_when: ns_create.rc == 0
+  failed_when:
+    - ns_create.rc != 0
+    - '"AlreadyExists" not in ns_create.stderr'
+
+- name: Create doppler-token-secret
+  command: >
+    kubectl --kubeconfig=/root/.kube/config create secret generic doppler-token-secret
+    -n doppler-operator-system
+    --from-literal=serviceToken={{ dp_token }}
+  register: secret_create
+  changed_when: secret_create.rc == 0
+  failed_when:
+    - secret_create.rc != 0
+    - '"AlreadyExists" not in secret_create.stderr'
+  no_log: true
+
+- name: Flux bootstrap (github)
+  command: >
+    flux bootstrap github
+    --token-auth=true
+    --owner={{ org }}
+    --repository=infra
+    --branch=main
+    --path=k8s/overlays/{{ env }}/{{ flux_path_suffix }}
+    --read-write-key=true
+    --personal=false
+    --timeout=10m
+  environment:
+    GITHUB_TOKEN: "{{ gh_access_token }}"
+    KUBECONFIG: /root/.kube/config
+  no_log: true
