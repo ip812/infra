@@ -98,7 +98,7 @@ resource "aws_instance" "this" {
 
     tailscale up --authkey="$AUTH_KEY" --hostname="${local.org}-${local.env}-work-01" --advertise-tags="$TS_TAGS" --ssh
 
-    # Ttrigger kubeadm-init Ansible playbook
+    # Trigger kubeadm-init Ansible playbook
     curl -fsSL -X POST \
         -H "Accept: application/vnd.github+json" \
         -H "Authorization: Bearer ${var.gh_access_token}" \
