@@ -48,6 +48,11 @@ locals {
       secret_name     = "TS_OAUTH_SECRET"
       plaintext_value = var.ts_oauth_client_secret
     }
+    infra_DP_TOKEN = {
+      repository      = "infra"
+      secret_name     = "DP_TOKEN"
+      plaintext_value = var.dp_token
+    }
     lambdas_AWS_ACCESS_KEY_ID = {
       repository      = "lambdas"
       secret_name     = "AWS_ACCESS_KEY_ID"
