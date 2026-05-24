@@ -49,19 +49,14 @@ resource "aws_instance" "this" {
   user_data                   = <<-EOF
     #!/bin/bash
 
+    set -euo errexit
+    set -euo nounset
     set -euo pipefail
 
-    # =============================================================================
-    # STEP 0: CORE DEPENDENCIES
-    # =============================================================================
-
     apt update -y
-    apt install -y curl wget unzip make git vim tmux jq gnupg
+    apt install -y curl jq
 
-    # =============================================================================
-    # STEP 1: ADD NODE TO TAILNET
-    # =============================================================================
-
+    # Add the node to tailnet
     curl -fsSL https://tailscale.com/install.sh | sh
 
     API_BASE="https://api.tailscale.com/api/v2"
@@ -103,12 +98,7 @@ resource "aws_instance" "this" {
 
     tailscale up --authkey="$AUTH_KEY" --hostname="${local.org}-${local.env}-work-01" --advertise-tags="$TS_TAGS" --ssh
 
-    # =============================================================================
-    # STEP 2: TRIGGER KUBEADM-INIT ANSIBLE PLAYBOOK
-    # The cluster bootstrap (containerd, kubeadm, cilium, csi, fluxcd) runs from
-    # the ansible/kubeadm-init.yml playbook against this VM.
-    # =============================================================================
-
+    # Ttrigger kubeadm-init Ansible playbook
     curl -fsSL -X POST \
         -H "Accept: application/vnd.github+json" \
         -H "Authorization: Bearer ${var.gh_access_token}" \
