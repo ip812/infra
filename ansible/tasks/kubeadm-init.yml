@@ -1,7 +1,7 @@
 - name: Add k8s-endpoint to /etc/hosts
   lineinfile:
     path: /etc/hosts
-    line: "{{ ansible_default_ipv4.address }}  k8s-endpoint"
+    line: "{{ ansible_facts['default_ipv4'].address }}  k8s-endpoint"
     state: present
 
 - name: Check if kubeadm has already initialized

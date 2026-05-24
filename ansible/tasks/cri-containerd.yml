@@ -78,8 +78,7 @@
 
 - name: Generate default containerd config
   shell: containerd config default > /etc/containerd/config.toml
-  args:
-    creates: /etc/containerd/config.toml
+  changed_when: true
 
 - name: Enable SystemdCgroup in containerd
   replace:
