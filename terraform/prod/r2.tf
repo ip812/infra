@@ -20,3 +20,10 @@ resource "cloudflare_r2_bucket" "family_drive_bucket" {
   location      = "EEUR"
   storage_class = "Standard"
 }
+
+resource "cloudflare_r2_bucket" "k8s_work_01_kubeconfig_bucket" {
+  account_id    = var.cf_account_id
+  name          = "${local.org}-${local.env}-work-01-bucket"
+  location      = "EEUR"
+  storage_class = "Standard"
+}
