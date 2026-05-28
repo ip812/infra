@@ -16,6 +16,8 @@
   tasks:
     - import_tasks: tasks/common.yml
     - import_tasks: tasks/cri-containerd.yml
+    - import_tasks: tasks/crictl.yml
+    - import_tasks: tasks/cloudflared.yml
     - import_tasks: tasks/helm.yml
     - import_tasks: tasks/kubeadm-install.yml
     - import_tasks: tasks/kubeadm-init.yml

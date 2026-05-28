@@ -1,0 +1,42 @@
+# https://computingforgeeks.com/install-cri-o-container-runtime-on-debian-linux
+# crictl is the CRI client used to debug containerd from the node.
+# Pinned to the cluster k8s minor version (per cri-tools release scheme).
+
+- name: Resolve crictl version
+  set_fact:
+    crictl_version: "v{{ k8s_major }}.{{ k8s_minor }}.0"
+
+- name: Check if crictl is already installed at the desired version
+  shell: crictl --version 2>/dev/null | awk '{print $3}'
+  register: crictl_installed
+  changed_when: false
+  failed_when: false
+
+- name: Download crictl tarball
+  get_url:
+    url: "https://github.com/kubernetes-sigs/cri-tools/releases/download/{{ crictl_version }}/crictl-{{ crictl_version }}-linux-{{ dpkg_arch.stdout }}.tar.gz"
+    dest: "/tmp/crictl-{{ crictl_version }}-linux-{{ dpkg_arch.stdout }}.tar.gz"
+    mode: "0644"
+  when: crictl_installed.stdout != crictl_version
+
+- name: Extract crictl into /usr/local/bin
+  unarchive:
+    src: "/tmp/crictl-{{ crictl_version }}-linux-{{ dpkg_arch.stdout }}.tar.gz"
+    dest: /usr/local/bin
+    remote_src: yes
+    mode: "0755"
+  when: crictl_installed.stdout != crictl_version
+
+- name: Remove crictl tarball
+  file:
+    path: "/tmp/crictl-{{ crictl_version }}-linux-{{ dpkg_arch.stdout }}.tar.gz"
+    state: absent
+
+- name: Configure crictl runtime endpoint
+  copy:
+    dest: /etc/crictl.yaml
+    content: |
+      runtime-endpoint: unix:///run/containerd/containerd.sock
+      image-endpoint: unix:///run/containerd/containerd.sock
+      timeout: 10
+    mode: "0644"
