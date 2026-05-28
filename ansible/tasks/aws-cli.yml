@@ -1,0 +1,38 @@
+# https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
+# Installs AWS CLI v2 from the official bundled installer (apt's awscli is v1 and stale).
+
+- name: Map dpkg arch to AWS CLI arch
+  set_fact:
+    awscli_arch: "{{ 'x86_64' if dpkg_arch.stdout == 'amd64' else 'aarch64' }}"
+
+- name: Check installed aws cli version
+  command: aws --version
+  register: aws_installed
+  changed_when: false
+  failed_when: false
+
+- name: Download AWS CLI v2 installer
+  get_url:
+    url: "https://awscli.amazonaws.com/awscli-exe-linux-{{ awscli_arch }}.zip"
+    dest: /tmp/awscliv2.zip
+    mode: "0644"
+  when: "'aws-cli/2.' not in aws_installed.stdout"
+
+- name: Unzip AWS CLI v2 installer
+  unarchive:
+    src: /tmp/awscliv2.zip
+    dest: /tmp
+    remote_src: yes
+  when: "'aws-cli/2.' not in aws_installed.stdout"
+
+- name: Run AWS CLI v2 installer
+  command: /tmp/aws/install --update
+  when: "'aws-cli/2.' not in aws_installed.stdout"
+
+- name: Cleanup AWS CLI installer artifacts
+  file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - /tmp/awscliv2.zip
+    - /tmp/aws
