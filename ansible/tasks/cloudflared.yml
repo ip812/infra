@@ -10,7 +10,7 @@
 - name: Add Cloudflare apt repository
   copy:
     dest: /etc/apt/sources.list.d/cloudflared.list
-    content: "deb [signed-by=/usr/share/keyrings/cloudflare-main.gpg] https://pkg.cloudflare.com/cloudflared {{ deb_codename.stdout }} main\n"
+    content: "deb [signed-by=/usr/share/keyrings/cloudflare-main.gpg] https://pkg.cloudflare.com/cloudflared any main\n"
     mode: "0644"
 
 - name: Install cloudflared
