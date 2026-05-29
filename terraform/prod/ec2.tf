@@ -68,7 +68,7 @@ resource "aws_instance" "this" {
         exit 1
     fi
 
-    DEVICES=$(curl -sf -H "Authorization: Bearer $TOKEN" "$API_BASE/tailnet/${local.ts_tailnet}/devices")
+    DEVICES=$(curl -sf -H "Authorization: Bearer $TOKEN" "$API_BASE/tailnet/${var.ts_tailnet}/devices")
     DEVICE_ID=$(echo "$DEVICES" | jq -r --arg name "${local.org}-${local.env}-work-01" '.devices[] | select(.hostname == $name) | .id')
     if [ -n "$DEVICE_ID" ]; then
         curl -sf -X DELETE -H "Authorization: Bearer $TOKEN" "$API_BASE/device/$DEVICE_ID" || true
@@ -78,7 +78,7 @@ resource "aws_instance" "this" {
     AUTH_KEY=$(curl -sf -X POST \
         -H "Authorization: Bearer $TOKEN" \
         -H "Content-Type: application/json" \
-        "$API_BASE/tailnet/${local.ts_tailnet}/keys" \
+        "$API_BASE/tailnet/${var.ts_tailnet}/keys" \
         -d "$(jq -n --argjson tags "$TAGS_JSON" '{
             capabilities: {
                 devices: {

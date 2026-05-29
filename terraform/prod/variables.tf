@@ -10,7 +10,6 @@ locals {
   cf_shoot_work_01_tunnel_name = "ip812_shoot_work_01_tunnel"
   cf_shoot_o11y_01_tunnel_name = "ip812_shoot_o11y_01_tunnel"
   gh_username                  = "iypetrov"
-  ts_tailnet                   = "TEPnqjjAnc11CNTRL"
 
   blog_app_name        = "blog"
   blog_domain          = "blog"
@@ -57,6 +56,11 @@ variable "gh_access_token" {
 
 # openssl rand -base64 64 | tr -d '\n'
 variable "cf_tunnel_secret" {
+  type      = string
+  sensitive = true
+}
+
+variable "ts_tailnet" {
   type      = string
   sensitive = true
 }

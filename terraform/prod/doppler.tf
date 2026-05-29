@@ -10,7 +10,7 @@ locals {
     },
     {
       name  = "TS_TAILNET"
-      value = local.ts_tailnet
+      value = var.ts_tailnet
     },
     {
       name  = "PG_USERNAME"
