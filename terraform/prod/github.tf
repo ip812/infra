@@ -13,6 +13,11 @@ locals {
       secret_name     = "GH_ACCESS_TOKEN"
       plaintext_value = var.gh_access_token
     }
+    infra_DP_TOKEN = {
+      repository      = "infra"
+      secret_name     = "DP_TOKEN"
+      plaintext_value = var.dp_token
+    }
     lambdas_AWS_ACCESS_KEY_ID = {
       repository      = "lambdas"
       secret_name     = "AWS_ACCESS_KEY_ID"
