@@ -18,6 +18,16 @@ locals {
       secret_name     = "DP_TOKEN"
       plaintext_value = var.dp_token
     }
+    infra_TS_OAUTH_CLIENT_ID = {
+      repository      = "infra"
+      secret_name     = "TS_OAUTH_CLIENT_ID"
+      plaintext_value = var.ts_oauth_client_id
+    }
+    infra_TS_OAUTH_SECRET = {
+      repository      = "infra"
+      secret_name     = "TS_OAUTH_SECRET"
+      plaintext_value = var.ts_oauth_client_secret
+    }
     infra_BACKUPS_ACCESS_KEY_ID = {
       repository      = "infra"
       secret_name     = "BACKUPS_ACCESS_KEY_ID"
