@@ -12,7 +12,7 @@
     env: "prod"
     flux_path_suffix: "shoot-work-01"
     # Required (pass via --extra-vars from CI):
-    #   dp_token, gh_access_token
+    #   dp_token, gh_access_token, backups_access_key_id, backups_secret_access_key, cf_account_id
   tasks:
     - import_tasks: tasks/common.yml
     - import_tasks: tasks/cri-containerd.yml
@@ -24,3 +24,4 @@
     - import_tasks: tasks/cni-cilium.yml
     - import_tasks: tasks/csi-local-path.yml
     - import_tasks: tasks/fluxcd.yml
+    - import_tasks: tasks/upload-kubeconfig.yml

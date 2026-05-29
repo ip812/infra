@@ -37,3 +37,6 @@ jobs:
             --extra-vars target=${{ env.TARGET_VM }}
             --extra-vars dp_token=${{ secrets.DP_TOKEN }}
             --extra-vars gh_access_token=${{ secrets.GH_ACCESS_TOKEN }}
+            --extra-vars backups_access_key_id=${{ secrets.BACKUPS_ACCESS_KEY_ID }}
+            --extra-vars backups_secret_access_key=${{ secrets.BACKUPS_SECRET_ACCESS_KEY }}
+            --extra-vars cf_account_id=${{ secrets.CF_ACCOUNT_ID }}

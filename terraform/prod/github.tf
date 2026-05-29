@@ -18,6 +18,21 @@ locals {
       secret_name     = "DP_TOKEN"
       plaintext_value = var.dp_token
     }
+    infra_BACKUPS_ACCESS_KEY_ID = {
+      repository      = "infra"
+      secret_name     = "BACKUPS_ACCESS_KEY_ID"
+      plaintext_value = var.backups_access_key_id
+    }
+    infra_BACKUPS_SECRET_ACCESS_KEY = {
+      repository      = "infra"
+      secret_name     = "BACKUPS_SECRET_ACCESS_KEY"
+      plaintext_value = var.backups_secret_access_key
+    }
+    infra_CF_ACCOUNT_ID = {
+      repository      = "infra"
+      secret_name     = "CF_ACCOUNT_ID"
+      plaintext_value = var.cf_account_id
+    }
     lambdas_AWS_ACCESS_KEY_ID = {
       repository      = "lambdas"
       secret_name     = "AWS_ACCESS_KEY_ID"
