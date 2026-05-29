@@ -25,12 +25,6 @@ locals {
   }
 }
 
-variable "whitelist_email_addresses" {
-  default = [
-    "ilia.yavorov.petrov@gmail.com",
-  ]
-}
-
 variable "aws_access_key_id" {
   type      = string
   sensitive = true
@@ -67,31 +61,6 @@ variable "cf_tunnel_secret" {
   sensitive = true
 }
 
-variable "ts_auth_key" {
-  type      = string
-  sensitive = true
-}
-
-variable "ts_auth_key_ci_cd" {
-  type      = string
-  sensitive = true
-}
-
-variable "ts_client_id" {
-  type      = string
-  sensitive = true
-}
-
-variable "ts_client_secret" {
-  type      = string
-  sensitive = true
-}
-
-variable "ts_api_key" {
-  type      = string
-  sensitive = true
-}
-
 variable "ts_oauth_client_id" {
   type      = string
   sensitive = true
@@ -122,42 +91,17 @@ variable "pg_password" {
   sensitive = true
 }
 
-variable "pg_backups_access_key_id" {
+variable "backups_access_key_id" {
   type      = string
   sensitive = true
 }
 
-variable "pg_backups_secret_access_key" {
+variable "backups_secret_access_key" {
   type      = string
   sensitive = true
 }
 
 variable "dp_token" {
-  type      = string
-  sensitive = true
-}
-
-variable "slk_blog_bot_token" {
-  type      = string
-  sensitive = true
-}
-
-variable "es_username" {
-  type      = string
-  sensitive = true
-}
-
-variable "es_password" {
-  type      = string
-  sensitive = true
-}
-
-variable "gf_username" {
-  type      = string
-  sensitive = true
-}
-
-variable "gf_password" {
   type      = string
   sensitive = true
 }

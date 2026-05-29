@@ -2,19 +2,11 @@ locals {
   secrets_config = [
     {
       name  = "POSTGRES_BACKUPS_ACCESS_KEY_ID"
-      value = var.pg_backups_access_key_id
+      value = var.backups_access_key_id
     },
     {
       name  = "POSTGRES_BACKUPS_SECRET_ACCESS_KEY"
-      value = var.pg_backups_secret_access_key
-    },
-    {
-      name  = "TS_CLIENT_SECRET"
-      value = var.ts_client_secret
-    },
-    {
-      name  = "TS_API_KEY"
-      value = var.ts_api_key
+      value = var.backups_secret_access_key
     },
     {
       name  = "TS_TAILNET"
@@ -37,6 +29,14 @@ locals {
       value = var.pgadmin_password
     },
     {
+      name  = "TUNNEL_SHOOT_WORK_01_TOKEN"
+      value = data.cloudflare_zero_trust_tunnel_cloudflared_token.cf_shoot_work_01_tunnel_token.token
+    },
+    {
+      name  = "TUNNEL_SHOOT_O11Y_01_TOKEN"
+      value = data.cloudflare_zero_trust_tunnel_cloudflared_token.cf_shoot_o11y_01_tunnel_token.token
+    },
+    {
       name = "GHCR_DOCKERCONFIGJSON"
       value = jsonencode({
         auths = {
@@ -47,34 +47,6 @@ locals {
           }
         }
       })
-    },
-    {
-      name  = "TUNNEL_SHOOT_WORK_01_TOKEN"
-      value = data.cloudflare_zero_trust_tunnel_cloudflared_token.cf_shoot_work_01_tunnel_token.token
-    },
-    {
-      name  = "TUNNEL_SHOOT_O11Y_01_TOKEN"
-      value = data.cloudflare_zero_trust_tunnel_cloudflared_token.cf_shoot_o11y_01_tunnel_token.token
-    },
-    {
-      name  = "SLACK_BLOG_BOT_TOKEN"
-      value = var.slk_blog_bot_token
-    },
-    {
-      name  = "ELASTIC_USERNAME"
-      value = var.es_username
-    },
-    {
-      name  = "ELASTIC_PASSWORD"
-      value = var.es_password
-    },
-    {
-      name  = "GRAFANA_USERNAME"
-      value = var.gf_username
-    },
-    {
-      name  = "GRAFANA_PASSWORD"
-      value = var.gf_password
     }
   ]
 }

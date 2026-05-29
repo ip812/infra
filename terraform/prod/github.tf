@@ -13,46 +13,6 @@ locals {
       secret_name     = "GH_ACCESS_TOKEN"
       plaintext_value = var.gh_access_token
     }
-    infra_AWS_ACCESS_KEY_ID = {
-      repository      = "infra"
-      secret_name     = "AWS_ACCESS_KEY_ID"
-      plaintext_value = var.aws_access_key_id
-    }
-    infra_AWS_SECRET_ACCESS_KEY = {
-      repository      = "infra"
-      secret_name     = "AWS_SECRET_ACCESS_KEY"
-      plaintext_value = var.aws_secret_access_key
-    }
-    infra_AWS_REGION = {
-      repository      = "infra"
-      secret_name     = "AWS_REGION"
-      plaintext_value = local.aws_region
-    }
-    infra_TS_AUTH_KEY = {
-      repository      = "infra"
-      secret_name     = "TS_AUTH_KEY"
-      plaintext_value = var.ts_auth_key
-    }
-    infra_TS_AUTH_KEY_CI_CD = {
-      repository      = "infra"
-      secret_name     = "TS_AUTH_KEY_CI_CD"
-      plaintext_value = var.ts_auth_key_ci_cd
-    }
-    infra_TS_OAUTH_CLIENT_ID = {
-      repository      = "infra"
-      secret_name     = "TS_OAUTH_CLIENT_ID"
-      plaintext_value = var.ts_oauth_client_id
-    }
-    infra_TS_OAUTH_SECRET = {
-      repository      = "infra"
-      secret_name     = "TS_OAUTH_SECRET"
-      plaintext_value = var.ts_oauth_client_secret
-    }
-    infra_DP_TOKEN = {
-      repository      = "infra"
-      secret_name     = "DP_TOKEN"
-      plaintext_value = var.dp_token
-    }
     lambdas_AWS_ACCESS_KEY_ID = {
       repository      = "lambdas"
       secret_name     = "AWS_ACCESS_KEY_ID"
