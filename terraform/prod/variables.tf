@@ -1,8 +1,4 @@
 locals {
-  whitelist_emails = [
-    "ilia.yavorov.petrov@gmail.com"
-  ]
-
   org = "ip812"
   env = "prod"
 

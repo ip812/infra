@@ -43,13 +43,11 @@ resource "cloudflare_zero_trust_access_policy" "zt_access_policy" {
   decision         = "allow"
   session_duration = "8h"
 
-  include = [
-    for email in local.whitelist_emails : {
-      email = {
-        email = email
-      }
+  include = [{
+    email = {
+      email = var.fd_email_1
     }
-  ]
+  }]
 }
 
 resource "cloudflare_zero_trust_access_application" "zt_access_application" {
