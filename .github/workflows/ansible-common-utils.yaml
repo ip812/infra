@@ -1,9 +1,13 @@
 ---
-name: Ansible Kubeadm Init
+name: Ansible Common Utils
 
 on:
-  repository_dispatch:
-    types: [kubeadm-init]
+  push:
+    branches:
+      - main
+    paths:
+      - ansible/common-utils.yml
+      - ansible/tasks/common.yml
 
 env:
   TARGET_VM: ${{ github.event.client_payload.target_vm }}
@@ -30,13 +34,7 @@ jobs:
       - name: Run Ansible playbook
         uses: dawidd6/action-ansible-playbook@v5
         with:
-          playbook: ansible/kubeadm-init.yml
+          playbook: ansible/common-utils.yml
           options: |
             --inventory ansible/inventory.ini
             --user root
-            --extra-vars target=${{ env.TARGET_VM }}
-            --extra-vars dp_token=${{ secrets.DP_TOKEN }}
-            --extra-vars gh_access_token=${{ secrets.GH_ACCESS_TOKEN }}
-            --extra-vars backups_access_key_id=${{ secrets.BACKUPS_ACCESS_KEY_ID }}
-            --extra-vars backups_secret_access_key=${{ secrets.BACKUPS_SECRET_ACCESS_KEY }}
-            --extra-vars cf_account_id=${{ secrets.CF_ACCOUNT_ID }}

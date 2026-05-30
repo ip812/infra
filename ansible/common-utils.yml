@@ -1,0 +1,6 @@
+- name: Common utils
+  hosts: vms
+  become: yes
+  gather_facts: yes
+  tasks:
+    - import_tasks: tasks/common.yml
