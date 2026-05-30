@@ -11,12 +11,12 @@ locals {
   cf_shoot_o11y_01_tunnel_name = "ip812_shoot_o11y_01_tunnel"
   gh_username                  = "iypetrov"
 
-  blog_app_name        = "blog"
-  blog_domain          = "blog"
-  blog_db_name         = "blog"
-  family_drive_name    = "family-drive"
-  family_drive_domain  = "familydrive"
-  pgadmin_domain       = "pgadmin"
+  blog_app_name       = "blog"
+  blog_domain         = "blog"
+  blog_db_name        = "blog"
+  family_drive_name   = "family-drive"
+  family_drive_domain = "familydrive"
+  pgadmin_domain      = "pgadmin"
 
   default_tags = {
     Organization = local.org

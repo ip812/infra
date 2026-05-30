@@ -84,8 +84,8 @@ resource "github_actions_variable" "this" {
 }
 
 resource "github_actions_secret" "this" {
-  for_each        = local.github_secrets
-  repository      = each.value.repository
-  secret_name     = each.value.secret_name
-  plaintext_value = each.value.plaintext_value
+  for_each    = local.github_secrets
+  repository  = each.value.repository
+  secret_name = each.value.secret_name
+  value       = each.value.plaintext_value
 }
