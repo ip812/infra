@@ -9,69 +9,69 @@ locals {
 
   github_secrets = {
     infra_GH_ACCESS_TOKEN = {
-      repository      = "infra"
-      secret_name     = "GH_ACCESS_TOKEN"
-      plaintext_value = var.gh_access_token
+      repository  = "infra"
+      secret_name = "GH_ACCESS_TOKEN"
+      value       = var.gh_access_token
     }
     infra_DP_TOKEN = {
-      repository      = "infra"
-      secret_name     = "DP_TOKEN"
-      plaintext_value = var.dp_token
+      repository  = "infra"
+      secret_name = "DP_TOKEN"
+      value       = var.dp_token
     }
     infra_TS_OAUTH_CLIENT_ID = {
-      repository      = "infra"
-      secret_name     = "TS_OAUTH_CLIENT_ID"
-      plaintext_value = var.ts_oauth_client_id
+      repository  = "infra"
+      secret_name = "TS_OAUTH_CLIENT_ID"
+      value       = var.ts_oauth_client_id
     }
     infra_TS_OAUTH_SECRET = {
-      repository      = "infra"
-      secret_name     = "TS_OAUTH_SECRET"
-      plaintext_value = var.ts_oauth_client_secret
+      repository  = "infra"
+      secret_name = "TS_OAUTH_SECRET"
+      value       = var.ts_oauth_client_secret
     }
     infra_BACKUPS_ACCESS_KEY_ID = {
-      repository      = "infra"
-      secret_name     = "BACKUPS_ACCESS_KEY_ID"
-      plaintext_value = var.backups_access_key_id
+      repository  = "infra"
+      secret_name = "BACKUPS_ACCESS_KEY_ID"
+      value       = var.backups_access_key_id
     }
     infra_BACKUPS_SECRET_ACCESS_KEY = {
-      repository      = "infra"
-      secret_name     = "BACKUPS_SECRET_ACCESS_KEY"
-      plaintext_value = var.backups_secret_access_key
+      repository  = "infra"
+      secret_name = "BACKUPS_SECRET_ACCESS_KEY"
+      value       = var.backups_secret_access_key
     }
     infra_CF_ACCOUNT_ID = {
-      repository      = "infra"
-      secret_name     = "CF_ACCOUNT_ID"
-      plaintext_value = var.cf_account_id
+      repository  = "infra"
+      secret_name = "CF_ACCOUNT_ID"
+      value       = var.cf_account_id
     }
     lambdas_AWS_ACCESS_KEY_ID = {
-      repository      = "lambdas"
-      secret_name     = "AWS_ACCESS_KEY_ID"
-      plaintext_value = var.aws_access_key_id
+      repository  = "lambdas"
+      secret_name = "AWS_ACCESS_KEY_ID"
+      value       = var.aws_access_key_id
     }
     lambdas_AWS_SECRET_ACCESS_KEY = {
-      repository      = "lambdas"
-      secret_name     = "AWS_SECRET_ACCESS_KEY"
-      plaintext_value = var.aws_secret_access_key
+      repository  = "lambdas"
+      secret_name = "AWS_SECRET_ACCESS_KEY"
+      value       = var.aws_secret_access_key
     }
     lambdas_AWS_REGION = {
-      repository      = "lambdas"
-      secret_name     = "AWS_REGION"
-      plaintext_value = local.aws_region
+      repository  = "lambdas"
+      secret_name = "AWS_REGION"
+      value       = local.aws_region
     }
     lambdas_GH_ACCESS_TOKEN = {
-      repository      = "lambdas"
-      secret_name     = "GH_ACCESS_TOKEN"
-      plaintext_value = var.gh_access_token
+      repository  = "lambdas"
+      secret_name = "GH_ACCESS_TOKEN"
+      value       = var.gh_access_token
     }
     go-template_GH_ACCESS_TOKEN = {
-      repository      = "go-template"
-      secret_name     = "GH_ACCESS_TOKEN"
-      plaintext_value = var.gh_access_token
+      repository  = "go-template"
+      secret_name = "GH_ACCESS_TOKEN"
+      value       = var.gh_access_token
     }
     blog_GH_ACCESS_TOKEN = {
-      repository      = "blog"
-      secret_name     = "GH_ACCESS_TOKEN"
-      plaintext_value = var.gh_access_token
+      repository  = "blog"
+      secret_name = "GH_ACCESS_TOKEN"
+      value       = var.gh_access_token
     }
   }
 }
@@ -87,5 +87,5 @@ resource "github_actions_secret" "this" {
   for_each    = local.github_secrets
   repository  = each.value.repository
   secret_name = each.value.secret_name
-  value       = each.value.plaintext_value
+  value       = each.value.value
 }
