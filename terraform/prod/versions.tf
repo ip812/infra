@@ -1,9 +1,15 @@
 terraform {
-  backend "remote" {
-    organization = "ip812"
-    workspaces {
-      name = "prod"
-    }
+  backend "s3" {
+    bucket                      = "ip812-tf-state-bucket"
+    key                         = "terraform.tfstate"
+    region                      = "auto"
+    skip_credentials_validation = true
+    skip_metadata_api_check     = true
+    skip_region_validation      = true
+    skip_requesting_account_id  = true
+    skip_s3_checksum            = true
+    use_path_style              = true
+    endpoints                   = { s3 = "https://cb54b3c79e547fe9cbcc0456f67c7bbf.r2.cloudflarestorage.com" }
   }
 
   required_providers {
