@@ -9,19 +9,19 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "5.77.0"
+      version = "5.100.0"
     }
     cloudflare = {
       source  = "cloudflare/cloudflare"
-      version = "5.7.1"
+      version = "5.19.1"
     }
     github = {
       source  = "integrations/github"
-      version = "6.4.0"
+      version = "6.12.1"
     }
     doppler = {
       source  = "DopplerHQ/doppler"
-      version = "1.20.0"
+      version = "1.21.3"
     }
   }
 }
