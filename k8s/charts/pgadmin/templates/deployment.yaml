@@ -1,4 +1,3 @@
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -13,13 +12,13 @@ spec:
   template:
     metadata:
       labels:
-        app: pgadmin 
+        app: pgadmin
       annotations:
         reloader.stakater.com/auto: "true"
     spec:
       containers:
         - name: pgadmin
-          image: dpage/pgadmin4:9.6.0 # {"$imagepolicy": "flux-system:pgadmin"}
+          image: dpage/pgadmin4:9.15.0 # {"$imagepolicy": "flux-system:pgadmin"}
           ports:
             - containerPort: 80
               protocol: TCP
