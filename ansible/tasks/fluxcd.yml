@@ -27,6 +27,7 @@
 - name: Flux bootstrap (github)
   command: >
     flux bootstrap github
+     --components-extra=image-reflector-controller,image-automation-controller
     --token-auth=true
     --owner={{ org }}
     --repository=infra
