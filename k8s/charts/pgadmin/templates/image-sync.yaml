@@ -1,0 +1,21 @@
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageRepository
+metadata:
+  name: pgadmin
+  namespace: flux-system
+spec:
+  image: dpage/pgadmin4
+  interval: 5m
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImagePolicy
+metadata:
+  name: pgadmin
+  namespace: flux-system
+spec:
+  imageRepositoryRef:
+    name: pgadmin
+  policy:
+    semver:
+      range: 9.x.x
