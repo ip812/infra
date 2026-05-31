@@ -1,0 +1,21 @@
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageRepository
+metadata:
+  name: {{ .Values.name }}
+spec:
+  image: {{ (splitList ":" .Values.image) | first | quote }}
+  interval: 5m
+  secretRef:
+    name: ghcr-auth
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImagePolicy
+metadata:
+  name: {{ .Values.name }}
+spec:
+  imageRepositoryRef:
+    name: {{ .Values.name }}
+  policy:
+    semver:
+      range: x.x.x
