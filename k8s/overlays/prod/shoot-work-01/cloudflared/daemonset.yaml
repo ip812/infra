@@ -1,4 +1,3 @@
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -18,23 +17,23 @@ spec:
     spec:
       containers:
       - name: cloudflared
-        image: "cloudflare/cloudflared:2025.7.0" # {"$imagepolicy": "flux-system:cloudflared"}
+        image: "cloudflare/cloudflared:2026.5.2" # {"$imagepolicy": "flux-system:cloudflared"}
         args:
-          - "tunnel"
-          - "--config"
-          - "/etc/cloudflared/config/config.yaml"
-          - "run"
-          - "--protocol"
-          - "http2"
+        - "tunnel"
+        - "--config"
+        - "/etc/cloudflared/config/config.yaml"
+        - "run"
+        - "--protocol"
+        - "http2"
         env:
-          - name: TUNNEL_TOKEN
-            valueFrom:
-              secretKeyRef:
-                name: cloudflared-creds
-                key: TUNNEL_SHOOT_WORK_01_TOKEN
+        - name: TUNNEL_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: cloudflared-creds
+              key: TUNNEL_SHOOT_WORK_01_TOKEN
         volumeMounts:
-          - name: config
-            mountPath: /etc/cloudflared/config
+        - name: config
+          mountPath: /etc/cloudflared/config
         livenessProbe:
           httpGet:
             path: /ready
@@ -43,6 +42,6 @@ spec:
           initialDelaySeconds: 10
           periodSeconds: 10
       volumes:
-        - name: config
-          configMap:
-            name: cloudflared-config
+      - name: config
+        configMap:
+          name: cloudflared-config
