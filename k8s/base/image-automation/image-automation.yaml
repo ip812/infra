@@ -18,7 +18,7 @@ spec:
         name: fluxcdbot
         email: fluxcdbot@users.noreply.github.com
       messageTemplate: |
-        Automated image update
+        feat: automated image update {{ range $i, $c := .Changed.Changes }}{{ if $i }}, {{ end }}{{ $c.Setter }} {{ $c.OldValue }} -> {{ $c.NewValue }}{{ end }}
 
         Automation name: {{ .AutomationObject }}
 
