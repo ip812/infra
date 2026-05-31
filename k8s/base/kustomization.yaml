@@ -4,3 +4,4 @@ kind: Kustomization
 resources:
 - doppler.yaml
 - reloader.yaml
+- image-automation.yaml
