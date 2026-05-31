@@ -12,6 +12,10 @@ on:
 env:
   TARGET_VM: ${{ github.event.client_payload.target_vm }}
 
+concurrency:
+  group: terraform-apply-prod
+  cancel-in-progress: false
+
 jobs:
   run-playbook:
     runs-on: ubuntu-latest
