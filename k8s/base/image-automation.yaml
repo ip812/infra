@@ -9,6 +9,6 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./k8s/overlays/prod/shoot-work-01/image-automation
+  path: ./k8s/base/image-automation
   prune: true
   wait: true

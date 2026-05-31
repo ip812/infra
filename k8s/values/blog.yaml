@@ -1,6 +1,6 @@
 isInit: false
 name: "blog"
-image: ghcr.io/iypetrov/blog:1.31.0 # {"$imagepolicy": "blog:blog"}
+image: ghcr.io/iypetrov/blog:1.31.0 # {"$imagepolicy": "flux-system:blog"}
 hostname: "blog.ip812.com"
 replicas: 1
 minMemory: "64Mi"
