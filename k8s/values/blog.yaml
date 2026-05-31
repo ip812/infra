@@ -1,6 +1,6 @@
 isInit: false
 name: "blog"
-image: ghcr.io/iypetrov/blog:1.31.0 # {"$imagepolicy": "flux-system:blog"}
+image: ghcr.io/iypetrov/blog:1.32.0 # {"$imagepolicy": "flux-system:blog"}
 hostname: "blog.ip812.com"
 replicas: 1
 minMemory: "64Mi"
@@ -33,10 +33,10 @@ env:
     value: "blog-pg-rw.blog.svc.cluster.local"
   - name: DB_SSL_MODE
     value: disable
-  # - name: OTEL_EXPORTER_OTLP_ENDPOINT
-  #   value: "http://vtsingle-traces.victoria.svc:10428/insert/opentelemetry"
-  # - name: OTEL_EXPORTER_OTLP_INSECURE
-  #   value: "true"
+    # - name: OTEL_EXPORTER_OTLP_ENDPOINT
+    #   value: "http://vtsingle-traces.victoria.svc:10428/insert/opentelemetry"
+    # - name: OTEL_EXPORTER_OTLP_INSECURE
+    #   value: "true"
 database:
   postgres:
     enabled: true
