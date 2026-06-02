@@ -36,7 +36,7 @@ jobs:
           tags: tag:ci
 
       - name: Run Ansible playbook
-        uses: dawidd6/action-ansible-playbook@v5
+        uses: dawidd6/action-ansible-playbook@v9
         with:
           playbook: ansible/common-utils.yml
           options: |
