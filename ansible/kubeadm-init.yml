@@ -3,16 +3,17 @@
   become: yes
   gather_facts: yes
   vars:
-    k8s_major: "1"
-    k8s_minor: "35"
-    k8s_patch: "5"
-    cilium_version: "1.19.4"
-    local_path_version: "v0.0.36"
     org: "ip812"
     env: "prod"
     flux_path_suffix: "shoot-work-01"
     # Required (pass via --extra-vars from CI):
     #   dp_token, gh_access_token, backups_access_key_id, backups_secret_access_key, cf_account_id
+    k8s_major: "1"
+    k8s_minor: "35"
+    k8s_patch: "5"
+    cilium_version: "1.19.4"
+    local_path_version: "v0.0.36"
+    etcd_version: "v3.6.12"
   tasks:
     - import_tasks: tasks/common.yml
     - import_tasks: tasks/cri-containerd.yml
@@ -25,3 +26,4 @@
     - import_tasks: tasks/csi-local-path.yml
     - import_tasks: tasks/fluxcd.yml
     - import_tasks: tasks/upload-kubeconfig.yml
+    - import_tasks: tasks/etcd-tools.yml
