@@ -1,0 +1,39 @@
+# Installs etcdctl and etcdutl from the upstream etcd release tarball.
+# etcdctl: client for interacting with an etcd cluster (get/put/snapshot save).
+# etcdutl: offline utility for snapshot restore and db maintenance.
+
+- name: Resolve dpkg architecture
+  command: dpkg --print-architecture
+  register: dpkg_arch
+  changed_when: false
+
+- name: Check if etcdctl is already installed at the desired version
+  shell: etcdctl version 2>/dev/null | awk '/etcdctl version:/ {print "v"$3}'
+  register: etcdctl_installed
+  changed_when: false
+  failed_when: false
+
+- name: Download etcd tarball
+  get_url:
+    url: "https://github.com/etcd-io/etcd/releases/download/{{ etcd_version }}/etcd-{{ etcd_version }}-linux-{{ dpkg_arch.stdout }}.tar.gz"
+    dest: "/tmp/etcd-{{ etcd_version }}-linux-{{ dpkg_arch.stdout }}.tar.gz"
+    mode: "0644"
+  when: etcdctl_installed.stdout != etcd_version
+
+- name: Extract etcdctl and etcdutl into /usr/local/bin
+  unarchive:
+    src: "/tmp/etcd-{{ etcd_version }}-linux-{{ dpkg_arch.stdout }}.tar.gz"
+    dest: /usr/local/bin
+    remote_src: yes
+    extra_opts:
+      - "--strip-components=1"
+      - "--wildcards"
+      - "*/etcdctl"
+      - "*/etcdutl"
+    mode: "0755"
+  when: etcdctl_installed.stdout != etcd_version
+
+- name: Remove etcd tarball
+  file:
+    path: "/tmp/etcd-{{ etcd_version }}-linux-{{ dpkg_arch.stdout }}.tar.gz"
+    state: absent

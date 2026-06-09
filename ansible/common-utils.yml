@@ -2,5 +2,8 @@
   hosts: vms
   become: yes
   gather_facts: yes
+  vars:
+    etcd_version: "v3.6.12"
   tasks:
     - import_tasks: tasks/common.yml
+    - import_tasks: tasks/etcd-tools.yml
