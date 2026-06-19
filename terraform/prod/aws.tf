@@ -133,15 +133,15 @@ resource "aws_instance" "this" {
     tailscale up --authkey="$AUTH_KEY" --hostname="${local.org}-${local.env}-work-01" --advertise-tags="$TS_TAGS" --ssh
 
     # Trigger kubeadm-init Ansible playbook
-    curl -fsSL -X POST \
-        -H "Accept: application/vnd.github+json" \
-        -H "Authorization: Bearer ${var.gh_access_token}" \
-        -H "X-GitHub-Api-Version: 2022-11-28" \
-        "https://api.github.com/repos/${local.org}/infra/dispatches" \
-        -d "$(jq -n --arg vm "prod-shoot-work-01-1" '{
-            event_type: "kubeadm-init",
-            client_payload: { target_vm: $vm }
-        }')"
+    # curl -fsSL -X POST \
+    #     -H "Accept: application/vnd.github+json" \
+    #     -H "Authorization: Bearer ${var.gh_access_token}" \
+    #     -H "X-GitHub-Api-Version: 2022-11-28" \
+    #     "https://api.github.com/repos/${local.org}/infra/dispatches" \
+    #     -d "$(jq -n --arg vm "prod-shoot-work-01-1" '{
+    #         event_type: "kubeadm-init",
+    #         client_payload: { target_vm: $vm }
+    #     }')"
   EOF
 
   root_block_device {
