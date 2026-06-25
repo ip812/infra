@@ -25,5 +25,5 @@
     - import_tasks: tasks/kubeadm-init.yml
     - import_tasks: tasks/cni-cilium.yml
     - import_tasks: tasks/csi-local-path.yml
-    # - import_tasks: tasks/fluxcd.yml
+    - import_tasks: tasks/fluxcd.yml
     - import_tasks: tasks/upload-kubeconfig.yml
