@@ -5,8 +5,8 @@ resources:
 - ../../../base
 - cloudflared.yaml
 # - fluent.yaml
-# - postgres.yaml
-# - blog.yaml
+- postgres.yaml
+- blog.yaml
 # - cert-manager.yaml
 # - otel-col.yaml
 # - victoria.yaml
