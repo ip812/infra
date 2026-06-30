@@ -10,7 +10,7 @@
     #   dp_token, gh_access_token, backups_access_key_id, backups_secret_access_key, cf_account_id
     k8s_major: "1"
     k8s_minor: "35"
-    k8s_patch: "5"
+    k8s_patch: "6"
     cilium_version: "1.19.4"
     local_path_version: "v0.0.36"
     etcd_version: "v3.6.12"
