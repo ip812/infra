@@ -133,7 +133,6 @@ resource "aws_instance" "this" {
     tailscale up --authkey="$AUTH_KEY" --hostname="${local.org}-${local.env}-work-01" --advertise-tags="$TS_TAGS" --ssh
 
     # Trigger kubeadm-init Ansible playbook
-    # foo
     curl -fsSL -X POST \
         -H "Accept: application/vnd.github+json" \
         -H "Authorization: Bearer ${var.gh_access_token}" \
@@ -149,6 +148,10 @@ resource "aws_instance" "this" {
     iops        = 3000
     volume_size = 12
     volume_type = "gp3"
+  }
+
+  credit_specification {
+    cpu_credits = "standard"
   }
 
   tags = merge(
