@@ -102,7 +102,7 @@ resource "aws_instance" "this" {
     echo "PersistentKeepalive = 25" >> /etc/wireguard/wg0.conf
     chmod 600 /etc/wireguard/wg0.conf
 
-    # systemctl enable --now wg-quick@wg0
+    # systemctl enable wg-quick@wg0
 
     # Trigger kubeadm-init Ansible playbook
     # curl -fsSL -X POST \
