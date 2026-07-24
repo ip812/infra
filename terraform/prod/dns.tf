@@ -38,7 +38,7 @@ resource "cloudflare_dns_record" "dns_record" {
   content  = try(each.value.tunnel, null) != null ? "${each.value.tunnel.id}.cfargotunnel.com" : each.value.ip
   type     = try(each.value.tunnel, null) != null ? "CNAME" : "A"
   ttl      = 1
-  proxied  = try(each.value.proxied, true)
+  proxied  = true
 }
 
 resource "cloudflare_zero_trust_access_policy" "zt_access_policy" {
