@@ -3,6 +3,7 @@ locals {
     proxmox  = {
       is_protected = false
       ip           = "45.67.89.95"
+      proxied      = false
     }
     shoot-work-01 = {
       is_protected = true
@@ -38,7 +39,7 @@ resource "cloudflare_dns_record" "dns_record" {
   content  = try(each.value.tunnel, null) != null ? "${each.value.tunnel.id}.cfargotunnel.com" : each.value.ip
   type     = try(each.value.tunnel, null) != null ? "CNAME" : "A"
   ttl      = 1
-  proxied  = true
+  proxied  = try(each.value.tunnel, null) != null ? true : try(each.value.proxied, false)
 }
 
 resource "cloudflare_zero_trust_access_policy" "zt_access_policy" {
