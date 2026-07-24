@@ -100,7 +100,7 @@ resource "aws_instance" "this" {
     [Peer]
     PublicKey = ${var.wg_proxmox_public_key}
     Endpoint = proxmox.${local.org}.com:51820
-    AllowedIPs = 0.0.0.0/0  # Route ALL traffic through VPN
+    AllowedIPs = 0.0.0.0/0
     PersistentKeepalive = 25
     WGEOF
     sed -i 's/^[[:space:]]*//' /etc/wireguard/wg0.conf
