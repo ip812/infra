@@ -2,7 +2,6 @@ locals {
   route_config = {
     proxmox = {
       is_protected = false
-      proxied      = false
       ip           = var.home_public_ip 
     }
     shoot-work-01 = {
