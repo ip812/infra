@@ -1,5 +1,9 @@
 locals {
   route_config = {
+    proxmox  = {
+      is_protected = false
+      ip           = "45.67.89.95"
+    }
     shoot-work-01 = {
       is_protected = true
       tunnel       = cloudflare_zero_trust_tunnel_cloudflared.cf_shoot_work_01_tunnel
@@ -31,8 +35,8 @@ resource "cloudflare_dns_record" "dns_record" {
   for_each = local.route_config
   zone_id  = var.cf_ip812_zone_id
   name     = "${each.key}.${local.org}.com"
-  content  = "${each.value.tunnel.id}.cfargotunnel.com"
-  type     = "CNAME"
+  content  = try(each.value.tunnel, null) != null ? "${each.value.tunnel.id}.cfargotunnel.com" : each.value.ip
+  type     = try(each.value.tunnel, null) != null ? "CNAME" : "A"
   ttl      = 1
   proxied  = true
 }
