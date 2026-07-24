@@ -103,6 +103,7 @@ resource "aws_instance" "this" {
     chmod 600 /etc/wireguard/wg0.conf
 
     systemctl enable wg-quick@wg0
+    systemctl start wg-quick@wg0
 
     # Trigger kubeadm-init Ansible playbook
     # curl -fsSL -X POST \
