@@ -74,7 +74,8 @@ resource "aws_iam_instance_profile" "this" {
 }
 
 resource "aws_instance" "this" {
-  ami                         = "ami-0da1f66573556d917" # Debian 13
+  # ami                         = "ami-0da1f66573556d917" # Debian 13
+  ami                         = "ami-0303e2e4a29f041a3" # Ubuntu 26.04
   instance_type               = "t3.medium"
   subnet_id                   = aws_subnet.public_subnet_a.id
   vpc_security_group_ids      = [aws_security_group.this.id]
