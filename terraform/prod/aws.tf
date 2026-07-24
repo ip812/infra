@@ -88,60 +88,35 @@ resource "aws_instance" "this" {
     set -euo pipefail
 
     apt update -y
-    apt install -y curl jq
+    apt install -y curl jq wireguard
 
-    # Add the node to tailnet
-    curl -fsSL https://tailscale.com/install.sh | sh
+    # Add the node to the WireGuard network
+    cat > /etc/wireguard/wg0.conf <<WGEOF
+    [Interface]
+    PrivateKey = ${var.wg_shoot_work_01_private_key}
+    Address = 10.0.0.4/24
 
-    API_BASE="https://api.tailscale.com/api/v2"
-    TS_TAGS="tag:vm"
+    [Peer]
+    PublicKey = ${var.wg_proxmox_public_key}
+    Endpoint = proxmox.${local.org}.com:51820
+    AllowedIPs = 10.0.0.0/24
+    PersistentKeepalive = 25
+    WGEOF
+    sed -i 's/^[[:space:]]*//' /etc/wireguard/wg0.conf
+    chmod 600 /etc/wireguard/wg0.conf
 
-    TOKEN=$(curl -sf -d "client_id=${var.ts_oauth_client_id}" -d "client_secret=${var.ts_oauth_client_secret}" "$API_BASE/oauth/token" | jq -r '.access_token')
-    if [ -z "$TOKEN" ] || [ "$TOKEN" = "null" ]; then
-        echo "ERROR: Failed to obtain OAuth token"
-        exit 1
-    fi
+    systemctl enable --now wg-quick@wg0
 
-    DEVICES=$(curl -sf -H "Authorization: Bearer $TOKEN" "$API_BASE/tailnet/${var.ts_tailnet}/devices")
-    DEVICE_ID=$(echo "$DEVICES" | jq -r --arg name "${local.org}-${local.env}-work-01" '.devices[] | select(.hostname == $name) | .id')
-    if [ -n "$DEVICE_ID" ]; then
-        curl -sf -X DELETE -H "Authorization: Bearer $TOKEN" "$API_BASE/device/$DEVICE_ID" || true
-    fi
-
-    TAGS_JSON=$(jq -Rn --arg tags "$TS_TAGS" '$tags | split(",")')
-    AUTH_KEY=$(curl -sf -X POST \
-        -H "Authorization: Bearer $TOKEN" \
-        -H "Content-Type: application/json" \
-        "$API_BASE/tailnet/${var.ts_tailnet}/keys" \
-        -d "$(jq -n --argjson tags "$TAGS_JSON" '{
-            capabilities: {
-                devices: {
-                    create: {
-                        reusable: false,
-                        preauthorized: true,
-                        tags: $tags
-                    }
-                }
-            },
-            expirySeconds: 3600
-        }')" | jq -r '.key')
-    if [ -z "$AUTH_KEY" ] || [ "$AUTH_KEY" = "null" ]; then
-        echo "ERROR: Failed to create auth key"
-        exit 1
-    fi
-
-    tailscale up --authkey="$AUTH_KEY" --hostname="${local.org}-${local.env}-work-01" --advertise-tags="$TS_TAGS" --ssh
-
-    # Trigger kubeadm-init Ansible playbook
-    curl -fsSL -X POST \
-        -H "Accept: application/vnd.github+json" \
-        -H "Authorization: Bearer ${var.gh_access_token}" \
-        -H "X-GitHub-Api-Version: 2022-11-28" \
-        "https://api.github.com/repos/${local.org}/infra/dispatches" \
-        -d "$(jq -n --arg vm "prod-shoot-work-01-1" '{
-            event_type: "kubeadm-init",
-            client_payload: { target_vm: $vm }
-        }')"
+    # # Trigger kubeadm-init Ansible playbook
+    # curl -fsSL -X POST \
+    #     -H "Accept: application/vnd.github+json" \
+    #     -H "Authorization: Bearer ${var.gh_access_token}" \
+    #     -H "X-GitHub-Api-Version: 2022-11-28" \
+    #     "https://api.github.com/repos/${local.org}/infra/dispatches" \
+    #     -d "$(jq -n --arg vm "prod-shoot-work-01-1" '{
+    #         event_type: "kubeadm-init",
+    #         client_payload: { target_vm: $vm }
+    #     }')"
   EOF
 
   root_block_device {
