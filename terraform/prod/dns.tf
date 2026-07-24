@@ -1,6 +1,6 @@
 locals {
   route_config = {
-    shoot-work-01 = {
+    proxmox = {
       is_protected = false
       proxied      = false
       ip           = "45.67.89.95"
