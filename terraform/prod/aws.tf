@@ -89,7 +89,7 @@ resource "aws_instance" "this" {
     set -euo pipefail
 
     apt update -y
-    apt install -y curl jq wireguard
+    apt install -y wireguard
 
     # Add the node to the WireGuard network
     cat > /etc/wireguard/wg0.conf <<WGEOF
@@ -100,13 +100,13 @@ resource "aws_instance" "this" {
     [Peer]
     PublicKey = ${var.wg_proxmox_public_key}
     Endpoint = proxmox.${local.org}.com:51820
-    AllowedIPs = 10.0.0.0/24
+    AllowedIPs = 0.0.0.0/0  # Route ALL traffic through VPN
     PersistentKeepalive = 25
     WGEOF
     sed -i 's/^[[:space:]]*//' /etc/wireguard/wg0.conf
     chmod 600 /etc/wireguard/wg0.conf
 
-    systemctl enable --now wg-quick@wg0
+    wg-quick up wg0
 
     # Trigger kubeadm-init Ansible playbook
     # curl -fsSL -X POST \
