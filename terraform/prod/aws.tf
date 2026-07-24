@@ -106,7 +106,7 @@ resource "aws_instance" "this" {
     sed -i 's/^[[:space:]]*//' /etc/wireguard/wg0.conf
     chmod 600 /etc/wireguard/wg0.conf
 
-    wg-quick up wg0
+    systemctl enable --now wg-quick@wg0
 
     # Trigger kubeadm-init Ansible playbook
     # curl -fsSL -X POST \
