@@ -5,7 +5,7 @@ locals {
   aws_region   = "eu-central-1"
   aws_az_a     = "eu-central-1a"
   aws_az_b     = "eu-central-1b"
-  aws_vpc_cidr = "10.0.0.0/16"
+  aws_vpc_cidr = "10.1.0.0/16"
 
   cf_shoot_work_01_tunnel_name = "ip812_shoot_work_01_tunnel"
   cf_shoot_o11y_01_tunnel_name = "ip812_shoot_o11y_01_tunnel"

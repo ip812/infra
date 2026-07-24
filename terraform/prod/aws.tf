@@ -91,6 +91,19 @@ resource "aws_instance" "this" {
     apt update -y
     apt install -y wireguard
 
+    # Add the node to the WireGuard network
+    echo "[Interface]" >> /etc/wireguard/wg0.conf
+    echo "PrivateKey = ${var.wg_shoot_work_01_private_key}" >> /etc/wireguard/wg0.conf
+    echo "Address = 10.0.0.4/24" >> /etc/wireguard/wg0.conf
+    echo "[Peer]" >> /etc/wireguard/wg0.conf
+    echo "PublicKey = ${var.wg_proxmox_public_key}" >> /etc/wireguard/wg0.conf
+    echo "Endpoint = proxmox.${local.org}.com:51820" >> /etc/wireguard/wg0.conf
+    echo "AllowedIPs = 10.0.0.0/0" >> /etc/wireguard/wg0.conf
+    echo "PersistentKeepalive = 25" >> /etc/wireguard/wg0.conf
+    chmod 600 /etc/wireguard/wg0.conf
+
+    # systemctl enable --now wg-quick@wg0
+
     # Trigger kubeadm-init Ansible playbook
     # curl -fsSL -X POST \
     #     -H "Accept: application/vnd.github+json" \
