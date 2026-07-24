@@ -3,7 +3,7 @@ locals {
     proxmox = {
       is_protected = false
       proxied      = false
-      ip           = "45.67.89.95"
+      ip           = var.home_public_ip 
     }
     shoot-work-01 = {
       is_protected = true

@@ -46,6 +46,7 @@ jobs:
       TF_VAR_dp_token:                  ${{ secrets.DP_TOKEN }}
       TF_VAR_fd_email_1:                ${{ secrets.FD_EMAIL_1 }}
       TF_VAR_fd_email_2:                ${{ secrets.FD_EMAIL_2 }}
+      TF_VAR_home_public_ip:            ${{ secrets.HOME_PUBLIC_IP }}
 
     steps:
       - name: Checkout

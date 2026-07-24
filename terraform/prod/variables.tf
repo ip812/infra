@@ -119,3 +119,8 @@ variable "fd_email_2" {
   type      = string
   sensitive = true
 }
+
+variable "home_public_ip" {
+  type      = string
+  sensitive = true
+}
