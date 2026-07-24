@@ -124,3 +124,13 @@ variable "home_public_ip" {
   type      = string
   sensitive = true
 }
+
+variable "wg_proxmox_public_key" {
+  type      = string
+  sensitive = true
+}
+
+variable "wg_shoot_work_01_private_key" {
+  type      = string
+  sensitive = true
+}
