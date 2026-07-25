@@ -84,9 +84,9 @@ resource "aws_instance" "this" {
   user_data                   = <<-EOF
     #!/bin/bash
 
-    set -o errexit
-    set -o nounset
-    set -o pipefail
+    set -euo errexit
+    set -euo nounset
+    set -euo pipefail
 
     apt update -y
     apt install -y wireguard
