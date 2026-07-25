@@ -9,10 +9,6 @@ locals {
       value = var.backups_secret_access_key
     },
     {
-      name  = "TS_TAILNET"
-      value = var.ts_tailnet
-    },
-    {
       name  = "PG_USERNAME"
       value = var.pg_username
     },

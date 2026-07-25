@@ -34,9 +34,6 @@ jobs:
       TF_VAR_cf_ip812_zone_id:             ${{ secrets.CF_IP812_ZONE_ID }}
       TF_VAR_gh_access_token:              ${{ secrets.GH_ACCESS_TOKEN }}
       TF_VAR_cf_tunnel_secret:             ${{ secrets.CF_TUNNEL_SECRET }}
-      TF_VAR_ts_tailnet:                   ${{ secrets.TS_TAILNET }}
-      TF_VAR_ts_oauth_client_id:           ${{ secrets.TS_OAUTH_CLIENT_ID }}
-      TF_VAR_ts_oauth_client_secret:       ${{ secrets.TS_OAUTH_SECRET }}
       TF_VAR_pgadmin_email:                ${{ secrets.PGADMIN_EMAIL }}
       TF_VAR_pgadmin_password:             ${{ secrets.PGADMIN_PASSWORD }}
       TF_VAR_pg_username:                  ${{ secrets.PG_USERNAME }}

@@ -6,7 +6,7 @@ Used technologies:
 - Terraform
 - Ansible
 - GitHub Actions 
-- Tailscale
+- WireGuard
 - Cloudflare
 - AWS
 - Proxmox (upcoming)
