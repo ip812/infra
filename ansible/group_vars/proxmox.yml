@@ -1,4 +1,1 @@
-# Proxmox ships its own kernel. Use the versioned PVE headers package that
-# matches the running kernel — the bare `pve-headers` meta-package does not
-# reliably resolve, but `pve-headers-<version>` is shipped with the kernel.
 bcc_headers_pkg: "pve-headers-{{ ansible_facts['kernel'] }}"

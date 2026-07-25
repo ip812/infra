@@ -14,8 +14,6 @@
       - strace
     state: present
 
-# bcc tools: https://github.com/iovisor/bcc/blob/master/INSTALL.md#debian---binary
-# bcc_headers_pkg is set per host group in group_vars (Debian VMs vs Proxmox).
 - name: Install bcc tools
   apt:
     name:
