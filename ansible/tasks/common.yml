@@ -20,5 +20,5 @@
       - bpfcc-tools
       - libbpfcc
       - libbpfcc-dev
-      - "linux-headers-{{ ansible_kernel }}"
+      - "{{ 'pve-headers' if 'pve' in ansible_facts['kernel'] else 'linux-headers-' + ansible_facts['kernel'].split('-', 1)[1] }}"
     state: present
