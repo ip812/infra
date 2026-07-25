@@ -50,28 +50,31 @@ jobs:
       TF_VAR_wg_proxmox_public_key:        ${{ secrets.WG_PROXMOX_PUBLIC_KEY }}
       TF_VAR_wg_shoot_work_01_private_key: ${{ secrets.WG_SHOOT_WORK_01_PRIVATE_KEY }}
                                                         
-    steps:                                              
-      - name: Checkout                                  
-        uses: actions/checkout@v7                       
-                                                        
-      - name: Set up Tailscale                          
-        uses: tailscale/github-action@v4                
-        with:                                           
-          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
-          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}  
-          tags: tag:ci                                  
-                                                        
-      - name: Set up Terraform                          
-        uses: hashicorp/setup-terraform@v4              
-                                                        
-      - name: Terraform init                            
-        run: terraform init -upgrade                    
-                                                        
-      - name: Terraform validate                        
-        run: terraform validate                         
-                                                        
-      - name: Terraform plan                            
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up WireGuard
+        uses: ./.github/actions/wireguard
+        with:
+          cicd_private_key: ${{ secrets.WG_CICD_PRIVATE_KEY }}
+          proxmox_public_key: ${{ secrets.WG_PROXMOX_PUBLIC_KEY }}
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v4
+
+      - name: Terraform init
+        run: terraform init -upgrade
+
+      - name: Terraform validate
+        run: terraform validate
+
+      - name: Terraform plan
         run: terraform plan -out=tfplan
 
       - name: Terraform apply
         run: terraform apply -auto-approve tfplan
+
+      - name: Tear down WireGuard
+        if: always()
+        uses: ./.github/actions/wireguard-teardown

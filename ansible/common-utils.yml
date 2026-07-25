@@ -1,5 +1,5 @@
 - name: Common utils
-  hosts: vms
+  hosts: vms:proxmox
   become: yes
   gather_facts: yes
   vars:

@@ -1,0 +1,9 @@
+name: WireGuard Teardown
+description: Bring down the CI/CD WireGuard tunnel (wg0)
+
+runs:
+  using: composite
+  steps:
+    - name: Bring down WireGuard
+      shell: bash
+      run: sudo wg-quick down wg0

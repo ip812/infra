@@ -9,9 +9,6 @@ on:
       - ansible/common-utils.yml
       - ansible/tasks/common.yml
 
-env:
-  TARGET_VM: ${{ github.event.client_payload.target_vm }}
-
 concurrency:
   group: terraform-apply-prod
   cancel-in-progress: false
@@ -28,17 +25,23 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Set up Tailscale
-        uses: tailscale/github-action@v4
+      - name: Set up WireGuard
+        uses: ./.github/actions/wireguard
         with:
-          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
-          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
-          tags: tag:ci
+          cicd_private_key: ${{ secrets.WG_CICD_PRIVATE_KEY }}
+          proxmox_public_key: ${{ secrets.WG_PROXMOX_PUBLIC_KEY }}
 
       - name: Run Ansible playbook
         uses: dawidd6/action-ansible-playbook@v9
+        env:
+          ANSIBLE_HOST_KEY_CHECKING: "False"
         with:
           playbook: ansible/common-utils.yml
+          key: ${{ secrets.CICD_SSH_PRIVATE_KEY }}
           options: |
             --inventory ansible/inventory.ini
             --user root
+
+      - name: Tear down WireGuard
+        if: always()
+        uses: ./.github/actions/wireguard-teardown

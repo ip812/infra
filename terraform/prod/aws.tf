@@ -98,23 +98,28 @@ resource "aws_instance" "this" {
     echo "[Peer]" >> /etc/wireguard/wg0.conf
     echo "PublicKey = ${var.wg_proxmox_public_key}" >> /etc/wireguard/wg0.conf
     echo "Endpoint = proxmox.${local.org}.com:51820" >> /etc/wireguard/wg0.conf
-    echo "AllowedIPs = 10.0.0.0/0" >> /etc/wireguard/wg0.conf
+    echo "AllowedIPs = 10.0.0.0/24" >> /etc/wireguard/wg0.conf
     echo "PersistentKeepalive = 25" >> /etc/wireguard/wg0.conf
     chmod 600 /etc/wireguard/wg0.conf
 
     systemctl enable wg-quick@wg0
     systemctl start wg-quick@wg0
 
-    # Trigger kubeadm-init Ansible playbook
-    # curl -fsSL -X POST \
-    #     -H "Accept: application/vnd.github+json" \
-    #     -H "Authorization: Bearer ${var.gh_access_token}" \
-    #     -H "X-GitHub-Api-Version: 2022-11-28" \
-    #     "https://api.github.com/repos/${local.org}/infra/dispatches" \
-    #     -d "$(jq -n --arg vm "prod-shoot-work-01-1" '{
-    #         event_type: "kubeadm-init",
-    #         client_payload: { target_vm: $vm }
-    #     }')"
+    # Wait for the WireGuard tunnel to establish a handshake with the server
+    for i in $(seq 1 30); do
+      if wg show wg0 latest-handshakes | awk '{ exit ($2 == 0) }'; then
+        break
+      fi
+      sleep 2
+    done
+
+    # Trigger the kubeadm-init Ansible playbook via repository_dispatch
+    curl -fsSL -X POST \
+        -H "Accept: application/vnd.github+json" \
+        -H "Authorization: Bearer ${var.gh_access_token}" \
+        -H "X-GitHub-Api-Version: 2022-11-28" \
+        "https://api.github.com/repos/${local.org}/infra/dispatches" \
+        -d '{"event_type":"kubeadm-init","client_payload":{"target_vm":"prod-shoot-work-01-1"}}'
   EOF
 
   root_block_device {
