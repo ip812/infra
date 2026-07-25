@@ -25,10 +25,10 @@
         owner: root
         group: root
         mode: "0600"
-      notify: Restart WireGuard
+      notify: Reload WireGuard
 
   handlers:
-    - name: Restart WireGuard
-      ansible.builtin.systemd:
-        name: wg-quick@wg0
-        state: restarted
+    - name: Reload WireGuard
+      ansible.builtin.shell: wg syncconf wg0 <(wg-quick strip wg0)
+      args:
+        executable: /bin/bash
