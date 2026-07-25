@@ -1,13 +1,13 @@
 ---
-name: Ansible Dummyy
+name: Ansible WireGuard Hub
 
 on:
   push:
     branches:
       - main
     paths:
-      - ansible/dummy.yml
-      - .github/workflows/ansible-dummy.yaml
+      - ansible/wireguard-hub.yml
+      - .github/workflows/ansible-wireguard-hub.yaml
   workflow_dispatch:
 
 concurrency:
@@ -57,6 +57,11 @@ jobs:
           options: |
             --inventory ansible/inventory.ini
             --user root
+            --extra-vars wg_proxmox_private_key=${{ secrets.WG_PROXMOX_PRIVATE_KEY }}
+            --extra-vars wg_work_laptop_public_key=${{ secrets.WG_WORK_LAPTOP_PUBLIC_KEY }}
+            --extra-vars wg_cicd_public_key=${{ secrets.WG_CICD_PUBLIC_KEY }}
+            --extra-vars wg_shoot_work_01_public_key=${{ secrets.WG_SHOOT_WORK_01_PUBLIC_KEY }}
+            --extra-vars wg_shoot_o11y_01_public_key=${{ secrets.WG_SHOOT_O11Y_01_PUBLIC_KEY }}
 
       - name: Tear down WireGuard
         if: always()

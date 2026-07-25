@@ -1,0 +1,17 @@
+[Interface]
+# Server's private key
+PrivateKey = {{ wg_server_private_key }}
+# VPN subnet address for the server
+Address = 10.0.0.1/24
+# UDP port to listen on
+ListenPort = 51820
+# Enable IP forwarding and NAT when the interface comes up
+PostUp = iptables -A FORWARD -i wg0 -j ACCEPT; iptables -t nat -A POSTROUTING -o vmbr0 -j MASQUERADE
+PostDown = iptables -D FORWARD -i wg0 -j ACCEPT; iptables -t nat -D POSTROUTING -o vmbr0 -j MASQUERADE
+{% for peer in wg_peers %}
+
+# {{ peer.name }}
+[Peer]
+PublicKey = {{ peer.public_key }}
+AllowedIPs = {{ peer.allowed_ips }}
+{% endfor %}
