@@ -52,7 +52,7 @@ jobs:
         env:
           ANSIBLE_HOST_KEY_CHECKING: "False"
         with:
-          playbook: ansible/dummy.yml
+          playbook: ansible/wireguard-hub.yml
           key: ${{ secrets.CICD_SSH_PRIVATE_KEY }}
           options: |
             --inventory ansible/inventory.ini
