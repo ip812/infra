@@ -13,12 +13,3 @@
       - gnupg
       - strace
     state: present
-
-- name: Install bcc tools
-  apt:
-    name:
-      - bpfcc-tools
-      - libbpfcc
-      - libbpfcc-dev
-      - "{{ bcc_headers_pkg }}"
-    state: present
