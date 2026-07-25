@@ -13,3 +13,12 @@
       - gnupg
       - strace
     state: present
+
+- name: Install bcc tools
+  apt:
+    name:
+      - bpfcc-tools
+      - libbpfcc
+      - libbpfcc-dev
+      - "linux-headers-{{ ansible_kernel }}"
+    state: present
