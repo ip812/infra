@@ -49,8 +49,11 @@ jobs:
 
       - name: Run Ansible playbook
         uses: dawidd6/action-ansible-playbook@v9
+        env:
+          ANSIBLE_HOST_KEY_CHECKING: "False"
         with:
           playbook: ansible/dummy.yml
+          key: ${{ secrets.CICD_SSH_PRIVATE_KEY }}
           options: |
             --inventory ansible/inventory.ini
             --user root
