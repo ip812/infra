@@ -91,6 +91,12 @@ resource "aws_instance" "this" {
     apt update -y
     apt install -y wireguard
 
+    # Authorize the CI/CD SSH key for root (Ansible connects as root)
+    mkdir -p /root/.ssh
+    echo "${var.cicd_ssh_public_key}" >> /root/.ssh/authorized_keys
+    chmod 700 /root/.ssh
+    chmod 600 /root/.ssh/authorized_keys
+
     # Add the node to the WireGuard network
     echo "[Interface]" >> /etc/wireguard/wg0.conf
     echo "PrivateKey = ${var.wg_shoot_work_01_private_key}" >> /etc/wireguard/wg0.conf
