@@ -14,11 +14,13 @@
       - strace
     state: present
 
+# bcc tools: https://github.com/iovisor/bcc/blob/master/INSTALL.md#debian---binary
+# bcc_headers_pkg is set per host group in group_vars (Debian VMs vs Proxmox).
 - name: Install bcc tools
   apt:
     name:
       - bpfcc-tools
       - libbpfcc
       - libbpfcc-dev
-      - "{{ 'pve-headers' if 'pve' in ansible_facts['kernel'] else 'linux-headers-' + ansible_facts['kernel'].split('-', 1)[1] }}"
+      - "{{ bcc_headers_pkg }}"
     state: present

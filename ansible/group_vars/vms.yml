@@ -1,0 +1,3 @@
+# Debian VMs run cloud kernel images; this meta-package tracks the running
+# kernel flavor across upgrades, unlike a version-pinned linux-headers-<ver>.
+bcc_headers_pkg: linux-headers-cloud-amd64

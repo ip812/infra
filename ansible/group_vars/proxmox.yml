@@ -1,0 +1,3 @@
+# Proxmox ships its own kernel, so use the PVE headers meta-package rather
+# than the Debian linux-headers-* packages.
+bcc_headers_pkg: pve-headers
