@@ -1,8 +1,3 @@
-# Runs CoreDNS as a Docker container on the Proxmox WireGuard hub, serving the
-# wireguard.ip812.com zone. Docker itself is installed via the geerlingguy.docker
-# role (see wireguard-hub.yml). The published port is bound to the WireGuard IP
-# only, so CoreDNS is not exposed as an open resolver on other interfaces.
-
 - name: Create CoreDNS config directory
   file:
     path: /etc/coredns
