@@ -7,6 +7,9 @@ on:
       - main
     paths:
       - ansible/wireguard-hub.yml
+      - ansible/tasks/coredns.yml
+      - ansible/templates/wg0.conf.j2
+      - ansible/templates/Corefile.j2
       - .github/workflows/ansible-wireguard-hub.yaml
   workflow_dispatch:
 

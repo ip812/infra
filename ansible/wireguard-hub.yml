@@ -27,8 +27,16 @@
         mode: "0600"
       notify: Reload WireGuard
 
+    - import_tasks: tasks/coredns.yml
+
   handlers:
     - name: Reload WireGuard
       ansible.builtin.shell: wg syncconf wg0 <(wg-quick strip wg0)
       args:
         executable: /bin/bash
+
+    - name: Restart CoreDNS
+      ansible.builtin.systemd:
+        name: coredns
+        state: restarted
+        daemon_reload: yes

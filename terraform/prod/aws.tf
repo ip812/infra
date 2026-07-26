@@ -88,7 +88,7 @@ resource "aws_instance" "this" {
     set -euo pipefail
 
     apt update -y
-    apt install -y wireguard
+    apt install -y wireguard openresolv
 
     # Authorize the CI/CD runner with SSH key for root
     mkdir -p /root/.ssh
@@ -100,6 +100,7 @@ resource "aws_instance" "this" {
     echo "[Interface]" >> /etc/wireguard/wg0.conf
     echo "PrivateKey = ${var.wg_shoot_work_01_private_key}" >> /etc/wireguard/wg0.conf
     echo "Address = 10.0.0.4/24" >> /etc/wireguard/wg0.conf
+    echo "DNS = 10.0.0.1" >> /etc/wireguard/wg0.conf
     echo "[Peer]" >> /etc/wireguard/wg0.conf
     echo "PublicKey = ${var.wg_proxmox_public_key}" >> /etc/wireguard/wg0.conf
     echo "Endpoint = proxmox.${local.org}.com:51820" >> /etc/wireguard/wg0.conf

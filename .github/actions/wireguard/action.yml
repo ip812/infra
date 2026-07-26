@@ -19,11 +19,12 @@ runs:
         WG_PROXMOX_PUBLIC_KEY: ${{ inputs.proxmox_public_key }}
       run: |
         sudo apt-get update
-        sudo apt-get install -y wireguard-tools
+        sudo apt-get install -y wireguard-tools openresolv
         cat <<EOF | sudo tee /etc/wireguard/wg0.conf > /dev/null
         [Interface]
         PrivateKey = ${WG_CICD_PRIVATE_KEY}
         Address = 10.0.0.3/24
+        DNS = 10.0.0.1
 
         [Peer]
         PublicKey = ${WG_PROXMOX_PUBLIC_KEY}
