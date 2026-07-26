@@ -88,7 +88,7 @@ resource "aws_instance" "this" {
     set -euo pipefail
 
     apt update -y
-    apt install -y wireguard openresolv
+    apt install -y wireguard
 
     # Authorize the CI/CD runner with SSH key for root
     mkdir -p /root/.ssh
