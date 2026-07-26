@@ -24,7 +24,6 @@ runs:
         [Interface]
         PrivateKey = ${WG_CICD_PRIVATE_KEY}
         Address = 10.0.0.3/24
-        DNS = 10.0.0.1
 
         [Peer]
         PublicKey = ${WG_PROXMOX_PUBLIC_KEY}
