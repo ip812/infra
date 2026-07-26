@@ -1,5 +1,4 @@
 wireguard.ip812.com {
-    bind 10.0.0.1
     hosts {
         10.0.0.1 proxmox.wireguard.ip812.com
         fallthrough
@@ -9,7 +8,6 @@ wireguard.ip812.com {
 }
 
 . {
-    bind 10.0.0.1
     forward . 1.1.1.1 9.9.9.9
     cache 30
     log

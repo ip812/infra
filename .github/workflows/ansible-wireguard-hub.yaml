@@ -7,6 +7,7 @@ on:
       - main
     paths:
       - ansible/wireguard-hub.yml
+      - ansible/requirements.yml
       - ansible/tasks/coredns.yml
       - ansible/templates/wg0.conf.j2
       - ansible/templates/Corefile.j2
@@ -34,6 +35,9 @@ jobs:
         with:
           cicd_private_key: ${{ secrets.WG_CICD_PRIVATE_KEY }}
           proxmox_public_key: ${{ secrets.WG_PROXMOX_PUBLIC_KEY }}
+
+      - name: Install Ansible requirements
+        run: ansible-galaxy install -r ansible/requirements.yml
 
       - name: Run Ansible playbook
         uses: dawidd6/action-ansible-playbook@v9

@@ -17,6 +17,8 @@
       - name: shoot-o11y-01
         public_key: "{{ wg_shoot_o11y_01_public_key }}"
         allowed_ips: 10.0.0.5/32
+  roles:
+    - geerlingguy.docker
   tasks:
     - name: Render WireGuard server config
       template:
@@ -36,7 +38,7 @@
         executable: /bin/bash
 
     - name: Restart CoreDNS
-      ansible.builtin.systemd:
+      community.docker.docker_container:
         name: coredns
-        state: restarted
-        daemon_reload: yes
+        state: started
+        restart: yes

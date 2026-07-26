@@ -1,96 +1,34 @@
-# Installs CoreDNS from the upstream release tarball and runs it as a systemd
-# service on the Proxmox WireGuard hub, serving the wireguard.ip812.com zone.
-# The tarball contains a single `coredns` binary.
-
-- name: Set CoreDNS version
-  set_fact:
-    coredns_version: "1.14.6"
-
-- name: Check if CoreDNS is already installed at the desired version
-  shell: coredns -version 2>/dev/null | awk 'NR==1 {print $1}'
-  register: coredns_installed
-  changed_when: false
-  failed_when: false
-
-- name: Download CoreDNS tarball
-  get_url:
-    url: "https://github.com/coredns/coredns/releases/download/v{{ coredns_version }}/coredns_{{ coredns_version }}_linux_amd64.tgz"
-    dest: "/tmp/coredns_{{ coredns_version }}_linux_amd64.tgz"
-    mode: "0644"
-  when: coredns_installed.stdout != "CoreDNS-" + coredns_version
-
-- name: Extract coredns into /usr/local/bin
-  unarchive:
-    src: "/tmp/coredns_{{ coredns_version }}_linux_amd64.tgz"
-    dest: /usr/local/bin
-    remote_src: yes
-    mode: "0755"
-  when: coredns_installed.stdout != "CoreDNS-" + coredns_version
-
-- name: Remove CoreDNS tarball
-  file:
-    path: "/tmp/coredns_{{ coredns_version }}_linux_amd64.tgz"
-    state: absent
-
-- name: Create coredns system group
-  group:
-    name: coredns
-    system: yes
-
-- name: Create coredns system user
-  user:
-    name: coredns
-    group: coredns
-    system: yes
-    shell: /usr/sbin/nologin
-    home: /etc/coredns
-    create_home: no
+# Runs CoreDNS as a Docker container on the Proxmox WireGuard hub, serving the
+# wireguard.ip812.com zone. Docker itself is installed via the geerlingguy.docker
+# role (see wireguard-hub.yml). The published port is bound to the WireGuard IP
+# only, so CoreDNS is not exposed as an open resolver on other interfaces.
 
 - name: Create CoreDNS config directory
   file:
     path: /etc/coredns
     state: directory
-    owner: coredns
-    group: coredns
+    owner: root
+    group: root
     mode: "0755"
 
 - name: Render CoreDNS Corefile
   template:
     src: templates/Corefile.j2
     dest: /etc/coredns/Corefile
-    owner: coredns
-    group: coredns
-    mode: "0644"
-  notify: Restart CoreDNS
-
-- name: Install CoreDNS systemd unit
-  copy:
-    dest: /etc/systemd/system/coredns.service
     owner: root
     group: root
     mode: "0644"
-    content: |
-      [Unit]
-      Description=CoreDNS DNS server
-      After=network-online.target
-      Wants=network-online.target
-
-      [Service]
-      User=coredns
-      Group=coredns
-      ExecStart=/usr/local/bin/coredns -conf /etc/coredns/Corefile
-      Restart=on-failure
-      RestartSec=5
-      AmbientCapabilities=CAP_NET_BIND_SERVICE
-      LimitNOFILE=1048576
-
-      [Install]
-      WantedBy=multi-user.target
   notify: Restart CoreDNS
 
-- name: Ensure CoreDNS is enabled and running
-  systemd:
+- name: Run CoreDNS container
+  community.docker.docker_container:
     name: coredns
-    enabled: yes
-    daemon_reload: yes
+    image: coredns/coredns:1.14.6
+    command: -conf /etc/coredns/Corefile
+    volumes:
+      - "/etc/coredns/Corefile:/etc/coredns/Corefile:ro"
+    ports:
+      - "10.0.0.1:53:53/udp"
+      - "10.0.0.1:53:53/tcp"
+    restart_policy: unless-stopped
     state: started
