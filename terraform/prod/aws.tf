@@ -91,6 +91,7 @@ resource "aws_instance" "this" {
     apt install -y wireguard
 
     # Authorize the CI/CD runner with SSH key for root
+    # foo
     mkdir -p /root/.ssh
     echo "${var.cicd_ssh_public_key}" >> /root/.ssh/authorized_keys
     chmod 700 /root/.ssh
