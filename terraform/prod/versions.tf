@@ -30,8 +30,8 @@ terraform {
       version = "1.21.2"
     }
     proxmox = {
-      source  = "Telmate/proxmox"
-      version = "3.0.2-rc08"
+      source  = "bpg/proxmox"
+      version = "0.111.1"
     }
   }
 }

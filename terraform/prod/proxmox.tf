@@ -1,6 +1,4 @@
 locals {
-  # Per-VM Proxmox settings. Only what differs per node lives here; disk/cpu/mem
-  # defaults are literals in the proxmox_vm_qemu resource below.
   pm_vms = {
     "o11y-01" = {
       wg_address      = "10.0.0.5"
@@ -10,21 +8,28 @@ locals {
   }
 }
 
-# Cloud-init user-data snippet per VM. Renders the shared bootstrap template
-# (same flow as the EC2 shoot nodes): authorize the CI/CD SSH key for root,
-# join WireGuard, wait for a handshake, then fire the kubeadm-init dispatch.
-resource "proxmox_cloud_init_disk" "this" {
+resource "proxmox_virtual_environment_download_file" "debian_13" {
+  content_type = "import"
+  datastore_id = "local"
+  node_name    = "pve"
+  url          = "https://cloud.debian.org/images/cloud/trixie/latest/debian-13-generic-amd64.qcow2"
+  file_name    = "debian-13-generic-amd64.img"
+}
+
+resource "proxmox_virtual_environment_file" "user_data" {
   for_each = local.pm_vms
 
-  name     = "${local.org}-${local.env}-${each.key}"
-  pve_node = "pve"
-  storage  = "local"
+  content_type = "snippets"
+  datastore_id = "local"
+  node_name    = "pve"
 
-  user_data = <<-EOF
-    #cloud-config
-    runcmd:
-      - |
-    ${indent(4, templatefile("${path.module}/templates/bootstrap.sh.tftpl", {
+  source_raw {
+    file_name = "${local.org}-${local.env}-${each.key}-user-data.yaml"
+    data = <<-EOF
+      #cloud-config
+      runcmd:
+        - |
+      ${indent(6, templatefile("${path.module}/templates/bootstrap.sh.tftpl", {
     cicd_ssh_public_key   = var.cicd_ssh_public_key
     wg_private_key        = each.value.wg_private_key
     wg_address            = each.value.wg_address
@@ -33,59 +38,53 @@ resource "proxmox_cloud_init_disk" "this" {
     gh_access_token       = var.gh_access_token
     dispatch_target       = each.value.dispatch_target
 }))}
-  EOF
+    EOF
+  }
 }
 
-resource "proxmox_vm_qemu" "this" {
+resource "proxmox_virtual_environment_vm" "this" {
   for_each = local.pm_vms
 
-  name        = "${local.org}-${local.env}-${each.key}"
-  target_node = "pve"
+  name      = "${local.org}-${local.env}-${each.key}"
+  node_name = "pve"
 
-  agent   = 1
-  cores   = 2
-  memory  = 4096
-  scsihw  = "virtio-scsi-single"
-  os_type = "cloud-init"
-
-  disks {
-    scsi {
-      scsi0 {
-        disk {
-          size    = "12G"
-          storage = "local-lvm"
-          # Debian generic cloud image; downloaded to the node then imported.
-          import_from = "https://cloud.debian.org/images/cloud/trixie/latest/debian-13-generic-amd64.qcow2"
-        }
-      }
-    }
-    ide {
-      ide2 {
-        cloudinit {
-          storage = "local-lvm"
-        }
-      }
-    }
+  agent {
+    enabled = true
   }
 
-  network {
-    id     = 0
+  operating_system {
+    type = "l26"
+  }
+
+  cpu {
+    cores = 2
+  }
+
+  memory {
+    dedicated = 4096
+  }
+
+  disk {
+    datastore_id = "local-lvm"
+    import_from  = proxmox_virtual_environment_download_file.debian_13.id
+    interface    = "scsi0"
+    size         = 12
+  }
+
+  network_device {
     bridge = "vmbr0"
     model  = "virtio"
   }
 
-  serial {
-    id   = 0
-    type = "socket"
-  }
+  initialization {
+    datastore_id = "local-lvm"
 
-  # Cloud-init: DHCP on the LAN bridge; custom user-data drives the bootstrap.
-  ipconfig0 = "ip=dhcp"
-  cicustom  = "user=local:${proxmox_cloud_init_disk.this[each.key].id}"
+    ip_config {
+      ipv4 {
+        address = "dhcp"
+      }
+    }
 
-  lifecycle {
-    replace_triggered_by = [
-      proxmox_cloud_init_disk.this[each.key].id,
-    ]
+    user_data_file_id = proxmox_virtual_environment_file.user_data[each.key].id
   }
 }
