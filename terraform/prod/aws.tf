@@ -73,44 +73,44 @@ resource "aws_iam_instance_profile" "this" {
   role = aws_iam_role.this.name
 }
 
-# resource "aws_instance" "this" {
-#   ami                         = "ami-0da1f66573556d917" # Debian 13
-#   instance_type               = "t3.medium"
-#   subnet_id                   = aws_subnet.public_subnet_a.id
-#   vpc_security_group_ids      = [aws_security_group.this.id]
-#   iam_instance_profile        = aws_iam_instance_profile.this.name
-#   user_data_replace_on_change = true
-#   user_data = templatefile("${path.module}/templates/bootstrap.sh.tftpl", {
-#     cicd_ssh_public_key   = var.cicd_ssh_public_key
-#     wg_private_key        = var.wg_shoot_work_01_private_key
-#     wg_address            = "10.0.0.4"
-#     wg_proxmox_public_key = var.wg_proxmox_public_key
-#     org                   = local.org
-#     gh_access_token       = var.gh_access_token
-#     dispatch_target       = "prod-shoot-work-01-1"
-#   })
-# 
-#   root_block_device {
-#     iops        = 3000
-#     volume_size = 12
-#     volume_type = "gp3"
-#   }
-# 
-#   credit_specification {
-#     cpu_credits = "standard"
-#   }
-# 
-#   tags = merge(
-#     {
-#       Name = "${local.org}-${local.env}-work-01"
-#     },
-#     local.default_tags
-#   )
-# 
-#   lifecycle {
-#     replace_triggered_by = [
-#       aws_security_group.this.name,
-#       aws_security_group.this.egress.security_group_rule_id
-#     ]
-#   }
-# }
+resource "aws_instance" "this" {
+  ami                         = "ami-0da1f66573556d917" # Debian 13
+  instance_type               = "t3.medium"
+  subnet_id                   = aws_subnet.public_subnet_a.id
+  vpc_security_group_ids      = [aws_security_group.this.id]
+  iam_instance_profile        = aws_iam_instance_profile.this.name
+  user_data_replace_on_change = true
+  user_data = templatefile("${path.module}/templates/bootstrap.sh.tftpl", {
+    cicd_ssh_public_key   = var.cicd_ssh_public_key
+    wg_private_key        = var.wg_shoot_work_01_private_key
+    wg_address            = "10.0.0.4"
+    wg_proxmox_public_key = var.wg_proxmox_public_key
+    org                   = local.org
+    gh_access_token       = var.gh_access_token
+    dispatch_target       = "prod-shoot-work-01-1"
+  })
+
+  root_block_device {
+    iops        = 3000
+    volume_size = 12
+    volume_type = "gp3"
+  }
+
+  credit_specification {
+    cpu_credits = "standard"
+  }
+
+  tags = merge(
+    {
+      Name = "${local.org}-${local.env}-work-01"
+    },
+    local.default_tags
+  )
+
+  lifecycle {
+    replace_triggered_by = [
+      aws_security_group.this.name,
+      aws_security_group.this.egress.security_group_rule_id
+    ]
+  }
+}
