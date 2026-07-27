@@ -27,7 +27,7 @@ resource "proxmox_download_file" "debian_13" {
   datastore_id = local.pm_defaults.snippet_datastore
   node_name    = local.pm_defaults.node_name
   url          = "https://cloud.debian.org/images/cloud/trixie/latest/debian-13-generic-amd64.qcow2"
-  file_name    = "debian-13-generic-amd64.img"
+  file_name    = "debian-13-generic-amd64.qcow2"
 }
 
 resource "proxmox_virtual_environment_file" "user_data" {

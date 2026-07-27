@@ -25,5 +25,10 @@ provider "proxmox" {
   ssh {
     agent    = false
     username = "root"
+
+    node {
+      name    = local.pm_defaults.node_name
+      address = "10.0.0.1"
+    }
   }
 }

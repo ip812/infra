@@ -50,6 +50,7 @@ jobs:
       TF_VAR_cicd_ssh_public_key:          ${{ secrets.CICD_SSH_PUBLIC_KEY }}
       TF_VAR_pm_api_token_id:              ${{ secrets.PM_API_TOKEN_ID }}
       TF_VAR_pm_api_token_secret:          ${{ secrets.PM_API_TOKEN_SECRET }}
+      PROXMOX_VE_SSH_PRIVATE_KEY:          ${{ secrets.CICD_SSH_PRIVATE_KEY }}
                                                         
     steps:
       - name: Checkout
