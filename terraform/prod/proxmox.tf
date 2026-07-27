@@ -70,7 +70,9 @@ resource "proxmox_virtual_environment_vm" "this" {
     type = "l26"
   }
 
-  serial_device {}
+  serial_device {
+    device = "socket"
+ }
 
   cpu {
     cores = try(each.value.cores, local.pm_defaults.cores)
