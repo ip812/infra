@@ -60,6 +60,12 @@ resource "proxmox_virtual_environment_file" "user_data" {
   }
 }
 
+resource "terraform_data" "user_data_hash" {
+  for_each = local.pm_vms
+
+  input = sha256(local.pm_user_data[each.key])
+}
+
 resource "proxmox_virtual_environment_vm" "this" {
   for_each = local.pm_vms
 
@@ -112,7 +118,7 @@ resource "proxmox_virtual_environment_vm" "this" {
 
   lifecycle {
     replace_triggered_by = [
-      proxmox_virtual_environment_file.user_data[each.key].id,
+      terraform_data.user_data_hash[each.key],
     ]
   }
 }
