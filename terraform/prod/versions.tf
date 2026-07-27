@@ -29,5 +29,9 @@ terraform {
       source  = "DopplerHQ/doppler"
       version = "1.21.2"
     }
+    proxmox = {
+      source  = "Telmate/proxmox"
+      version = "3.0.2-rc08"
+    }
   }
 }

@@ -47,6 +47,8 @@ jobs:
       TF_VAR_wg_proxmox_public_key:        ${{ secrets.WG_PROXMOX_PUBLIC_KEY }}
       TF_VAR_wg_shoot_work_01_private_key: ${{ secrets.WG_SHOOT_WORK_01_PRIVATE_KEY }}
       TF_VAR_cicd_ssh_public_key:          ${{ secrets.CICD_SSH_PUBLIC_KEY }}
+      TF_VAR_pm_api_token_id:              ${{ secrets.PM_API_TOKEN_ID }}
+      TF_VAR_pm_api_token_secret:          ${{ secrets.PM_API_TOKEN_SECRET }}
                                                         
     steps:
       - name: Checkout
