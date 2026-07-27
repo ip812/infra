@@ -103,4 +103,10 @@ resource "proxmox_virtual_environment_vm" "this" {
 
     user_data_file_id = proxmox_virtual_environment_file.user_data[each.key].id
   }
+
+  lifecycle {
+    replace_triggered_by = [
+      proxmox_virtual_environment_file.user_data[each.key].id,
+    ]
+  }
 }
