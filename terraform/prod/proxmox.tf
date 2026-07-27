@@ -1,17 +1,17 @@
 locals {
   pm_vms = {
     "shoot-o11y-01" = {
+      dispatch_target = "prod-shoot-o11y-01-1"
+      wg_address      = "10.0.0.5"
+      wg_private_key  = var.wg_shoot_o11y_01_private_key
       cores           = 2
       memory          = 4096
       disk_size       = 12
-      wg_address      = "10.0.0.5"
-      wg_private_key  = var.wg_shoot_o11y_01_private_key
-      dispatch_target = "prod-shoot-o11y-01-1"
     }
   }
 }
 
-resource "proxmox_virtual_environment_download_file" "debian_13" {
+resource "proxmox_download_file" "debian_13" {
   content_type = "import"
   datastore_id = "local"
   node_name    = "pve"
@@ -69,7 +69,7 @@ resource "proxmox_virtual_environment_vm" "this" {
 
   disk {
     datastore_id = "local-lvm"
-    import_from  = proxmox_virtual_environment_download_file.debian_13.id
+    import_from  = proxmox_download_file.debian_13.id
     interface    = "scsi0"
     size         = each.value.disk_size
   }
