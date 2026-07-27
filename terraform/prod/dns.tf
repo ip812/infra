@@ -5,10 +5,6 @@ locals {
       proxied      = false
       ip           = var.home_public_ip
     }
-    shoot-work-01 = {
-      is_protected = true
-      tunnel       = cloudflare_zero_trust_tunnel_cloudflared.cf_shoot_work_01_tunnel
-    }
     blog = {
       is_protected = false
       tunnel       = cloudflare_zero_trust_tunnel_cloudflared.cf_shoot_work_01_tunnel

@@ -5,7 +5,13 @@
   vars:
     org: "ip812"
     env: "prod"
-    flux_path_suffix: "shoot-work-01"
+    # Derive the cluster identity from the dispatch target (prod-<suffix>-<n>):
+    #   prod-shoot-work-01-1 -> cluster_suffix=shoot-work-01
+    #   prod-shoot-o11y-01-1 -> cluster_suffix=shoot-o11y-01
+    # Used for the Flux overlay path and to prefix per-cluster keys in the
+    # shared kubeconfig R2 bucket (so clusters don't overwrite each other).
+    cluster_suffix: "{{ target | regex_replace('^' ~ env ~ '-', '') | regex_replace('-[0-9]+$', '') }}"
+    flux_path_suffix: "{{ cluster_suffix }}"
     # Required (pass via --extra-vars from CI):
     #   dp_token, gh_access_token, backups_access_key_id, backups_secret_access_key, cf_account_id
     k8s_major: "1"
