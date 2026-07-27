@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -euo errexit
-set -euo nounset
 set -euo pipefail
 
 apt update -y
@@ -12,9 +10,6 @@ mkdir -p /root/.ssh
 echo "${cicd_ssh_public_key}" >> /root/.ssh/authorized_keys
 chmod 700 /root/.ssh
 chmod 600 /root/.ssh/authorized_keys
-
-mkdir /foo/bar
-echo hello > /foo/bar/ilia
 
 # Add the node to the WireGuard network
 echo "[Interface]" >> /etc/wireguard/wg0.conf
