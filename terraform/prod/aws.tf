@@ -80,54 +80,15 @@ resource "aws_instance" "this" {
   vpc_security_group_ids      = [aws_security_group.this.id]
   iam_instance_profile        = aws_iam_instance_profile.this.name
   user_data_replace_on_change = true
-  user_data                   = <<-EOF
-    #!/bin/bash
-
-    set -euo errexit
-    set -euo nounset
-    set -euo pipefail
-
-    apt update -y
-    apt install -y wireguard
-
-    # Authorize the CI/CD runner with SSH key for root
-    # foo
-    mkdir -p /root/.ssh
-    echo "${var.cicd_ssh_public_key}" >> /root/.ssh/authorized_keys
-    chmod 700 /root/.ssh
-    chmod 600 /root/.ssh/authorized_keys
-
-    # Add the node to the WireGuard network
-    echo "[Interface]" >> /etc/wireguard/wg0.conf
-    echo "PrivateKey = ${var.wg_shoot_work_01_private_key}" >> /etc/wireguard/wg0.conf
-    echo "Address = 10.0.0.4/24" >> /etc/wireguard/wg0.conf
-    echo "DNS = 10.0.0.1" >> /etc/wireguard/wg0.conf
-    echo "[Peer]" >> /etc/wireguard/wg0.conf
-    echo "PublicKey = ${var.wg_proxmox_public_key}" >> /etc/wireguard/wg0.conf
-    echo "Endpoint = proxmox.${local.org}.com:51820" >> /etc/wireguard/wg0.conf
-    echo "AllowedIPs = 10.0.0.0/24" >> /etc/wireguard/wg0.conf
-    echo "PersistentKeepalive = 25" >> /etc/wireguard/wg0.conf
-    chmod 600 /etc/wireguard/wg0.conf
-
-    systemctl enable wg-quick@wg0
-    systemctl start wg-quick@wg0
-
-    # Wait for the WireGuard tunnel to establish a handshake with the server
-    for i in $(seq 1 30); do
-      if wg show wg0 latest-handshakes | awk '{ exit ($2 == 0) }'; then
-        break
-      fi
-      sleep 2
-    done
-
-    # Trigger the kubeadm-init Ansible playbook via repository_dispatch
-    curl -fsSL -X POST \
-        -H "Accept: application/vnd.github+json" \
-        -H "Authorization: Bearer ${var.gh_access_token}" \
-        -H "X-GitHub-Api-Version: 2022-11-28" \
-        "https://api.github.com/repos/${local.org}/infra/dispatches" \
-        -d '{"event_type":"kubeadm-init","client_payload":{"target_vm":"prod-shoot-work-01-1"}}'
-  EOF
+  user_data = templatefile("${path.module}/templates/bootstrap.sh.tftpl", {
+    cicd_ssh_public_key   = var.cicd_ssh_public_key
+    wg_private_key        = var.wg_shoot_work_01_private_key
+    wg_address            = "10.0.0.4"
+    wg_proxmox_public_key = var.wg_proxmox_public_key
+    org                   = local.org
+    gh_access_token       = var.gh_access_token
+    dispatch_target       = "prod-shoot-work-01-1"
+  })
 
   root_block_device {
     iops        = 3000
