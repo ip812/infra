@@ -1,6 +1,9 @@
 locals {
   pm_vms = {
-    "o11y-01" = {
+    "shoot-o11y-01" = {
+      cores           = 2
+      memory          = 4096
+      disk_size       = 12
       wg_address      = "10.0.0.5"
       wg_private_key  = var.wg_shoot_o11y_01_private_key
       dispatch_target = "prod-shoot-o11y-01-1"
@@ -57,18 +60,18 @@ resource "proxmox_virtual_environment_vm" "this" {
   }
 
   cpu {
-    cores = 2
+    cores = each.value.cores
   }
 
   memory {
-    dedicated = 4096
+    dedicated = each.value.memory
   }
 
   disk {
     datastore_id = "local-lvm"
     import_from  = proxmox_virtual_environment_download_file.debian_13.id
     interface    = "scsi0"
-    size         = 12
+    size         = each.value.disk_size
   }
 
   network_device {
