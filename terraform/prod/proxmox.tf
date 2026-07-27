@@ -20,6 +20,23 @@ locals {
       disk_size       = 30
     }
   }
+
+  pm_user_data = {
+    for name, cfg in local.pm_vms : name => <<-EOF
+      #cloud-config
+      runcmd:
+        - |
+      ${indent(6, templatefile("${path.module}/templates/bootstrap.sh.tftpl", {
+    cicd_ssh_public_key   = var.cicd_ssh_public_key
+    wg_private_key        = cfg.wg_private_key
+    wg_address            = cfg.wg_address
+    wg_proxmox_public_key = var.wg_proxmox_public_key
+    org                   = local.org
+    gh_access_token       = var.gh_access_token
+    dispatch_target       = cfg.dispatch_target
+    }))}
+    EOF
+  }
 }
 
 resource "proxmox_download_file" "debian_13" {
@@ -38,21 +55,8 @@ resource "proxmox_virtual_environment_file" "user_data" {
   node_name    = try(each.value.node_name, local.pm_defaults.node_name)
 
   source_raw {
-    file_name = "${local.org}-${local.env}-${each.key}-user-data.yaml"
-    data = <<-EOF
-      #cloud-config
-      runcmd:
-        - |
-      ${indent(6, templatefile("${path.module}/templates/bootstrap.sh.tftpl", {
-    cicd_ssh_public_key   = var.cicd_ssh_public_key
-    wg_private_key        = each.value.wg_private_key
-    wg_address            = each.value.wg_address
-    wg_proxmox_public_key = var.wg_proxmox_public_key
-    org                   = local.org
-    gh_access_token       = var.gh_access_token
-    dispatch_target       = each.value.dispatch_target
-}))}
-    EOF
+    file_name = "${local.org}-${local.env}-${each.key}-user-data-${substr(sha256(local.pm_user_data[each.key]), 0, 12)}.yaml"
+    data      = local.pm_user_data[each.key]
   }
 }
 
@@ -61,6 +65,8 @@ resource "proxmox_virtual_environment_vm" "this" {
 
   name      = "${local.org}-${local.env}-${each.key}"
   node_name = try(each.value.node_name, local.pm_defaults.node_name)
+
+  stop_on_destroy = true
 
   agent {
     enabled = false
