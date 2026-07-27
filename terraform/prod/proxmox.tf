@@ -7,7 +7,7 @@ locals {
     snippet_datastore = "local"
     cores             = 2
     memory            = 4096
-    disk_size         = 12
+    disk_size         = 15
   }
 
   pm_vms = {
