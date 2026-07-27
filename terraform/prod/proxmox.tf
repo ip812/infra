@@ -63,12 +63,14 @@ resource "proxmox_virtual_environment_vm" "this" {
   node_name = try(each.value.node_name, local.pm_defaults.node_name)
 
   agent {
-    enabled = true
+    enabled = false
   }
 
   operating_system {
     type = "l26"
   }
+
+  serial_device {}
 
   cpu {
     cores = try(each.value.cores, local.pm_defaults.cores)
