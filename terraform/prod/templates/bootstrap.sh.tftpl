@@ -5,20 +5,13 @@ set -euo nounset
 set -euo pipefail
 
 apt update -y
-apt install -y wireguard openssh-server
+apt install -y wireguard
 
 # Authorize the CI/CD runner
 mkdir -p /root/.ssh
 echo "${cicd_ssh_public_key}" >> /root/.ssh/authorized_keys
 chmod 700 /root/.ssh
 chmod 600 /root/.ssh/authorized_keys
-
-# Ensure sshd is up so CI/CD runner can connect as root over WireGuard.
-mkdir -p /etc/ssh/sshd_config.d
-echo "PermitRootLogin prohibit-password" > /etc/ssh/sshd_config.d/10-cicd.conf
-chmod 644 /etc/ssh/sshd_config.d/10-cicd.conf
-systemctl enable ssh
-systemctl restart ssh
 
 # Add the node to the WireGuard network
 echo "[Interface]" >> /etc/wireguard/wg0.conf
