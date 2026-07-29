@@ -17,6 +17,9 @@
       - name: shoot-o11y-01
         public_key: "{{ wg_shoot_o11y_01_public_key }}"
         allowed_ips: 10.0.0.5/32
+      - name: shoot-mgnt-01
+        public_key: "{{ wg_shoot_mgnt_01_public_key }}"
+        allowed_ips: 10.0.0.6/32
   roles:
     - geerlingguy.docker
   tasks:

@@ -54,6 +54,7 @@ jobs:
             --extra-vars wg_cicd_public_key=${{ secrets.WG_CICD_PUBLIC_KEY }}
             --extra-vars wg_shoot_work_01_public_key=${{ secrets.WG_SHOOT_WORK_01_PUBLIC_KEY }}
             --extra-vars wg_shoot_o11y_01_public_key=${{ secrets.WG_SHOOT_O11Y_01_PUBLIC_KEY }}
+            --extra-vars wg_shoot_mgnt_01_public_key=${{ secrets.WG_SHOOT_MGNT_01_PUBLIC_KEY }}
 
       - name: Tear down WireGuard
         if: always()

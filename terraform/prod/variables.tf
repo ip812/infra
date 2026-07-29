@@ -9,6 +9,7 @@ locals {
 
   cf_shoot_work_01_tunnel_name = "ip812_shoot_work_01_tunnel"
   cf_shoot_o11y_01_tunnel_name = "ip812_shoot_o11y_01_tunnel"
+  cf_shoot_mgnt_01_tunnel_name = "ip812_shoot_mgnt_01_tunnel"
   gh_username                  = "iypetrov"
 
   blog_app_name       = "blog"
@@ -121,6 +122,11 @@ variable "wg_shoot_work_01_private_key" {
 }
 
 variable "wg_shoot_o11y_01_private_key" {
+  type      = string
+  sensitive = true
+}
+
+variable "wg_shoot_mgnt_01_private_key" {
   type      = string
   sensitive = true
 }
