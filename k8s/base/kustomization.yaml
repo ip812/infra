@@ -5,3 +5,4 @@ resources:
 - doppler.yaml
 - reloader.yaml
 - image-automation.yaml
+- cert-manager.yaml

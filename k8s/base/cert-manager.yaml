@@ -9,6 +9,6 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./k8s/overlays/prod/shoot-mgnt-01/cert-manager
+  path: ./k8s/base/cert-manager
   prune: true
   wait: true
