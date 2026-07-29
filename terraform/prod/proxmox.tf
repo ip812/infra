@@ -42,8 +42,7 @@ resource "proxmox_virtual_environment_file" "user_data" {
     data = <<-EOF
       #cloud-config
       runcmd:
-        - |
-      ${indent(6, templatefile("${path.module}/templates/bootstrap.sh.tftpl", {
+        - ${jsonencode(templatefile("${path.module}/templates/bootstrap.sh.tftpl", {
     cicd_ssh_public_key   = var.cicd_ssh_public_key
     wg_private_key        = each.value.wg_private_key
     wg_address            = each.value.wg_address
