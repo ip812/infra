@@ -35,9 +35,9 @@ resource "cloudflare_r2_bucket" "family_drive_bucket" {
   storage_class = "Standard"
 }
 
-resource "cloudflare_r2_bucket" "k8s_work_01_kubeconfig_bucket" {
+resource "cloudflare_r2_bucket" "k8s_kubeconfig_bucket" {
   account_id    = var.cf_account_id
-  name          = "${local.org}-${local.env}-work-01-kubeconfig-bucket"
+  name          = "${local.org}-${local.env}-kubeconfig-bucket"
   location      = "EEUR"
   storage_class = "Standard"
 }
