@@ -14,10 +14,6 @@ on:
       - .github/workflows/ansible-wireguard-hub.yaml
   workflow_dispatch:
 
-concurrency:
-  group: terraform-apply-prod
-  cancel-in-progress: false
-
 jobs:
   run-playbook:
     runs-on: ubuntu-latest

@@ -9,10 +9,6 @@ on:
       - ansible/common-utils.yml
       - ansible/tasks/common.yml
 
-concurrency:
-  group: terraform-apply-prod
-  cancel-in-progress: false
-
 jobs:
   run-playbook:
     runs-on: ubuntu-latest
