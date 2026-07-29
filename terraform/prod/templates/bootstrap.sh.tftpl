@@ -26,7 +26,7 @@ chmod 600 /etc/wireguard/wg0.conf
 systemctl enable wg-quick@wg0
 systemctl start wg-quick@wg0
 
-# Wait for the WireGuard tunnel to establish a handshake with the server
+# Wait for the WireGuard tunnel to establish a handshake with the WireGuard server
 for i in $(seq 1 30); do
   if wg show wg0 latest-handshakes | awk '{ exit ($2 == 0) }'; then
     break

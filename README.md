@@ -9,4 +9,4 @@ Used technologies:
 - WireGuard
 - Cloudflare
 - AWS
-- Proxmox (upcoming)
+- Proxmox
