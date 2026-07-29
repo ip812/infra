@@ -1,5 +1,5 @@
 ---
-name: Ansible WireGuard Hub
+name: Ansible WireGuard Hub Prod
 
 on:
   push:
@@ -13,6 +13,12 @@ on:
       - ansible/templates/Corefile.j2
       - .github/workflows/ansible-wireguard-hub.yaml
   workflow_dispatch:
+
+# Core Ansible jobs share the same WireGuard identity (10.0.0.3), so they should
+# wait for each other.
+concurrency:
+  group: ansible-prod
+  cancel-in-progress: false
 
 jobs:
   run-playbook:
@@ -51,6 +57,9 @@ jobs:
             --extra-vars wg_shoot_work_01_public_key=${{ secrets.WG_SHOOT_WORK_01_PUBLIC_KEY }}
             --extra-vars wg_shoot_o11y_01_public_key=${{ secrets.WG_SHOOT_O11Y_01_PUBLIC_KEY }}
             --extra-vars wg_shoot_mgnt_01_public_key=${{ secrets.WG_SHOOT_MGNT_01_PUBLIC_KEY }}
+            --extra-vars wg_cicd_shoot_work_01_public_key=${{ secrets.WG_CI_CD_SHOOT_WORK_01_PUBLIC_KEY }}
+            --extra-vars wg_cicd_shoot_o11y_01_public_key=${{ secrets.WG_CI_CD_SHOOT_O11Y_01_PUBLIC_KEY }}
+            --extra-vars wg_cicd_shoot_mgnt_01_public_key=${{ secrets.WG_CI_CD_SHOOT_MGNT_01_PUBLIC_KEY }}
 
       - name: Tear down WireGuard
         if: always()

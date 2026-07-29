@@ -11,6 +11,15 @@
       - name: CI/CD
         public_key: "{{ wg_cicd_public_key }}"
         allowed_ips: 10.0.0.3/32
+      - name: CI/CD shoot-work-01
+        public_key: "{{ wg_cicd_shoot_work_01_public_key }}"
+        allowed_ips: 10.0.0.11/32
+      - name: CI/CD shoot-o11y-01
+        public_key: "{{ wg_cicd_shoot_o11y_01_public_key }}"
+        allowed_ips: 10.0.0.12/32
+      - name: CI/CD shoot-mgnt-01
+        public_key: "{{ wg_cicd_shoot_mgnt_01_public_key }}"
+        allowed_ips: 10.0.0.13/32
       - name: shoot-work-01
         public_key: "{{ wg_shoot_work_01_public_key }}"
         allowed_ips: 10.0.0.4/32

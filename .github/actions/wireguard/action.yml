@@ -3,11 +3,15 @@ description: Bring up the CI/CD WireGuard tunnel (wg0) to the homelab
 
 inputs:
   cicd_private_key:
-    description: WireGuard private key for the CI/CD peer (10.0.0.3)
+    description: WireGuard private key for the CI/CD peer
     required: true
   proxmox_public_key:
     description: Public key of the Proxmox WireGuard server peer
     required: true
+  address:
+    description: VPN address (CIDR) for this runner's WireGuard peer
+    required: false
+    default: 10.0.0.3/24
 
 runs:
   using: composite
@@ -17,13 +21,14 @@ runs:
       env:
         WG_CICD_PRIVATE_KEY: ${{ inputs.cicd_private_key }}
         WG_PROXMOX_PUBLIC_KEY: ${{ inputs.proxmox_public_key }}
+        WG_ADDRESS: ${{ inputs.address }}
       run: |
         sudo apt-get update
         sudo apt-get install -y wireguard-tools
         cat <<EOF | sudo tee /etc/wireguard/wg0.conf > /dev/null
         [Interface]
         PrivateKey = ${WG_CICD_PRIVATE_KEY}
-        Address = 10.0.0.3/24
+        Address = ${WG_ADDRESS}
         DNS = 10.0.0.1
 
         [Peer]

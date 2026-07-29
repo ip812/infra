@@ -9,8 +9,10 @@ on:
       - terraform/prod/**
   workflow_dispatch:
 
+# The Cloudflare R2 backend doesn't support state locking, so concurrent
+# `terraform apply` runs would race on the remote state and corrupt it.
 concurrency:
-  group: terraform-apply-prod
+  group: terraform-prod
   cancel-in-progress: false
 
 jobs:

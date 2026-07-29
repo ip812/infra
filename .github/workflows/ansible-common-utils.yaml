@@ -1,5 +1,5 @@
 ---
-name: Ansible Common Utils
+name: Ansible Common Utils Prod
 
 on:
   push:
@@ -8,6 +8,12 @@ on:
     paths:
       - ansible/common-utils.yml
       - ansible/tasks/common.yml
+
+# Core Ansible jobs share the same WireGuard identity (10.0.0.3), so they should
+# wait for each other.
+concurrency:
+  group: ansible-prod
+  cancel-in-progress: false
 
 jobs:
   run-playbook:

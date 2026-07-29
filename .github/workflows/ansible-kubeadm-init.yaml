@@ -20,11 +20,33 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
+      # kubeadm jobs use per-cluster WireGuard CI/CD credentials, so to overcome the
+      # GitHub limitation that at most one job or workflow run can be pending in the 
+      # same concurrency group. Can read more here https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/control-workflow-concurrency.
+      # Even better, with this approach kubeadm actions can be executed in parallel.
+      - name: Resolve WireGuard peer for target VM
+        id: wg
+        env:
+          WG_CICD_WORK_PRIVATE_KEY: ${{ secrets.WG_CI_CD_SHOOT_WORK_01_PRIVATE_KEY }}
+          WG_CICD_O11Y_PRIVATE_KEY: ${{ secrets.WG_CI_CD_SHOOT_O11Y_01_PRIVATE_KEY }}
+          WG_CICD_MGNT_PRIVATE_KEY: ${{ secrets.WG_CI_CD_SHOOT_MGNT_01_PRIVATE_KEY }}
+        run: |
+          case "${TARGET_VM}" in
+            prod-shoot-work-01-*) addr=10.0.0.11/24; key="${WG_CICD_WORK_PRIVATE_KEY}" ;;
+            prod-shoot-o11y-01-*) addr=10.0.0.12/24; key="${WG_CICD_O11Y_PRIVATE_KEY}" ;;
+            prod-shoot-mgnt-01-*) addr=10.0.0.13/24; key="${WG_CICD_MGNT_PRIVATE_KEY}" ;;
+            *) echo "::error::No WireGuard CI peer mapped for TARGET_VM='${TARGET_VM}'"; exit 1 ;;
+          esac
+          echo "address=${addr}" >> "$GITHUB_OUTPUT"
+          echo "::add-mask::${key}"
+          echo "private_key=${key}" >> "$GITHUB_OUTPUT"
+
       - name: Set up WireGuard
         uses: ./.github/actions/wireguard
         with:
-          cicd_private_key: ${{ secrets.WG_CICD_PRIVATE_KEY }}
+          cicd_private_key: ${{ steps.wg.outputs.private_key }}
           proxmox_public_key: ${{ secrets.WG_PROXMOX_PUBLIC_KEY }}
+          address: ${{ steps.wg.outputs.address }}
 
       - name: Run Ansible playbook
         uses: dawidd6/action-ansible-playbook@v9
