@@ -29,14 +29,6 @@ locals {
       value = data.cloudflare_zero_trust_tunnel_cloudflared_token.cf_shoot_work_01_tunnel_token.token
     },
     {
-      name  = "TUNNEL_SHOOT_O11Y_01_TOKEN"
-      value = data.cloudflare_zero_trust_tunnel_cloudflared_token.cf_shoot_o11y_01_tunnel_token.token
-    },
-    {
-      name  = "TUNNEL_SHOOT_MGNT_01_TOKEN"
-      value = data.cloudflare_zero_trust_tunnel_cloudflared_token.cf_shoot_mgnt_01_tunnel_token.token
-    },
-    {
       name = "GHCR_DOCKERCONFIGJSON"
       value = jsonencode({
         auths = {

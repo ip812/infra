@@ -8,8 +8,6 @@ locals {
   aws_vpc_cidr = "10.1.0.0/16"
 
   cf_shoot_work_01_tunnel_name = "ip812_shoot_work_01_tunnel"
-  cf_shoot_o11y_01_tunnel_name = "ip812_shoot_o11y_01_tunnel"
-  cf_shoot_mgnt_01_tunnel_name = "ip812_shoot_mgnt_01_tunnel"
   gh_username                  = "iypetrov"
 
   blog_app_name       = "blog"
