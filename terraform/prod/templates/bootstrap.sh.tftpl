@@ -34,7 +34,7 @@ for i in $(seq 1 30); do
   sleep 2
 done
 
-# Trigger the kubeadm-init Ansible playbook
+# Trigger the "kubeadm-init" Ansible playbook
 curl -fsSL -X POST \
     -H "Accept: application/vnd.github+json" \
     -H "Authorization: Bearer ${gh_access_token}" \
