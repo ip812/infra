@@ -83,6 +83,10 @@ resource "proxmox_virtual_environment_vm" "this" {
 
   cpu {
     cores = try(each.value.cores, local.pm_defaults.cores)
+    # clickstack operator installs mongodb as well and it fails with the error
+    # below, when the CPU is with default value "qemu64".
+    # > MongoDB 5.0+ requires a CPU with AVX support, and your current system does not appear to have that!
+    type  = "host"
   }
 
   memory {
