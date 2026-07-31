@@ -4,3 +4,4 @@ kind: Kustomization
 resources:
 - ../../../base
 - clickstack-operators.yaml
+- clickstack.yaml

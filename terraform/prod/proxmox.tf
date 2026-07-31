@@ -86,6 +86,7 @@ resource "proxmox_virtual_environment_vm" "this" {
     # clickstack operator installs mongodb as well and it fails with the error
     # below, when the CPU is with default value "qemu64".
     # > MongoDB 5.0+ requires a CPU with AVX support, and your current system does not appear to have that!
+    # https://stackoverflow.com/questions/76126384/mongodb-5-0-requires-a-cpu-with-avx-support-container-failed-to-start
     type  = "host"
   }
 
