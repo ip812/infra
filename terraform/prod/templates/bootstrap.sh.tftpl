@@ -6,7 +6,6 @@ apt update -y
 apt install -y wireguard
 
 # Add SSH keys for the CI/CD runner
-# foo
 mkdir -p /root/.ssh
 echo "${cicd_ssh_public_key}" >> /root/.ssh/authorized_keys
 chmod 700 /root/.ssh
