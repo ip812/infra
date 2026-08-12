@@ -1,28 +1,7 @@
 locals {
   route_config = {
-    proxmox = {
-      is_protected = false
-      proxied      = false
-      ip           = var.home_public_ip
-    }
     blog = {
       is_protected = false
-      tunnel       = cloudflare_zero_trust_tunnel_cloudflared.cf_shoot_work_01_tunnel
-    }
-    pgadmin = {
-      is_protected = true
-      tunnel       = cloudflare_zero_trust_tunnel_cloudflared.cf_shoot_work_01_tunnel
-    }
-    victoria-logs = {
-      is_protected = true
-      tunnel       = cloudflare_zero_trust_tunnel_cloudflared.cf_shoot_work_01_tunnel
-    }
-    victoria-traces = {
-      is_protected = true
-      tunnel       = cloudflare_zero_trust_tunnel_cloudflared.cf_shoot_work_01_tunnel
-    }
-    cilium-hubble = {
-      is_protected = true
       tunnel       = cloudflare_zero_trust_tunnel_cloudflared.cf_shoot_work_01_tunnel
     }
   }
