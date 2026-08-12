@@ -9,3 +9,15 @@ data "cloudflare_zero_trust_tunnel_cloudflared_token" "cf_shoot_work_01_tunnel_t
   account_id = var.cf_account_id
   tunnel_id  = cloudflare_zero_trust_tunnel_cloudflared.cf_shoot_work_01_tunnel.id
 }
+
+resource "cloudflare_zero_trust_tunnel_cloudflared" "cf_gardener_o11y_signal_externalization_tunnel" {
+  account_id    = var.cf_account_id
+  name          = "gardener-o11y-signal-externalization"
+  config_src    = "local"
+  tunnel_secret = var.cf_tunnel_secret
+}
+
+data "cloudflare_zero_trust_tunnel_cloudflared_token" "cf_gardener_o11y_signal_externalization_tunnel_token" {
+  account_id = var.cf_account_id
+  tunnel_id  = cloudflare_zero_trust_tunnel_cloudflared.cf_gardener_o11y_signal_externalization_tunnel.id
+}
