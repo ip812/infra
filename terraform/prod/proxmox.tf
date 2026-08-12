@@ -60,7 +60,7 @@ resource "proxmox_virtual_environment_file" "user_data" {
     dispatch_target       = each.value.dispatch_target
 }))}
     EOF
-  }
+}
 }
 
 resource "proxmox_virtual_environment_vm" "this" {
@@ -79,7 +79,7 @@ resource "proxmox_virtual_environment_vm" "this" {
 
   serial_device {
     device = "socket"
- }
+  }
 
   cpu {
     cores = try(each.value.cores, local.pm_defaults.cores)
@@ -87,7 +87,7 @@ resource "proxmox_virtual_environment_vm" "this" {
     # below, when the CPU is with default value "qemu64".
     # > MongoDB 5.0+ requires a CPU with AVX support, and your current system does not appear to have that!
     # https://stackoverflow.com/questions/76126384/mongodb-5-0-requires-a-cpu-with-avx-support-container-failed-to-start
-    type  = "host"
+    type = "host"
   }
 
   memory {
