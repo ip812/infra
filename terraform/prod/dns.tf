@@ -34,11 +34,6 @@ resource "cloudflare_dns_record" "dns_record" {
   proxied  = try(each.value.proxied, true)
 }
 
-import {
-  to = cloudflare_dns_record.dns_record["proxmox"]
-  id = "${var.cf_ip812_zone_id}/c36f0e4d44ea32124e431db0c672c8e8"
-}
-
 resource "cloudflare_zero_trust_access_policy" "zt_access_policy" {
   account_id       = var.cf_account_id
   name             = "Admin allowlist"
