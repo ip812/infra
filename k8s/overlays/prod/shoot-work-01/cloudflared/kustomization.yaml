@@ -5,5 +5,5 @@ resources:
 - namespace.yaml
 - secret.yaml
 - configmap.yaml
-- daemonset.yaml
+- deployment.yaml
 - image-sync.yaml
