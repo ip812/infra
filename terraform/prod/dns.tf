@@ -1,11 +1,11 @@
 locals {
   route_config = {
-    proxmox = {
+    "proxmox" = {
       is_protected = false
       proxied      = false
       ip           = var.home_public_ip
     }
-    blog = {
+    "blog" = {
       is_protected = false
       tunnel       = cloudflare_zero_trust_tunnel_cloudflared.cf_shoot_work_01_tunnel
     }
@@ -13,15 +13,15 @@ locals {
       is_protected = false
       tunnel       = cloudflare_zero_trust_tunnel_cloudflared.cf_gardener_o11y_signal_externalization_tunnel
     }
-    clickstack = {
+    "clickstack" = {
       is_protected = false
       tunnel       = cloudflare_zero_trust_tunnel_cloudflared.cf_gardener_o11y_signal_externalization_tunnel
     }
-    elk = {
+    "elk" = {
       is_protected = false
       tunnel       = cloudflare_zero_trust_tunnel_cloudflared.cf_gardener_o11y_signal_externalization_tunnel
     }
-    influxdb = {
+    "influxdb" = {
       is_protected = false
       tunnel       = cloudflare_zero_trust_tunnel_cloudflared.cf_gardener_o11y_signal_externalization_tunnel
     }
