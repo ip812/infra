@@ -11,7 +11,6 @@ locals {
     }
     "otel-collector.clickstack" = {
       is_protected = false
-      proxied      = false
       tunnel       = cloudflare_zero_trust_tunnel_cloudflared.cf_gardener_o11y_signal_externalization_tunnel
     }
     "clickstack" = {
