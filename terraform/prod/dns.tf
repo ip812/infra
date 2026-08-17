@@ -9,6 +9,10 @@ locals {
       is_protected = false
       tunnel       = cloudflare_zero_trust_tunnel_cloudflared.cf_shoot_work_01_tunnel
     }
+    otel-collector.clickstack = {
+      is_protected = false
+      tunnel       = cloudflare_zero_trust_tunnel_cloudflared.cf_gardener_o11y_signal_externalization_tunnel
+    }
     clickstack = {
       is_protected = false
       tunnel       = cloudflare_zero_trust_tunnel_cloudflared.cf_gardener_o11y_signal_externalization_tunnel
