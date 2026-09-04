@@ -11,22 +11,22 @@ locals {
   }
 
   pm_vms = {
-    # "shoot-o11y-01" = {
-    #   dispatch_target = "prod-shoot-o11y-01-1"
-    #   wg_address      = "10.0.0.5"
-    #   wg_private_key  = var.wg_shoot_o11y_01_private_key
-    #   cores           = 6
-    #   memory          = 8192
-    #   disk_size       = 30
-    # }
-    # "shoot-mgnt-01" = {
-    #   dispatch_target = "prod-shoot-mgnt-01-1"
-    #   wg_address      = "10.0.0.6"
-    #   wg_private_key  = var.wg_shoot_mgnt_01_private_key
-    #   cores           = 2
-    #   memory          = 4096
-    #   disk_size       = 20
-    # }
+    "shoot-o11y-01" = {
+      dispatch_target = "prod-shoot-o11y-01-1"
+      wg_address      = "10.0.0.5"
+      wg_private_key  = var.wg_shoot_o11y_01_private_key
+      cores           = 6
+      memory          = 8192
+      disk_size       = 30
+    }
+    "shoot-mgnt-01" = {
+      dispatch_target = "prod-shoot-mgnt-01-1"
+      wg_address      = "10.0.0.6"
+      wg_private_key  = var.wg_shoot_mgnt_01_private_key
+      cores           = 2
+      memory          = 4096
+      disk_size       = 20
+    }
   }
 }
 
