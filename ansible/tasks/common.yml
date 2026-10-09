@@ -8,7 +8,7 @@
       - git
       - vim
       - tmux
-      # - jq
+      - jq
       - yq
       - gnupg
       - strace
