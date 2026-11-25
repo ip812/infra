@@ -1,0 +1,12 @@
+---
+apiVersion: operator.victoriametrics.com/v1
+kind: VLSingle
+metadata:
+  name: logs
+  namespace: victoria
+spec:
+  retentionPeriod: "7d"
+  storage:
+    resources:
+      requests:
+        storage: 2Gi
